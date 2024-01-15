@@ -5,30 +5,34 @@ import {
   MapContainer,
   TileLayer,
   Marker,
+  useMapEvents,
   Popup,
   useMap,
   Polyline,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-function Map({ position }) {
+function LocationMarkers({ markers }) {
+  return (
+    <>
+      {markers.map((marker, index) => (
+        <Marker
+          key={index}
+          position={{ lat: marker.coordinates[1], lng: marker.coordinates[0] }} // Assuming coordinates array is [longitude, latitude]
+        >
+          <Popup>{marker.name}</Popup> {/* Optional Popup */}
+        </Marker>
+      ))}
+    </>
+  );
+}
+
+function Map({ markers }) {
   const [showPolyline, setShowPolyline] = useState(true);
 
   const togglePolyline = () => {
     setShowPolyline(!showPolyline); // toggle the state
   };
-
-  function FlyToNewPosition({ newPosition }) {
-    const map = useMap();
-
-    useEffect(() => {
-      if (newPosition) {
-        map.flyTo(newPosition, map.getZoom());
-      }
-    }, [newPosition, map]);
-
-    return null;
-  }
 
   return (
     <section>
@@ -39,17 +43,12 @@ function Map({ position }) {
           zoom={17}
           scrollWheelZoom={true}
         >
-          
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
           />
-          <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
-          
+          <LocationMarkers markers={markers} />
+
           {showPolyline &&
             jsonData.features.map((feature, index) => (
               <Polyline
@@ -65,12 +64,13 @@ function Map({ position }) {
                 ])}
               />
             ))}
-          <FlyToNewPosition newPosition={position} />
-          
         </MapContainer>
-        <button className=" z-10000 bg-white p-2 text-sm rounded shadow" onClick={togglePolyline}>
-            {showPolyline ? "Hide Polyline" : "Show Polyline"}
-          </button>
+        <button
+          className="mt-2 z-10000 bg-white p-2 text-sm rounded shadow"
+          onClick={togglePolyline}
+        >
+          {showPolyline ? "Hide Polyline" : "Show Polyline"}
+        </button>
       </div>
     </section>
   );

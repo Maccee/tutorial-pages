@@ -6,7 +6,7 @@ import {
   GlobeAltIcon,
   UserCircleIcon,
   UsersIcon,
-  MapPinIcon
+  MapPinIcon,
 } from "@heroicons/react/24/solid";
 
 function Header({ setKeyword }) {
@@ -17,14 +17,14 @@ function Header({ setKeyword }) {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
 
   return (
     <header className="sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md p-5 md:px-10">
-      <div className="relative flex items-center h-24 cursor-pointer my-auto">
+      <div className="relative flex items-center h-14 cursor-pointer my-auto">
         <Image
           src="/logo2.png"
           layout="fill"
