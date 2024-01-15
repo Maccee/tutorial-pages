@@ -6,6 +6,7 @@ import {
   GlobeAltIcon,
   UserCircleIcon,
   UsersIcon,
+  MapPinIcon
 } from "@heroicons/react/24/solid";
 
 function Header({ setKeyword }) {
