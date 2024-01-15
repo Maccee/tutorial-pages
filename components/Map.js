@@ -1,38 +1,49 @@
-import React, { useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import React, { useEffect, useState } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  GeoJSON,
+  useMap,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import axios from "axios";
 
 function Map({ position }) {
-  const FlyTo = ({ position }) => {
-    const map = useMap();
-    useEffect(() => {
-      if (position && position.lat && position.lon) {
-        // map.flyTo([position.lat, position.lon], map.getZoom());
-        map.flyTo([position.lat, position.lon], map.getZoom());
-      }
-    }, [position, map]);
-    return null;
-  };
 
+  function FlyToNewPosition({ newPosition }) {
+    const map = useMap();
+  
+    useEffect(() => {
+      if (newPosition) {
+        map.flyTo(newPosition, map.getZoom());
+      }
+    }, [newPosition, map]);
+  
+    return null;
+  }
+
+  
   return (
     <section>
       <div>
         <MapContainer
-          style={{ height: "300px" }}
-          center={[51.505, -0.09]}
-          zoom={13}
-          scrollWheelZoom={false}
+          style={{ height: "600px" }}
+          center={{ lat: 60.1705, lon: 24.9414 }}
+          zoom={17}
+          scrollWheelZoom={true}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://kartta.hel.fi/paikkatietohakemisto/metadata/?id=298/{z}/{x}/{y}@2x@fi.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <Marker position={position}>
             <Popup>
               A pretty CSS3 popup. <br /> Easily customizable.
             </Popup>
           </Marker>
-          <FlyTo position={position} />
+          <FlyToNewPosition newPosition={position} />
         </MapContainer>
       </div>
     </section>
