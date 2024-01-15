@@ -5,12 +5,12 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  useMapEvents,
   Popup,
-  useMap,
   Polyline,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
 function LocationMarkers({ markers }) {
   return (
@@ -40,7 +40,7 @@ function Map({ markers }) {
         <MapContainer
           style={{ height: "600px" }}
           center={{ lat: 60.1705, lon: 24.9414 }}
-          zoom={17}
+          zoom={13}
           scrollWheelZoom={true}
         >
           <TileLayer
