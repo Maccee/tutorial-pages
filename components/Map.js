@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -8,7 +8,7 @@ import { Aluejako } from "./Aluejako";
 function LocationMarkers({ markers }) {
   return (
     <>
-      {markers.map((marker, index) => (
+      {markers?.map((marker, index) => (
         <Marker
           key={index}
           position={{ lat: marker.coordinates[1], lng: marker.coordinates[0] }}
@@ -20,9 +20,21 @@ function LocationMarkers({ markers }) {
   );
 }
 
-function Map({ markers }) {
+function Map({ markers, selectedCard }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showPolyline, setShowPolyline] = useState(false);
+
+  function FlyToSelectedCard({ selectedCard }) {
+    const map = useMap();
+
+    useEffect(() => {
+      if (selectedCard) {
+        map.flyTo([selectedCard[1], selectedCard[0]], 16); // Assuming zoom level 13
+      }
+    }, [selectedCard, map]);
+
+    return null; // This component does not render anything
+  }
 
   const togglePolyline = () => {
     setShowPolyline(!showPolyline);
@@ -42,7 +54,7 @@ function Map({ markers }) {
         />
 
         <LocationMarkers markers={markers} />
-
+        <FlyToSelectedCard selectedCard={selectedCard} />
         <Aluejako showPolyline={showPolyline} />
       </MapContainer>
       <button
