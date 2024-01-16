@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import { Cards } from "@/components/Cards";
+import paikat from "../public/paikat.json";
 
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -9,17 +10,89 @@ const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
-  const [userLocation, setUserLocation] = useState();
   const [markers, setMarkers] = useState([]);
+  const [geocodeData, setGeocodeData] = useState();
+  const [run, setRun] = useState(false);
 
   useEffect(() => {
     if (keyword) {
       setMarkers([]); // Reset markers before fetching new data
-
-      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=true&show_all_places=true&lat=25&lon=60&distance=5000`;
+      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=true&show_all_places=true`;
       fetchData(initialUrl);
     }
   }, [keyword]);
+
+  useEffect(() => {
+    if (!run) {
+      selectAndFetch();
+      setRun(true);
+    }
+  }, []);
+
+  const selectAndFetch = async () => {
+    const allPlaces = paikat; // This should be your array of places from the JSON file
+    let selectedPlaces = [];
+    let selectedNames = new Set(); // Set to keep track of selected place names
+
+    // Randomly select places without duplicates
+    while (selectedPlaces.length < 6) {
+      const randomIndex = Math.floor(Math.random() * allPlaces.length);
+      const place = allPlaces[randomIndex];
+
+      if (!selectedNames.has(place.name)) {
+        selectedPlaces.push(place);
+        selectedNames.add(place.name); // Add the name to the Set
+      }
+    }
+    console.log(selectedPlaces);
+
+    // Process each selected place
+    for (const place of selectedPlaces) {
+      const url = `https://api.hel.fi/linkedevents/v1/place/?text=${encodeURIComponent(
+        place.name
+      )}&has_upcoming_event=true&show_all_places=true`;
+
+      try {
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (result.data.length > 0) {
+          const item = result.data[0];
+
+          // Check if item.image is null. If so, skip to the next iteration
+          if (!item.image) {
+            const imageSearchUrl = `https://api.hel.fi/linkedevents/v1/image/?text=${encodeURIComponent(
+              place.name
+            )}`;
+            const imageResponse = await fetch(imageSearchUrl);
+            const imageResult = await imageResponse.json();
+
+            if (imageResult.data.length > 0) {
+              item.image = imageResult.data[0].url;
+            } else {
+              continue; // Skip if no image is found
+            }
+          }
+
+          let imageUrl = await getImage(item.image); // Assuming getImage is defined elsewhere
+
+          const marker = {
+            id: item.id,
+            name: item.name.fi,
+            description: item.description?.fi
+              ? (item.description.fi.match(/^[^,.]*/) || [])[0] + "."
+              : "",
+            imageUrl,
+            coordinates: item.position.coordinates,
+          };
+
+          setMarkers((currentMarkers) => [...currentMarkers, marker]);
+        }
+      } catch (error) {
+        console.error("Error fetching data for place:", place.name, error);
+      }
+    }
+  };
 
   async function fetchData(url, accumulatedMarkers = []) {
     try {
@@ -78,43 +151,25 @@ export default function Home() {
   }
 
   const getUserLocation = async () => {
-    if ("geolocation" in navigator) {
-      console.log(userLocation)
-      if (!userLocation) {
-        console.log(userLocation)
-        try {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-  
-          const { latitude, longitude } = position.coords;
-          console.log(latitude, longitude);
-  
-          const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
-          const geocodeResponse = await fetch(reverseGeocodeUrl);
-          const geocodeData = await geocodeResponse.json();
-          const suburb = geocodeData.address.suburb;
-  
-          setUserLocation({ latitude, longitude, suburb });
-        } catch (error) {
-          console.error("Error in getUserLocation:", error);
-          return;  // Exit the function if there is an error
-        }
-      }
-  
-      // Check if suburb is defined in userLocation
-      if (userLocation && userLocation.suburb) {
-        const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${userLocation.suburb}`;
-        await fetchData(initialUrl);
-      } else {
-        console.error("Suburb information is not available.");
-      }
-    } else {
+    if (geocodeData) return;
+    if (!("geolocation" in navigator)) {
       console.error("Geolocation is not supported in this browser.");
+      return;
+    }
+
+    try {
+      const {
+        coords: { latitude, longitude },
+      } = await new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      );
+      const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+      const geocodeData = await (await fetch(reverseGeocodeUrl)).json();
+      setGeocodeData(geocodeData);
+    } catch (error) {
+      console.error("Error in getUserLocation:", error);
     }
   };
-  
-  
 
   return (
     <div className="">

@@ -1,0 +1,127 @@
+[
+    {
+      "name": "Suomenlinna",
+      "description": "Suomenlinna on merellinen linnoitus saaristossa, joka on UNESCOn maailmanperintökohde."
+    },
+    {
+      "name": "Temppeliaukion kirkko",
+      "description": "Temppeliaukion kirkko on ainutlaatuinen kallioon louhittu kirkkorakennus."
+    },
+    {
+      "name": "Helsingin tuomiokirkko",
+      "description": "Helsingin tuomiokirkko on kaupungin tunnetuin maamerkki ja upea neoklassinen kirkkorakennus."
+    },
+    {
+      "name": "Ateneumin taidemuseo",
+      "description": "Ateneumin taidemuseo esittelee laajan kokoelman suomalaista ja eurooppalaista taidetta."
+    },
+    {
+      "name": "Kiasma - Nykytaiteen museo",
+      "description": "Kiasma on moderni museo, joka keskittyy nykytaiteeseen ja taide-esityksiin."
+    },
+    {
+      "name": "Finlandia-talo",
+      "description": "Finlandia-talo on arkkitehtoninen helmi ja tunnettu konserttitalo Helsingissä."
+    },
+    {
+      "name": "Sibelius-monumentti",
+      "description": "Sibelius-monumentti on ainutlaatuinen veistos, joka kunnioittaa säveltäjä Jean Sibeliusta."
+    },
+    {
+      "name": "Helsingin Olympiastadion",
+      "description": "Helsingin Olympiastadion on historiallinen urheilustadion ja kulttuuritapahtumien keskus."
+    },
+    {
+      "name": "Kauppatori",
+      "description": "Kauppatori on perinteinen tori Helsingin sydämessä, jossa voi nauttia ulkoilmakahvista ja ostoksista."
+    },
+    {
+      "name": "Senaatintori",
+      "description": "Senaatintori on kaunis aukio, jota ympäröivät arvokkaat historialliset rakennukset."
+    },
+    {
+      "name": "Linnanmäki",
+      "description": "Linnanmäki on huvipuisto ja viihdekeskus, joka tarjoaa hauskoja aktiviteetteja perheille."
+    },
+    {
+      "name": "Suomen Kansallisooppera",
+      "description": "Suomen Kansallisooppera on tärkeä paikka klassisen musiikin ja oopperan ystäville."
+    },
+    {
+      "name": "Töölönlahden puisto",
+      "description": "Töölönlahden puisto on kaunis viheralue, joka tarjoaa virkistystä ja ulkoilumahdollisuuksia."
+    },
+    {
+      "name": "Helsingin taidemuseo - HAM",
+      "description": "HAM esittelee taidetta julkisissa tiloissa ja on osa Helsingin kaupungin taidekokoelmaa."
+    },
+    {
+      "name": "Helsingin kasvitieteellinen puutarha",
+      "description": "Helsingin kasvitieteellinen puutarha on kaunis paikka tutkia erilaisia kasvielämän muotoja."
+    },
+    {
+      "name": "Helsingin Musiikkitalo",
+      "description": "Helsingin Musiikkitalo on paikka nauttia konserteista ja musiikista monipuolisessa ympäristössä."
+    },
+    {
+      "name": "Lasipalatsi",
+      "description": "Lasipalatsi on modernistinen rakennus, joka tunnetaan sen funktionaalisesta arkkitehtuurista."
+    },
+    {
+      "name": "Kallion kirkko",
+      "description": "Kallion kirkko on jugendtyylinen kirkkorakennus, joka on kaupungin koristeellisimpia."
+    },
+    {
+      "name": "Sörnäisten rantatie 22",
+      "description": "Sörnäisten rantatie 22 on erikoinen punatiilinen rakennus, joka herättää huomiota."
+    },
+    {
+      "name": "Helsingin päärautatieasema",
+      "description": "Helsingin päärautatieasema on upea jugendtyylinen rautatieasema, joka on kaupungin tärkein liikennekeskus."
+    },
+    {
+      "name": "Helsinki-Vantaan lentoasema",
+      "description": "Helsinki-Vantaan lentoasema on moderni lentokenttärakennus, joka on yksi Pohjoismaiden vilkkaimmista."
+    },
+    {
+      "name": "Eduskuntatalo",
+      "description": "Eduskuntatalo on klassisen arkkitehtuurin mestariteos, jossa sijaitsee Suomen parlamentti."
+    },
+    {
+      "name": "Eliel Saarisen suunnittelema asuintalo",
+      "description": "Eliel Saarisen suunnittelema asuintalo on arkkitehtoninen helmi, joka edustaa suomalaista jugend-tyyliä."
+    },
+    {
+      "name": "Helsinki Ice Hall",
+      "description": "Helsinki Ice Hall on moderni jäähalli ja urheilukeskus, joka on suosittu jäällä pelattavan jääkiekon paikka."
+    },
+    {
+      "name": "Suvilahden Voimala",
+      "description": "Suvilahden Voimala on entinen voimalarakennus, joka on nyt kulttuuri- ja tapahtumakeskus."
+    },
+    {
+      "name": "Kulttuuritalo",
+      "description": "Kulttuuritalo on modernistinen konsertti- ja kongressikeskus, joka tunnetaan sen ainutlaatuisesta ulkoasusta."
+    },
+    {
+      "name": "Rautatientorin metroasema",
+      "description": "Rautatientorin metroasema on moderni maanalainen asema, joka on arvostettu arkkitehtuuristaan."
+    },
+    {
+      "name": "Helsingin yliopiston päärakennus",
+      "description": "Helsingin yliopiston päärakennus on klassinen arkkitehtoninen rakennus, joka toimii yliopiston keskuksena."
+    },
+    {
+      "name": "Helsingin kaupunginteatteri",
+      "description": "Helsingin kaupunginteatteri on merkittävä teatteri, joka sijaitsee upeassa rakennuksessa."
+    },
+    {
+      "name": "Kino Engel",
+      "description": "Kino Engel on historiallinen elokuvateatteri, joka sijaitsee kauniissa jugend-tyylisessä rakennuksessa."
+    },
+    {
+      "name": "St. John's Church",
+      "description": "St. John's Church on englantilaistyylinen kirkko, joka tunnetaan sen kauniista goottilaisista yksityiskohdista."
+    }
+  ]
+  
