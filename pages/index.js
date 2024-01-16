@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Header from "@/components/Header";
+import { Cards } from "@/components/Cards";
 
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -81,33 +82,12 @@ export default function Home() {
   return (
     <div className="">
       <Header setKeyword={setKeyword} />
-      <main className="flex   sm:px-16">
-        <section className="pt-6 max-w-3xl">
-          <h2 className="text-4xl font-semibold pb-4">
-            Results - {totalCards}
-          </h2>
+      <main className="relative flex justify-between mx-2 mt-5 xl:mx-24">
+        <Cards markers={markers} />
 
-          {markers?.map((item) => (
-            <div
-              className="flex gap-4 mb-2 mr-4 border-2 p-2 rounded-lg"
-              key={item.id}
-            >
-              <div className="w-24 bg-slate-600 flex items-center justify-center">
-                {item.imageUrl && (
-                  <img src={item.imageUrl} className="h-24 object-contain" />
-                )}
-              </div>
-              <div>
-                <p>{item.name}</p>
-
-                <p className="text-sm">{item.description}</p>
-              </div>
-            </div>
-          ))}
-        </section>
-        <section className="flex-grow sticky position-absolute">
+        <div className="fixed top-[120px] right-10 h-screen max-h-screen">
           <MapComponentWithNoSSR markers={markers} />
-        </section>
+        </div>
       </main>
     </div>
   );

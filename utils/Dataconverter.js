@@ -27,13 +27,30 @@ const processGeometry = (geometry) => {
 };
 
 // Read dataset.json
-const rawData = fs.readFileSync('newdata.json');
+const rawData = fs.readFileSync('datasetespoo.json');
 const dataset = JSON.parse(rawData);
 
 // Convert coordinates for each feature
-dataset.features.forEach(feature => {
-    processGeometry(feature.geometry);
+//dataset.features.forEach(feature => {
+  //  processGeometry(feature.geometry);
+//});
+
+dataset.ResultArray.forEach((geoJSONArr) => {
+    // Iterate through geoJSON objects within the array
+    geoJSONArr.forEach((geoJSONObj) => {
+        if (geoJSONObj.geoJSON) {
+            geoJSONObj.geoJSON.forEach((item) => {
+                if (item.geometry && item.geometry.members) {
+                    // Assuming that 'members' is an array of geometries
+                    item.geometry.members.forEach((member) => {
+                        processGeometry(member.geometry);
+                    });
+                }
+            });
+        }
+    });
 });
+
 
 // Write the converted data to a new file
 const convertedData = JSON.stringify(dataset, null, 2);

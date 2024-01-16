@@ -5,8 +5,7 @@ import {
   MagnifyingGlassIcon,
   GlobeAltIcon,
   UserCircleIcon,
-  UsersIcon,
-  MapPinIcon,
+  UsersIcon
 } from "@heroicons/react/24/solid";
 
 function Header({ setKeyword }) {
@@ -30,6 +29,7 @@ function Header({ setKeyword }) {
           layout="fill"
           objectFit="contain"
           objectPosition="left"
+          alt="logo"
         />
       </div>
       <div className="flex items-center ">
