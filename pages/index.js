@@ -9,7 +9,7 @@ const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
-  const [userLocation, setUserLocation] = useState([]);
+  const [userLocation, setUserLocation] = useState();
   const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
@@ -77,29 +77,44 @@ export default function Home() {
     }
   }
 
-  const getUserLocation = () => {
+  const getUserLocation = async () => {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
-        setUserLocation({ latitude, longitude });
-        console.log(latitude, longitude);
-
+      console.log(userLocation)
+      if (!userLocation) {
+        console.log(userLocation)
         try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          });
+  
+          const { latitude, longitude } = position.coords;
+          console.log(latitude, longitude);
+  
           const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
           const geocodeResponse = await fetch(reverseGeocodeUrl);
           const geocodeData = await geocodeResponse.json();
           const suburb = geocodeData.address.suburb;
-
-          const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${suburb}&has_upcoming_event=true&show_all_places=true&lat=${latitude}&lon=${longitude}&distance=5000`;
-          await fetchData(initialUrl);
+  
+          setUserLocation({ latitude, longitude, suburb });
         } catch (error) {
           console.error("Error in getUserLocation:", error);
+          return;  // Exit the function if there is an error
         }
-      });
+      }
+  
+      // Check if suburb is defined in userLocation
+      if (userLocation && userLocation.suburb) {
+        const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${userLocation.suburb}`;
+        await fetchData(initialUrl);
+      } else {
+        console.error("Suburb information is not available.");
+      }
     } else {
       console.error("Geolocation is not supported in this browser.");
     }
   };
+  
+  
 
   return (
     <div className="">
