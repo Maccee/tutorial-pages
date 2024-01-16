@@ -9,80 +9,109 @@ const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
-  const [data, setData] = useState();
+  const [userLocation, setUserLocation] = useState([]);
   const [markers, setMarkers] = useState([]);
-  const [totalCards, setTotalCards] = useState(0);
 
   useEffect(() => {
-    async function fetchData(url, accumulatedMarkers = []) {
-      try {
-        const response = await fetch(url);
-        const result = await response.json();
-
-        const newMarkers = await Promise.all(
-          result.data
-            .filter((item) => item.position && item.position.coordinates)
-            .filter((item) => !item.id.startsWith("osoite"))
-            .map(async (item) => {
-              let imageUrl = "";
-              if (item.image) {
-                imageUrl = await getImage(item.image);
-              }
-              return {
-                id: item.id,
-                name: item.name.fi,
-                description: item.description?.fi
-                  ? (item.description.fi.match(/^[^,.]*/) || [])[0] + "."
-                  : "",
-                imageUrl,
-                coordinates: item.position.coordinates,
-              };
-            })
-        );
-
-        const updatedMarkers = [...accumulatedMarkers, ...newMarkers];
-
-        if (updatedMarkers.length > 50) {
-          setMarkers(updatedMarkers.slice(0, 50));
-          return; // Stop fetching if the limit is reached or exceeded
-        }
-
-        setMarkers(updatedMarkers);
-        setTotalCards(updatedMarkers.length);
-
-        if (result.meta.next) {
-          await fetchData(result.meta.next, updatedMarkers); // Pass accumulated markers
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
-    async function getImage(imageId) {
-      try {
-        const response = await fetch(
-          `https://api.hel.fi/linkedevents/v1/image/${imageId}`
-        );
-        const imageData = await response.json();
-        return imageData.url;
-      } catch (error) {
-        console.error("Error fetching image:", error);
-        return "";
-      }
-    }
-
     if (keyword) {
       setMarkers([]); // Reset markers before fetching new data
-      setTotalCards(0);
-      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=true&show_all_places=true`;
+
+      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=true&show_all_places=true&lat=25&lon=60&distance=5000`;
       fetchData(initialUrl);
     }
   }, [keyword]);
 
+  async function fetchData(url, accumulatedMarkers = []) {
+    try {
+      const response = await fetch(url);
+      const result = await response.json();
+
+      const newMarkers = await Promise.all(
+        result.data
+          .filter((item) => item.position && item.position.coordinates)
+          .filter((item) => !item.id.startsWith("osoite"))
+          .map(async (item) => {
+            let imageUrl = "";
+            if (item.image) {
+              imageUrl = await getImage(item.image);
+            }
+            return {
+              id: item.id,
+              name: item.name.fi,
+              description: item.description?.fi
+                ? (item.description.fi.match(/^[^,.]*/) || [])[0] + "."
+                : "",
+              imageUrl,
+              coordinates: item.position.coordinates,
+            };
+          })
+      );
+      console.log(result.data);
+      const updatedMarkers = [...accumulatedMarkers, ...newMarkers];
+
+      if (updatedMarkers.length > 50) {
+        setMarkers(updatedMarkers.slice(0, 50));
+        return; // Stop fetching if the limit is reached or exceeded
+      }
+
+      setMarkers(updatedMarkers);
+
+      if (result.meta.next) {
+        await fetchData(result.meta.next, updatedMarkers); // Pass accumulated markers
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  async function getImage(imageId) {
+    try {
+      const response = await fetch(
+        `https://api.hel.fi/linkedevents/v1/image/${imageId}`
+      );
+      const imageData = await response.json();
+      return imageData.url;
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return "";
+    }
+  }
+
+  const getUserLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ latitude, longitude });
+        console.log(latitude, longitude);
+
+        try {
+          const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+          const geocodeResponse = await fetch(reverseGeocodeUrl);
+          const geocodeData = await geocodeResponse.json();
+          const suburb = geocodeData.address.suburb;
+
+          const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${suburb}&has_upcoming_event=true&show_all_places=true&lat=${latitude}&lon=${longitude}&distance=5000`;
+          await fetchData(initialUrl);
+        } catch (error) {
+          console.error("Error in getUserLocation:", error);
+        }
+      });
+    } else {
+      console.error("Geolocation is not supported in this browser.");
+    }
+  };
+
   return (
     <div className="">
       <Header setKeyword={setKeyword} />
-      <main className="relative flex justify-between mx-2 mt-5 xl:mx-24">
+      <main className="relative justify-between mx-2 mt-5 xl:mx-24">
+        <button
+          className="my-2 bg-white p-2 text-sm rounded shadow"
+          onClick={getUserLocation}
+        >
+          Lähelläsi
+        </button>
+
         <Cards markers={markers} />
 
         <div className="fixed top-[120px] right-10 h-screen max-h-screen">
