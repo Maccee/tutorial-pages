@@ -7,7 +7,7 @@ export const selectAndFetch = async () => {
   let selectedNames = new Set(); // Set to keep track of selected place names
 
   // Randomly select places without duplicates
-  while (selectedPlaces.length < 6) {
+  while (selectedPlaces.length < 20) {
     const randomIndex = Math.floor(Math.random() * allPlaces.length);
     const placeName = allPlaces[randomIndex];
 
@@ -21,24 +21,42 @@ export const selectAndFetch = async () => {
   let newMarkers = []; // Temporary array to hold new markers
 
   for (const place of selectedPlaces) {
-    const url = `https://api.hel.fi/linkedevents/v1/place/?text=${place.name}&show_all_places=true`;
+    const url = `https://api.hel.fi/linkedevents/v1/search/?type=place&q=${place}`;
 
     try {
       const response = await fetch(url);
       const result = await response.json();
-      console.log(place.name, result);
+      console.log(place, result);
 
-      if (result.data.length > 0) {
-        const item = result.data[0];
+      // Access the first item in the data array
+      let item = result.data[0];
 
+      // Use data[1] if the name starts with "äänestys"
+      if (
+        (item && item.name.fi.startsWith("Äänestys")) ||
+        item.name.fi.startsWith("EuroPark") ||
+        (item.name.fi.startsWith("Pysäköinti") && result.data.length > 1)
+      ) {
+        item = result.data[1];
+      }
+
+      // Check if the item meets the required conditions
+      if (
+        item &&
+        item.position &&
+        item.position.coordinates &&
+        !item.id.startsWith("osoite") &&
+        !item.id.startsWith("harrastus")
+      ) {
         let imageUrl;
         if (item.image) {
           imageUrl = await getImage(item.image);
         }
 
+        // Fetch additional image if necessary
         if (!imageUrl) {
           const imageResponse = await fetch(
-            `https://api.hel.fi/linkedevents/v1/image/?text=${place.name}`
+            `https://api.hel.fi/linkedevents/v1/image/?text=${place}`
           );
           const imageResult = await imageResponse.json();
 
@@ -49,6 +67,7 @@ export const selectAndFetch = async () => {
           }
         }
 
+        // Create a marker object
         const marker = {
           id: item.id,
           name: item.name.fi,
@@ -63,8 +82,8 @@ export const selectAndFetch = async () => {
         newMarkers.push(marker); // Add marker to temporary array
       }
     } catch (error) {
-      console.error("Error fetching data for place:", place.name, error);
-      // Optionally, add logic here to handle the error in the UI
+      console.error("Error fetching data for place:", place, error);
+      // Optionally, handle the error
     }
   }
 
@@ -81,6 +100,7 @@ export async function fetchData(url, accumulatedMarkers = []) {
       result.data
         .filter((item) => item.position && item.position.coordinates)
         .filter((item) => !item.id.startsWith("osoite"))
+        .filter((item) => !item.id.startsWith("harrastus"))
         .map(async (item) => {
           let imageUrl = "";
           if (item.image) {
