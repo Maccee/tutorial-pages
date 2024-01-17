@@ -1,0 +1,6438 @@
+schema {
+    query: query_root
+    subscription: subscription_root
+  }
+  
+  """whether this query should be cached (Hasura Cloud only)"""
+  directive @cached(
+    """measured in seconds"""
+    ttl: Int! = 60
+  
+    """refresh the cache entry"""
+    refresh: Boolean! = false
+  ) on QUERY
+  
+  """
+  Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+  """
+  input Boolean_comparison_exp {
+    _eq: Boolean
+    _gt: Boolean
+    _gte: Boolean
+    _in: [Boolean!]
+    _is_null: Boolean
+    _lt: Boolean
+    _lte: Boolean
+    _neq: Boolean
+    _nin: [Boolean!]
+  }
+  
+  """
+  Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+  """
+  input Int_comparison_exp {
+    _eq: Int
+    _gt: Int
+    _gte: Int
+    _in: [Int!]
+    _is_null: Boolean
+    _lt: Int
+    _lte: Int
+    _neq: Int
+    _nin: [Int!]
+  }
+  
+  """
+  Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+  """
+  input String_comparison_exp {
+    _eq: String
+    _gt: String
+    _gte: String
+  
+    """does the column match the given case-insensitive pattern"""
+    _ilike: String
+    _in: [String!]
+  
+    """
+    does the column match the given POSIX regular expression, case insensitive
+    """
+    _iregex: String
+    _is_null: Boolean
+  
+    """does the column match the given pattern"""
+    _like: String
+    _lt: String
+    _lte: String
+    _neq: String
+  
+    """does the column NOT match the given case-insensitive pattern"""
+    _nilike: String
+    _nin: [String!]
+  
+    """
+    does the column NOT match the given POSIX regular expression, case insensitive
+    """
+    _niregex: String
+  
+    """does the column NOT match the given pattern"""
+    _nlike: String
+  
+    """
+    does the column NOT match the given POSIX regular expression, case sensitive
+    """
+    _nregex: String
+  
+    """does the column NOT match the given SQL regular expression"""
+    _nsimilar: String
+  
+    """
+    does the column match the given POSIX regular expression, case sensitive
+    """
+    _regex: String
+  
+    """does the column match the given SQL regular expression"""
+    _similar: String
+  }
+  
+  type UserFullProfile {
+    businessId: String!
+    companyIds: [String]
+    createdTimestamp: String!
+    emailVerified: Boolean!
+    enabled: Boolean!
+    firstName: String!
+    id: uuid!
+    lastName: String!
+    requestedGroup: String!
+    username: String!
+  }
+  
+  type UserProfile {
+    id: uuid!
+    name: String!
+  }
+  
+  scalar _uuid
+  
+  scalar date
+  
+  """
+  Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'.
+  """
+  input date_comparison_exp {
+    _eq: date
+    _gt: date
+    _gte: date
+    _in: [date!]
+    _is_null: Boolean
+    _lt: date
+    _lte: date
+    _neq: date
+    _nin: [date!]
+  }
+  
+  """
+  columns and relationships of "hasuradb.business_entity"
+  """
+  type hasuradb_business_entity {
+    businessId: String!
+  
+    """An array relationship"""
+    companies(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_company_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_company_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_company_bool_exp
+    ): [hasuradb_company!]!
+    id: uuid!
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.business_entity". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_business_entity_bool_exp {
+    _and: [hasuradb_business_entity_bool_exp!]
+    _not: hasuradb_business_entity_bool_exp
+    _or: [hasuradb_business_entity_bool_exp!]
+    businessId: String_comparison_exp
+    companies: hasuradb_company_bool_exp
+    id: uuid_comparison_exp
+  }
+  
+  """Ordering options when selecting data from "hasuradb.business_entity"."""
+  input hasuradb_business_entity_order_by {
+    businessId: order_by
+    companies_aggregate: hasuradb_company_aggregate_order_by
+    id: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.business_entity"
+  """
+  enum hasuradb_business_entity_select_column {
+    """column name"""
+    businessId
+  
+    """column name"""
+    id
+  }
+  
+  """
+  columns and relationships of "hasuradb.business_hours"
+  """
+  type hasuradb_business_hours {
+    """An object relationship"""
+    company: hasuradb_company!
+    companyId: uuid!
+  
+    """An array relationship"""
+    default(
+      """distinct select on columns"""
+      distinct_on: [openingHoursDefaultView_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [openingHoursDefaultView_order_by!]
+  
+      """filter the rows returned"""
+      where: openingHoursDefaultView_bool_exp
+    ): [openingHoursDefaultView!]!
+  
+    """An array relationship"""
+    exceptions(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_business_hours_exception_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_business_hours_exception_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_business_hours_exception_view_bool_exp
+    ): [hasuradb_business_hours_exception_view!]!
+    id: uuid!
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.business_hours". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_business_hours_bool_exp {
+    _and: [hasuradb_business_hours_bool_exp!]
+    _not: hasuradb_business_hours_bool_exp
+    _or: [hasuradb_business_hours_bool_exp!]
+    company: hasuradb_company_bool_exp
+    companyId: uuid_comparison_exp
+    default: openingHoursDefaultView_bool_exp
+    exceptions: hasuradb_business_hours_exception_view_bool_exp
+    id: uuid_comparison_exp
+  }
+  
+  """
+  columns and relationships of "hasuradb.business_hours_exception_view"
+  """
+  type hasuradb_business_hours_exception_view {
+    """An object relationship"""
+    businessHours: hasuradb_business_hours
+    businessHoursId: uuid
+    end: date
+    id: uuid
+  
+    """An array relationship"""
+    openingHours(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_opening_hours_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_opening_hours_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_opening_hours_bool_exp
+    ): [hasuradb_opening_hours!]!
+    start: date
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.business_hours_exception_view"
+  """
+  input hasuradb_business_hours_exception_view_aggregate_order_by {
+    count: order_by
+    max: hasuradb_business_hours_exception_view_max_order_by
+    min: hasuradb_business_hours_exception_view_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.business_hours_exception_view". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_business_hours_exception_view_bool_exp {
+    _and: [hasuradb_business_hours_exception_view_bool_exp!]
+    _not: hasuradb_business_hours_exception_view_bool_exp
+    _or: [hasuradb_business_hours_exception_view_bool_exp!]
+    businessHours: hasuradb_business_hours_bool_exp
+    businessHoursId: uuid_comparison_exp
+    end: date_comparison_exp
+    id: uuid_comparison_exp
+    openingHours: hasuradb_opening_hours_bool_exp
+    start: date_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.business_hours_exception_view"
+  """
+  input hasuradb_business_hours_exception_view_max_order_by {
+    businessHoursId: order_by
+    end: order_by
+    id: order_by
+    start: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.business_hours_exception_view"
+  """
+  input hasuradb_business_hours_exception_view_min_order_by {
+    businessHoursId: order_by
+    end: order_by
+    id: order_by
+    start: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.business_hours_exception_view".
+  """
+  input hasuradb_business_hours_exception_view_order_by {
+    businessHours: hasuradb_business_hours_order_by
+    businessHoursId: order_by
+    end: order_by
+    id: order_by
+    openingHours_aggregate: hasuradb_opening_hours_aggregate_order_by
+    start: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.business_hours_exception_view"
+  """
+  enum hasuradb_business_hours_exception_view_select_column {
+    """column name"""
+    businessHoursId
+  
+    """column name"""
+    end
+  
+    """column name"""
+    id
+  
+    """column name"""
+    start
+  }
+  
+  """Ordering options when selecting data from "hasuradb.business_hours"."""
+  input hasuradb_business_hours_order_by {
+    company: hasuradb_company_order_by
+    companyId: order_by
+    default_aggregate: openingHoursDefaultView_aggregate_order_by
+    exceptions_aggregate: hasuradb_business_hours_exception_view_aggregate_order_by
+    id: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.business_hours"
+  """
+  enum hasuradb_business_hours_select_column {
+    """column name"""
+    companyId
+  
+    """column name"""
+    id
+  }
+  
+  """
+  columns and relationships of "hasuradb.category_group"
+  """
+  type hasuradb_category_group {
+    groupName: String!
+  
+    """
+    fetch data from the table: "hasuradb.tags"
+    """
+    tags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_tags_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_tags_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_tags_bool_exp
+    ): [hasuradb_tags!]!
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.category_group". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_category_group_bool_exp {
+    _and: [hasuradb_category_group_bool_exp!]
+    _not: hasuradb_category_group_bool_exp
+    _or: [hasuradb_category_group_bool_exp!]
+    groupName: String_comparison_exp
+    tags: hasuradb_tags_bool_exp
+  }
+  
+  enum hasuradb_category_group_enum {
+    accommodation
+    activities_attractions
+    culture
+    food_and_drink
+    indoor_activities
+    other
+    outdoor_activities
+    shopping
+    transportation
+    venues
+    wellbeing_health
+    winter_activities
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_category_group_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_category_group_enum_comparison_exp {
+    _eq: hasuradb_category_group_enum
+    _in: [hasuradb_category_group_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_category_group_enum
+    _nin: [hasuradb_category_group_enum!]
+  }
+  
+  """Ordering options when selecting data from "hasuradb.category_group"."""
+  input hasuradb_category_group_order_by {
+    groupName: order_by
+    tags_aggregate: hasuradb_tags_aggregate_order_by
+  }
+  
+  """
+  select columns of table "hasuradb.category_group"
+  """
+  enum hasuradb_category_group_select_column {
+    """column name"""
+    groupName
+  }
+  
+  """
+  columns and relationships of "hasuradb.certificate"
+  """
+  type hasuradb_certificate {
+    description: String
+    logoUrl: String!
+    name: String!
+    websiteUrl: String
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.certificate". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_certificate_bool_exp {
+    _and: [hasuradb_certificate_bool_exp!]
+    _not: hasuradb_certificate_bool_exp
+    _or: [hasuradb_certificate_bool_exp!]
+    description: String_comparison_exp
+    logoUrl: String_comparison_exp
+    name: String_comparison_exp
+    websiteUrl: String_comparison_exp
+  }
+  
+  """Ordering options when selecting data from "hasuradb.certificate"."""
+  input hasuradb_certificate_order_by {
+    description: order_by
+    logoUrl: order_by
+    name: order_by
+    websiteUrl: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.certificate"
+  """
+  enum hasuradb_certificate_select_column {
+    """column name"""
+    description
+  
+    """column name"""
+    logoUrl
+  
+    """column name"""
+    name
+  
+    """column name"""
+    websiteUrl
+  }
+  
+  """
+  columns and relationships of "hasuradb.city"
+  """
+  type hasuradb_city {
+    city: String!
+    cityCode: String!
+    id: uuid!
+  
+    """An array relationship"""
+    postalAreas(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_area_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_area_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_area_bool_exp
+    ): [hasuradb_postal_area!]!
+  
+    """An object relationship"""
+    region: hasuradb_region!
+    regionCode: String!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.city"
+  """
+  input hasuradb_city_aggregate_order_by {
+    count: order_by
+    max: hasuradb_city_max_order_by
+    min: hasuradb_city_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.city". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_city_bool_exp {
+    _and: [hasuradb_city_bool_exp!]
+    _not: hasuradb_city_bool_exp
+    _or: [hasuradb_city_bool_exp!]
+    city: String_comparison_exp
+    cityCode: String_comparison_exp
+    id: uuid_comparison_exp
+    postalAreas: hasuradb_postal_area_bool_exp
+    region: hasuradb_region_bool_exp
+    regionCode: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.city"
+  """
+  input hasuradb_city_max_order_by {
+    city: order_by
+    cityCode: order_by
+    id: order_by
+    regionCode: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.city"
+  """
+  input hasuradb_city_min_order_by {
+    city: order_by
+    cityCode: order_by
+    id: order_by
+    regionCode: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.city"."""
+  input hasuradb_city_order_by {
+    city: order_by
+    cityCode: order_by
+    id: order_by
+    postalAreas_aggregate: hasuradb_postal_area_aggregate_order_by
+    region: hasuradb_region_order_by
+    regionCode: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.city"
+  """
+  enum hasuradb_city_select_column {
+    """column name"""
+    city
+  
+    """column name"""
+    cityCode
+  
+    """column name"""
+    id
+  
+    """column name"""
+    regionCode
+  }
+  
+  """
+  columns and relationships of "hasuradb.company"
+  """
+  type hasuradb_company {
+    """An object relationship"""
+    businessEntity: hasuradb_business_entity!
+    businessEntityId: uuid!
+  
+    """An object relationship"""
+    businessHours: hasuradb_business_hours
+    businessHoursId: uuid
+    businessName: String
+  
+    """An array relationship"""
+    contactDetails(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_contact_details_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_contact_details_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_contact_details_bool_exp
+    ): [hasuradb_contact_details!]!
+    createdAt: timestamptz!
+    description: String
+    id: uuid!
+    logoThumbnailUrl: String
+    logoUrl: String
+    officialName: String!
+  
+    """An array relationship"""
+    postalAddresses(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_address_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_address_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_address_bool_exp
+    ): [hasuradb_postal_address!]!
+  
+    """An array relationship"""
+    products(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_bool_exp
+    ): [hasuradb_product!]!
+  
+    """An object relationship"""
+    socialMedia: hasuradb_social_media
+  
+    """An array relationship"""
+    socialMediaLinks(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_company_social_media_links_compatibility_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_company_social_media_links_compatibility_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_company_social_media_links_compatibility_view_bool_exp
+    ): [hasuradb_company_social_media_links_compatibility_view!]!
+    updatedAt: timestamptz!
+    webshopUrl: String
+    websiteUrl: String
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.company"
+  """
+  input hasuradb_company_aggregate_order_by {
+    count: order_by
+    max: hasuradb_company_max_order_by
+    min: hasuradb_company_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.company". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_company_bool_exp {
+    _and: [hasuradb_company_bool_exp!]
+    _not: hasuradb_company_bool_exp
+    _or: [hasuradb_company_bool_exp!]
+    businessEntity: hasuradb_business_entity_bool_exp
+    businessEntityId: uuid_comparison_exp
+    businessHours: hasuradb_business_hours_bool_exp
+    businessHoursId: uuid_comparison_exp
+    businessName: String_comparison_exp
+    contactDetails: hasuradb_contact_details_bool_exp
+    createdAt: timestamptz_comparison_exp
+    description: String_comparison_exp
+    id: uuid_comparison_exp
+    logoThumbnailUrl: String_comparison_exp
+    logoUrl: String_comparison_exp
+    officialName: String_comparison_exp
+    postalAddresses: hasuradb_postal_address_bool_exp
+    products: hasuradb_product_bool_exp
+    socialMedia: hasuradb_social_media_bool_exp
+    socialMediaLinks: hasuradb_company_social_media_links_compatibility_view_bool_exp
+    updatedAt: timestamptz_comparison_exp
+    webshopUrl: String_comparison_exp
+    websiteUrl: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.company"
+  """
+  input hasuradb_company_max_order_by {
+    businessEntityId: order_by
+    businessHoursId: order_by
+    businessName: order_by
+    createdAt: order_by
+    description: order_by
+    id: order_by
+    logoThumbnailUrl: order_by
+    logoUrl: order_by
+    officialName: order_by
+    updatedAt: order_by
+    webshopUrl: order_by
+    websiteUrl: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.company"
+  """
+  input hasuradb_company_min_order_by {
+    businessEntityId: order_by
+    businessHoursId: order_by
+    businessName: order_by
+    createdAt: order_by
+    description: order_by
+    id: order_by
+    logoThumbnailUrl: order_by
+    logoUrl: order_by
+    officialName: order_by
+    updatedAt: order_by
+    webshopUrl: order_by
+    websiteUrl: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.company"."""
+  input hasuradb_company_order_by {
+    businessEntity: hasuradb_business_entity_order_by
+    businessEntityId: order_by
+    businessHours: hasuradb_business_hours_order_by
+    businessHoursId: order_by
+    businessName: order_by
+    contactDetails_aggregate: hasuradb_contact_details_aggregate_order_by
+    createdAt: order_by
+    description: order_by
+    id: order_by
+    logoThumbnailUrl: order_by
+    logoUrl: order_by
+    officialName: order_by
+    postalAddresses_aggregate: hasuradb_postal_address_aggregate_order_by
+    products_aggregate: hasuradb_product_aggregate_order_by
+    socialMedia: hasuradb_social_media_order_by
+    socialMediaLinks_aggregate: hasuradb_company_social_media_links_compatibility_view_aggregate_order_by
+    updatedAt: order_by
+    webshopUrl: order_by
+    websiteUrl: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.company"
+  """
+  enum hasuradb_company_select_column {
+    """column name"""
+    businessEntityId
+  
+    """column name"""
+    businessHoursId
+  
+    """column name"""
+    businessName
+  
+    """column name"""
+    createdAt
+  
+    """column name"""
+    description
+  
+    """column name"""
+    id
+  
+    """column name"""
+    logoThumbnailUrl
+  
+    """column name"""
+    logoUrl
+  
+    """column name"""
+    officialName
+  
+    """column name"""
+    updatedAt
+  
+    """column name"""
+    webshopUrl
+  
+    """column name"""
+    websiteUrl
+  }
+  
+  """
+  columns and relationships of "hasuradb.company_social_media_links_compatibility_view"
+  """
+  type hasuradb_company_social_media_links_compatibility_view {
+    """An object relationship"""
+    company: hasuradb_company
+    companyId: uuid
+    id: uuid
+    linkType: String
+    socialMediaId: uuid
+    url: String
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.company_social_media_links_compatibility_view"
+  """
+  input hasuradb_company_social_media_links_compatibility_view_aggregate_order_by {
+    count: order_by
+    max: hasuradb_company_social_media_links_compatibility_view_max_order_by
+    min: hasuradb_company_social_media_links_compatibility_view_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.company_social_media_links_compatibility_view". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_company_social_media_links_compatibility_view_bool_exp {
+    _and: [hasuradb_company_social_media_links_compatibility_view_bool_exp!]
+    _not: hasuradb_company_social_media_links_compatibility_view_bool_exp
+    _or: [hasuradb_company_social_media_links_compatibility_view_bool_exp!]
+    company: hasuradb_company_bool_exp
+    companyId: uuid_comparison_exp
+    id: uuid_comparison_exp
+    linkType: String_comparison_exp
+    socialMediaId: uuid_comparison_exp
+    url: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.company_social_media_links_compatibility_view"
+  """
+  input hasuradb_company_social_media_links_compatibility_view_max_order_by {
+    companyId: order_by
+    id: order_by
+    linkType: order_by
+    socialMediaId: order_by
+    url: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.company_social_media_links_compatibility_view"
+  """
+  input hasuradb_company_social_media_links_compatibility_view_min_order_by {
+    companyId: order_by
+    id: order_by
+    linkType: order_by
+    socialMediaId: order_by
+    url: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.company_social_media_links_compatibility_view".
+  """
+  input hasuradb_company_social_media_links_compatibility_view_order_by {
+    company: hasuradb_company_order_by
+    companyId: order_by
+    id: order_by
+    linkType: order_by
+    socialMediaId: order_by
+    url: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.company_social_media_links_compatibility_view"
+  """
+  enum hasuradb_company_social_media_links_compatibility_view_select_column {
+    """column name"""
+    companyId
+  
+    """column name"""
+    id
+  
+    """column name"""
+    linkType
+  
+    """column name"""
+    socialMediaId
+  
+    """column name"""
+    url
+  }
+  
+  """
+  columns and relationships of "hasuradb.contact_details"
+  """
+  type hasuradb_contact_details {
+    """An object relationship"""
+    company: hasuradb_company
+    companyId: uuid
+    email: String!
+    id: uuid!
+    phone: String!
+  
+    """An object relationship"""
+    product: hasuradb_product
+    productId: uuid
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.contact_details"
+  """
+  input hasuradb_contact_details_aggregate_order_by {
+    count: order_by
+    max: hasuradb_contact_details_max_order_by
+    min: hasuradb_contact_details_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.contact_details". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_contact_details_bool_exp {
+    _and: [hasuradb_contact_details_bool_exp!]
+    _not: hasuradb_contact_details_bool_exp
+    _or: [hasuradb_contact_details_bool_exp!]
+    company: hasuradb_company_bool_exp
+    companyId: uuid_comparison_exp
+    email: String_comparison_exp
+    id: uuid_comparison_exp
+    phone: String_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.contact_details"
+  """
+  input hasuradb_contact_details_max_order_by {
+    companyId: order_by
+    email: order_by
+    id: order_by
+    phone: order_by
+    productId: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.contact_details"
+  """
+  input hasuradb_contact_details_min_order_by {
+    companyId: order_by
+    email: order_by
+    id: order_by
+    phone: order_by
+    productId: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.contact_details"."""
+  input hasuradb_contact_details_order_by {
+    company: hasuradb_company_order_by
+    companyId: order_by
+    email: order_by
+    id: order_by
+    phone: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.contact_details"
+  """
+  enum hasuradb_contact_details_select_column {
+    """column name"""
+    companyId
+  
+    """column name"""
+    email
+  
+    """column name"""
+    id
+  
+    """column name"""
+    phone
+  
+    """column name"""
+    productId
+  }
+  
+  input hasuradb_dmo_products_args {
+    dmo_areas: _uuid
+  }
+  
+  """
+  columns and relationships of "hasuradb.grouped_product_view"
+  """
+  type hasuradb_grouped_product_view {
+    accessible: Boolean
+  
+    """An object relationship"""
+    businessHours: hasuradb_business_hours
+    businessHoursId: uuid
+  
+    """An object relationship"""
+    company: hasuradb_company
+    companyId: uuid
+  
+    """An array relationship"""
+    contactDetails(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_contact_details_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_contact_details_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_contact_details_bool_exp
+    ): [hasuradb_contact_details!]!
+    createdAt: timestamptz
+    externalSource: String
+    id: uuid
+  
+    """An array relationship"""
+    openingHours(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_opening_hours_compatibility_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_opening_hours_compatibility_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_opening_hours_compatibility_view_bool_exp
+    ): [hasuradb_opening_hours_compatibility_view!]!
+  
+    """An array relationship"""
+    postalAddresses(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_address_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_address_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_address_bool_exp
+    ): [hasuradb_postal_address!]!
+  
+    """An array relationship"""
+    productAvailabilities(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_bool_exp
+    ): [hasuradb_product_availability!]!
+  
+    """An array relationship"""
+    productAvailabilityLanguages(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_language_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_language_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_language_bool_exp
+    ): [hasuradb_product_availability_language!]!
+  
+    """An array relationship"""
+    productAvailableMonths(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_available_months_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_available_months_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_available_months_bool_exp
+    ): [hasuradb_product_available_months!]!
+  
+    """An array relationship"""
+    productCapacities(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_capacity_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_capacity_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_capacity_bool_exp
+    ): [hasuradb_product_capacity!]!
+  
+    """An array relationship"""
+    productCertificates(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_certificate_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_certificate_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_certificate_bool_exp
+    ): [hasuradb_product_certificate!]!
+  
+    """An array relationship"""
+    productDuration(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_duration_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_duration_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_duration_bool_exp
+    ): [hasuradb_product_duration!]!
+  
+    """An array relationship"""
+    productImages(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_image_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_image_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_image_bool_exp
+    ): [hasuradb_product_image!]!
+  
+    """An array relationship"""
+    productInformations(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_information_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_information_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_information_bool_exp
+    ): [hasuradb_product_information!]!
+  
+    """An array relationship"""
+    productPricings(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_pricing_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_pricing_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_pricing_bool_exp
+    ): [hasuradb_product_pricing!]!
+  
+    """An array relationship"""
+    productTags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_tag_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_tag_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_tag_bool_exp
+    ): [hasuradb_product_tag!]!
+  
+    """An array relationship"""
+    productTargetGroups(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_target_group_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_target_group_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_target_group_bool_exp
+    ): [hasuradb_product_target_group!]!
+  
+    """An array relationship"""
+    productVideos(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_video_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_video_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_video_bool_exp
+    ): [hasuradb_product_video!]!
+    publishingId: uuid
+  
+    """An object relationship"""
+    socialMedia: hasuradb_social_media
+    socialMediaId: uuid
+    type: String
+    updatedAt: timestamptz
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.grouped_product_view". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_grouped_product_view_bool_exp {
+    _and: [hasuradb_grouped_product_view_bool_exp!]
+    _not: hasuradb_grouped_product_view_bool_exp
+    _or: [hasuradb_grouped_product_view_bool_exp!]
+    accessible: Boolean_comparison_exp
+    businessHours: hasuradb_business_hours_bool_exp
+    businessHoursId: uuid_comparison_exp
+    company: hasuradb_company_bool_exp
+    companyId: uuid_comparison_exp
+    contactDetails: hasuradb_contact_details_bool_exp
+    createdAt: timestamptz_comparison_exp
+    externalSource: String_comparison_exp
+    id: uuid_comparison_exp
+    openingHours: hasuradb_opening_hours_compatibility_view_bool_exp
+    postalAddresses: hasuradb_postal_address_bool_exp
+    productAvailabilities: hasuradb_product_availability_bool_exp
+    productAvailabilityLanguages: hasuradb_product_availability_language_bool_exp
+    productAvailableMonths: hasuradb_product_available_months_bool_exp
+    productCapacities: hasuradb_product_capacity_bool_exp
+    productCertificates: hasuradb_product_certificate_bool_exp
+    productDuration: hasuradb_product_duration_bool_exp
+    productImages: hasuradb_product_image_bool_exp
+    productInformations: hasuradb_product_information_bool_exp
+    productPricings: hasuradb_product_pricing_bool_exp
+    productTags: hasuradb_product_tag_bool_exp
+    productTargetGroups: hasuradb_product_target_group_bool_exp
+    productVideos: hasuradb_product_video_bool_exp
+    publishingId: uuid_comparison_exp
+    socialMedia: hasuradb_social_media_bool_exp
+    socialMediaId: uuid_comparison_exp
+    type: String_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.grouped_product_view".
+  """
+  input hasuradb_grouped_product_view_order_by {
+    accessible: order_by
+    businessHours: hasuradb_business_hours_order_by
+    businessHoursId: order_by
+    company: hasuradb_company_order_by
+    companyId: order_by
+    contactDetails_aggregate: hasuradb_contact_details_aggregate_order_by
+    createdAt: order_by
+    externalSource: order_by
+    id: order_by
+    openingHours_aggregate: hasuradb_opening_hours_compatibility_view_aggregate_order_by
+    postalAddresses_aggregate: hasuradb_postal_address_aggregate_order_by
+    productAvailabilities_aggregate: hasuradb_product_availability_aggregate_order_by
+    productAvailabilityLanguages_aggregate: hasuradb_product_availability_language_aggregate_order_by
+    productAvailableMonths_aggregate: hasuradb_product_available_months_aggregate_order_by
+    productCapacities_aggregate: hasuradb_product_capacity_aggregate_order_by
+    productCertificates_aggregate: hasuradb_product_certificate_aggregate_order_by
+    productDuration_aggregate: hasuradb_product_duration_aggregate_order_by
+    productImages_aggregate: hasuradb_product_image_aggregate_order_by
+    productInformations_aggregate: hasuradb_product_information_aggregate_order_by
+    productPricings_aggregate: hasuradb_product_pricing_aggregate_order_by
+    productTags_aggregate: hasuradb_product_tag_aggregate_order_by
+    productTargetGroups_aggregate: hasuradb_product_target_group_aggregate_order_by
+    productVideos_aggregate: hasuradb_product_video_aggregate_order_by
+    publishingId: order_by
+    socialMedia: hasuradb_social_media_order_by
+    socialMediaId: order_by
+    type: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.grouped_product_view"
+  """
+  enum hasuradb_grouped_product_view_select_column {
+    """column name"""
+    accessible
+  
+    """column name"""
+    businessHoursId
+  
+    """column name"""
+    companyId
+  
+    """column name"""
+    createdAt
+  
+    """column name"""
+    externalSource
+  
+    """column name"""
+    id
+  
+    """column name"""
+    publishingId
+  
+    """column name"""
+    socialMediaId
+  
+    """column name"""
+    type
+  
+    """column name"""
+    updatedAt
+  }
+  
+  input hasuradb_grouped_products_args {
+    publishing_id: uuid
+  }
+  
+  enum hasuradb_image_orientation_enum {
+    landscape
+    portrait
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_image_orientation_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_image_orientation_enum_comparison_exp {
+    _eq: hasuradb_image_orientation_enum
+    _in: [hasuradb_image_orientation_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_image_orientation_enum
+    _nin: [hasuradb_image_orientation_enum!]
+  }
+  
+  enum hasuradb_languages_enum {
+    ar
+    da
+    de
+    en
+    es
+    et
+    fi
+    fr
+    it
+    ja
+    ko
+    nl
+    no
+    pl
+    pt
+    ru
+    sv
+    zh
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_languages_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_languages_enum_comparison_exp {
+    _eq: hasuradb_languages_enum
+    _in: [hasuradb_languages_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_languages_enum
+    _nin: [hasuradb_languages_enum!]
+  }
+  
+  enum hasuradb_months_enum {
+    april
+    august
+    december
+    february
+    january
+    july
+    june
+    march
+    may
+    november
+    october
+    september
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_months_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_months_enum_comparison_exp {
+    _eq: hasuradb_months_enum
+    _in: [hasuradb_months_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_months_enum
+    _nin: [hasuradb_months_enum!]
+  }
+  
+  """
+  columns and relationships of "hasuradb.opening_hours"
+  """
+  type hasuradb_opening_hours {
+    businessHoursPeriodId: uuid!
+    closes: time
+    date: date
+    id: uuid!
+    open: Boolean!
+    opens: time
+    updatedAt: timestamptz
+    weekday: hasuradb_weekdays_enum!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.opening_hours"
+  """
+  input hasuradb_opening_hours_aggregate_order_by {
+    count: order_by
+    max: hasuradb_opening_hours_max_order_by
+    min: hasuradb_opening_hours_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.opening_hours". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_opening_hours_bool_exp {
+    _and: [hasuradb_opening_hours_bool_exp!]
+    _not: hasuradb_opening_hours_bool_exp
+    _or: [hasuradb_opening_hours_bool_exp!]
+    businessHoursPeriodId: uuid_comparison_exp
+    closes: time_comparison_exp
+    date: date_comparison_exp
+    id: uuid_comparison_exp
+    open: Boolean_comparison_exp
+    opens: time_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+    weekday: hasuradb_weekdays_enum_comparison_exp
+  }
+  
+  """
+  columns and relationships of "hasuradb.opening_hours_compatibility_view"
+  """
+  type hasuradb_opening_hours_compatibility_view {
+    closes: time
+    id: uuid
+    open: Boolean
+  
+    """
+    A computed field, executes function "hasuradb.opening_hours_open_from"
+    """
+    openFrom: timetz
+  
+    """
+    A computed field, executes function "hasuradb.opening_hours_open_to"
+    """
+    openTo: timetz
+    opens: time
+  
+    """An object relationship"""
+    product: hasuradb_product
+    productId: uuid
+    updatedAt: timestamptz
+    weekday: String
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.opening_hours_compatibility_view"
+  """
+  input hasuradb_opening_hours_compatibility_view_aggregate_order_by {
+    count: order_by
+    max: hasuradb_opening_hours_compatibility_view_max_order_by
+    min: hasuradb_opening_hours_compatibility_view_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.opening_hours_compatibility_view". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_opening_hours_compatibility_view_bool_exp {
+    _and: [hasuradb_opening_hours_compatibility_view_bool_exp!]
+    _not: hasuradb_opening_hours_compatibility_view_bool_exp
+    _or: [hasuradb_opening_hours_compatibility_view_bool_exp!]
+    closes: time_comparison_exp
+    id: uuid_comparison_exp
+    open: Boolean_comparison_exp
+    openFrom: timetz_comparison_exp
+    openTo: timetz_comparison_exp
+    opens: time_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+    weekday: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.opening_hours_compatibility_view"
+  """
+  input hasuradb_opening_hours_compatibility_view_max_order_by {
+    id: order_by
+    productId: order_by
+    updatedAt: order_by
+    weekday: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.opening_hours_compatibility_view"
+  """
+  input hasuradb_opening_hours_compatibility_view_min_order_by {
+    id: order_by
+    productId: order_by
+    updatedAt: order_by
+    weekday: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.opening_hours_compatibility_view".
+  """
+  input hasuradb_opening_hours_compatibility_view_order_by {
+    closes: order_by
+    id: order_by
+    open: order_by
+    openFrom: order_by
+    openTo: order_by
+    opens: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    updatedAt: order_by
+    weekday: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.opening_hours_compatibility_view"
+  """
+  enum hasuradb_opening_hours_compatibility_view_select_column {
+    """column name"""
+    closes
+  
+    """column name"""
+    id
+  
+    """column name"""
+    open
+  
+    """column name"""
+    opens
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    updatedAt
+  
+    """column name"""
+    weekday
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.opening_hours"
+  """
+  input hasuradb_opening_hours_max_order_by {
+    businessHoursPeriodId: order_by
+    date: order_by
+    id: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.opening_hours"
+  """
+  input hasuradb_opening_hours_min_order_by {
+    businessHoursPeriodId: order_by
+    date: order_by
+    id: order_by
+    updatedAt: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.opening_hours"."""
+  input hasuradb_opening_hours_order_by {
+    businessHoursPeriodId: order_by
+    closes: order_by
+    date: order_by
+    id: order_by
+    open: order_by
+    opens: order_by
+    updatedAt: order_by
+    weekday: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.opening_hours"
+  """
+  enum hasuradb_opening_hours_select_column {
+    """column name"""
+    businessHoursPeriodId
+  
+    """column name"""
+    closes
+  
+    """column name"""
+    date
+  
+    """column name"""
+    id
+  
+    """column name"""
+    open
+  
+    """column name"""
+    opens
+  
+    """column name"""
+    updatedAt
+  
+    """column name"""
+    weekday
+  }
+  
+  """
+  columns and relationships of "hasuradb.postal_address"
+  """
+  type hasuradb_postal_address {
+    city: String!
+  
+    """An object relationship"""
+    company: hasuradb_company
+    companyId: uuid
+    id: uuid!
+    location: point
+  
+    """An object relationship"""
+    postalArea: hasuradb_postal_area
+    postalCode: String
+  
+    """An object relationship"""
+    product: hasuradb_product
+    productId: uuid
+    streetName: String!
+    updatedAt: timestamptz!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.postal_address"
+  """
+  input hasuradb_postal_address_aggregate_order_by {
+    count: order_by
+    max: hasuradb_postal_address_max_order_by
+    min: hasuradb_postal_address_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.postal_address". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_postal_address_bool_exp {
+    _and: [hasuradb_postal_address_bool_exp!]
+    _not: hasuradb_postal_address_bool_exp
+    _or: [hasuradb_postal_address_bool_exp!]
+    city: String_comparison_exp
+    company: hasuradb_company_bool_exp
+    companyId: uuid_comparison_exp
+    id: uuid_comparison_exp
+    location: point_comparison_exp
+    postalArea: hasuradb_postal_area_bool_exp
+    postalCode: String_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    streetName: String_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.postal_address"
+  """
+  input hasuradb_postal_address_max_order_by {
+    city: order_by
+    companyId: order_by
+    id: order_by
+    postalCode: order_by
+    productId: order_by
+    streetName: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.postal_address"
+  """
+  input hasuradb_postal_address_min_order_by {
+    city: order_by
+    companyId: order_by
+    id: order_by
+    postalCode: order_by
+    productId: order_by
+    streetName: order_by
+    updatedAt: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.postal_address"."""
+  input hasuradb_postal_address_order_by {
+    city: order_by
+    company: hasuradb_company_order_by
+    companyId: order_by
+    id: order_by
+    location: order_by
+    postalArea: hasuradb_postal_area_order_by
+    postalCode: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    streetName: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.postal_address"
+  """
+  enum hasuradb_postal_address_select_column {
+    """column name"""
+    city
+  
+    """column name"""
+    companyId
+  
+    """column name"""
+    id
+  
+    """column name"""
+    location
+  
+    """column name"""
+    postalCode
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    streetName
+  
+    """column name"""
+    updatedAt
+  }
+  
+  """
+  columns and relationships of "hasuradb.postal_area"
+  """
+  type hasuradb_postal_area {
+    """An object relationship"""
+    city: hasuradb_city!
+    cityCode: String!
+    id: uuid!
+    postalArea: String!
+    postalCode: String!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.postal_area"
+  """
+  input hasuradb_postal_area_aggregate_order_by {
+    count: order_by
+    max: hasuradb_postal_area_max_order_by
+    min: hasuradb_postal_area_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.postal_area". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_postal_area_bool_exp {
+    _and: [hasuradb_postal_area_bool_exp!]
+    _not: hasuradb_postal_area_bool_exp
+    _or: [hasuradb_postal_area_bool_exp!]
+    city: hasuradb_city_bool_exp
+    cityCode: String_comparison_exp
+    id: uuid_comparison_exp
+    postalArea: String_comparison_exp
+    postalCode: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.postal_area"
+  """
+  input hasuradb_postal_area_max_order_by {
+    cityCode: order_by
+    id: order_by
+    postalArea: order_by
+    postalCode: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.postal_area"
+  """
+  input hasuradb_postal_area_min_order_by {
+    cityCode: order_by
+    id: order_by
+    postalArea: order_by
+    postalCode: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.postal_area"."""
+  input hasuradb_postal_area_order_by {
+    city: hasuradb_city_order_by
+    cityCode: order_by
+    id: order_by
+    postalArea: order_by
+    postalCode: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.postal_area"
+  """
+  enum hasuradb_postal_area_select_column {
+    """column name"""
+    cityCode
+  
+    """column name"""
+    id
+  
+    """column name"""
+    postalArea
+  
+    """column name"""
+    postalCode
+  }
+  
+  enum hasuradb_pricing_types_enum {
+    chargeable
+    free
+    unknown
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_pricing_types_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_pricing_types_enum_comparison_exp {
+    _eq: hasuradb_pricing_types_enum
+    _in: [hasuradb_pricing_types_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_pricing_types_enum
+    _nin: [hasuradb_pricing_types_enum!]
+  }
+  
+  enum hasuradb_pricing_units_enum {
+    day
+    hour
+    person
+    week
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_pricing_units_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_pricing_units_enum_comparison_exp {
+    _eq: hasuradb_pricing_units_enum
+    _in: [hasuradb_pricing_units_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_pricing_units_enum
+    _nin: [hasuradb_pricing_units_enum!]
+  }
+  
+  """
+  columns and relationships of "hasuradb.product"
+  """
+  type hasuradb_product {
+    accessible: Boolean
+  
+    """An object relationship"""
+    businessHours: hasuradb_business_hours!
+    businessHoursId: uuid!
+  
+    """An object relationship"""
+    company: hasuradb_company!
+    companyId: uuid!
+  
+    """An array relationship"""
+    contactDetails(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_contact_details_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_contact_details_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_contact_details_bool_exp
+    ): [hasuradb_contact_details!]!
+    createdAt: timestamptz!
+  
+    """
+    A computed field, executes function "hasuradb.calculate_duration"
+    """
+    duration: String
+  
+    """
+    A computed field, executes function "hasuradb.calculate_duration_type"
+    """
+    durationType: String
+    externalSource: String
+    id: uuid!
+  
+    """An array relationship"""
+    openingHours(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_opening_hours_compatibility_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_opening_hours_compatibility_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_opening_hours_compatibility_view_bool_exp
+    ): [hasuradb_opening_hours_compatibility_view!]!
+  
+    """An array relationship"""
+    postalAddresses(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_address_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_address_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_address_bool_exp
+    ): [hasuradb_postal_address!]!
+  
+    """An array relationship"""
+    productAvailabilities(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_bool_exp
+    ): [hasuradb_product_availability!]!
+  
+    """An array relationship"""
+    productAvailabilityLanguages(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_language_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_language_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_language_bool_exp
+    ): [hasuradb_product_availability_language!]!
+  
+    """An array relationship"""
+    productAvailableMonths(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_available_months_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_available_months_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_available_months_bool_exp
+    ): [hasuradb_product_available_months!]!
+  
+    """An array relationship"""
+    productCapacities(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_capacity_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_capacity_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_capacity_bool_exp
+    ): [hasuradb_product_capacity!]!
+  
+    """An array relationship"""
+    productCertificates(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_certificate_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_certificate_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_certificate_bool_exp
+    ): [hasuradb_product_certificate!]!
+  
+    """An array relationship"""
+    productDuration(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_duration_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_duration_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_duration_bool_exp
+    ): [hasuradb_product_duration!]!
+  
+    """An array relationship"""
+    productImages(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_image_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_image_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_image_bool_exp
+    ): [hasuradb_product_image!]!
+  
+    """An array relationship"""
+    productInformations(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_information_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_information_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_information_bool_exp
+    ): [hasuradb_product_information!]!
+  
+    """An array relationship"""
+    productPricings(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_pricing_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_pricing_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_pricing_bool_exp
+    ): [hasuradb_product_pricing!]!
+  
+    """An array relationship"""
+    productTags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_tag_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_tag_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_tag_bool_exp
+    ): [hasuradb_product_tag!]!
+  
+    """An array relationship"""
+    productTargetGroups(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_target_group_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_target_group_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_target_group_bool_exp
+    ): [hasuradb_product_target_group!]!
+  
+    """An array relationship"""
+    productVideos(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_video_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_video_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_video_bool_exp
+    ): [hasuradb_product_video!]!
+  
+    """An object relationship"""
+    socialMedia: hasuradb_social_media
+    type: hasuradb_product_types_enum!
+    updatedAt: timestamptz!
+    updatedByUser: UserProfile
+  
+    """
+    A computed field, executes function "hasuradb.prod_info_url_en"
+    """
+    urlPrimary: String
+  
+    """
+    A computed field, executes function "hasuradb.prod_info_webshop_url_en"
+    """
+    webshopUrlPrimary: String
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product"
+  """
+  input hasuradb_product_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_max_order_by
+    min: hasuradb_product_min_order_by
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_availability"
+  """
+  type hasuradb_product_availability {
+    doorsOpenAt: timetz
+    endDate: date
+    endTime: timetz
+    id: uuid!
+    nroOfTickets: Int
+  
+    """An object relationship"""
+    product: hasuradb_product
+    productId: uuid
+    startDate: date
+    startTime: timetz
+    transportationAvailability: hasuradb_transportation_availability_enum
+    updatedAt: timestamptz!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_aggregate_order_by {
+    avg: hasuradb_product_availability_avg_order_by
+    count: order_by
+    max: hasuradb_product_availability_max_order_by
+    min: hasuradb_product_availability_min_order_by
+    stddev: hasuradb_product_availability_stddev_order_by
+    stddev_pop: hasuradb_product_availability_stddev_pop_order_by
+    stddev_samp: hasuradb_product_availability_stddev_samp_order_by
+    sum: hasuradb_product_availability_sum_order_by
+    var_pop: hasuradb_product_availability_var_pop_order_by
+    var_samp: hasuradb_product_availability_var_samp_order_by
+    variance: hasuradb_product_availability_variance_order_by
+  }
+  
+  """
+  order by avg() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_avg_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_availability". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_availability_bool_exp {
+    _and: [hasuradb_product_availability_bool_exp!]
+    _not: hasuradb_product_availability_bool_exp
+    _or: [hasuradb_product_availability_bool_exp!]
+    doorsOpenAt: timetz_comparison_exp
+    endDate: date_comparison_exp
+    endTime: timetz_comparison_exp
+    id: uuid_comparison_exp
+    nroOfTickets: Int_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    startDate: date_comparison_exp
+    startTime: timetz_comparison_exp
+    transportationAvailability: hasuradb_transportation_availability_enum_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_availability_language"
+  """
+  type hasuradb_product_availability_language {
+    id: uuid!
+    language: hasuradb_languages_enum
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_availability_language"
+  """
+  input hasuradb_product_availability_language_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_availability_language_max_order_by
+    min: hasuradb_product_availability_language_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_availability_language". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_availability_language_bool_exp {
+    _and: [hasuradb_product_availability_language_bool_exp!]
+    _not: hasuradb_product_availability_language_bool_exp
+    _or: [hasuradb_product_availability_language_bool_exp!]
+    id: uuid_comparison_exp
+    language: hasuradb_languages_enum_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_availability_language"
+  """
+  input hasuradb_product_availability_language_max_order_by {
+    id: order_by
+    productId: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_availability_language"
+  """
+  input hasuradb_product_availability_language_min_order_by {
+    id: order_by
+    productId: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.product_availability_language".
+  """
+  input hasuradb_product_availability_language_order_by {
+    id: order_by
+    language: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_availability_language"
+  """
+  enum hasuradb_product_availability_language_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    language
+  
+    """column name"""
+    productId
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_max_order_by {
+    doorsOpenAt: order_by
+    endDate: order_by
+    endTime: order_by
+    id: order_by
+    nroOfTickets: order_by
+    productId: order_by
+    startDate: order_by
+    startTime: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_min_order_by {
+    doorsOpenAt: order_by
+    endDate: order_by
+    endTime: order_by
+    id: order_by
+    nroOfTickets: order_by
+    productId: order_by
+    startDate: order_by
+    startTime: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.product_availability".
+  """
+  input hasuradb_product_availability_order_by {
+    doorsOpenAt: order_by
+    endDate: order_by
+    endTime: order_by
+    id: order_by
+    nroOfTickets: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    startDate: order_by
+    startTime: order_by
+    transportationAvailability: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_availability"
+  """
+  enum hasuradb_product_availability_select_column {
+    """column name"""
+    doorsOpenAt
+  
+    """column name"""
+    endDate
+  
+    """column name"""
+    endTime
+  
+    """column name"""
+    id
+  
+    """column name"""
+    nroOfTickets
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    startDate
+  
+    """column name"""
+    startTime
+  
+    """column name"""
+    transportationAvailability
+  
+    """column name"""
+    updatedAt
+  }
+  
+  """
+  order by stddev() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_stddev_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  order by stddev_pop() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_stddev_pop_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  order by stddev_samp() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_stddev_samp_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  order by sum() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_sum_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  order by var_pop() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_var_pop_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  order by var_samp() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_var_samp_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  order by variance() on columns of table "hasuradb.product_availability"
+  """
+  input hasuradb_product_availability_variance_order_by {
+    nroOfTickets: order_by
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_available_months"
+  """
+  type hasuradb_product_available_months {
+    id: uuid!
+    month: hasuradb_months_enum
+  
+    """An object relationship"""
+    product: hasuradb_product
+    productId: uuid
+    updatedAt: timestamptz
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_available_months"
+  """
+  input hasuradb_product_available_months_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_available_months_max_order_by
+    min: hasuradb_product_available_months_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_available_months". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_available_months_bool_exp {
+    _and: [hasuradb_product_available_months_bool_exp!]
+    _not: hasuradb_product_available_months_bool_exp
+    _or: [hasuradb_product_available_months_bool_exp!]
+    id: uuid_comparison_exp
+    month: hasuradb_months_enum_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_available_months"
+  """
+  input hasuradb_product_available_months_max_order_by {
+    id: order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_available_months"
+  """
+  input hasuradb_product_available_months_min_order_by {
+    id: order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.product_available_months".
+  """
+  input hasuradb_product_available_months_order_by {
+    id: order_by
+    month: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_available_months"
+  """
+  enum hasuradb_product_available_months_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    month
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    updatedAt
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_bool_exp {
+    _and: [hasuradb_product_bool_exp!]
+    _not: hasuradb_product_bool_exp
+    _or: [hasuradb_product_bool_exp!]
+    accessible: Boolean_comparison_exp
+    businessHours: hasuradb_business_hours_bool_exp
+    businessHoursId: uuid_comparison_exp
+    company: hasuradb_company_bool_exp
+    companyId: uuid_comparison_exp
+    contactDetails: hasuradb_contact_details_bool_exp
+    createdAt: timestamptz_comparison_exp
+    duration: String_comparison_exp
+    durationType: String_comparison_exp
+    externalSource: String_comparison_exp
+    id: uuid_comparison_exp
+    openingHours: hasuradb_opening_hours_compatibility_view_bool_exp
+    postalAddresses: hasuradb_postal_address_bool_exp
+    productAvailabilities: hasuradb_product_availability_bool_exp
+    productAvailabilityLanguages: hasuradb_product_availability_language_bool_exp
+    productAvailableMonths: hasuradb_product_available_months_bool_exp
+    productCapacities: hasuradb_product_capacity_bool_exp
+    productCertificates: hasuradb_product_certificate_bool_exp
+    productDuration: hasuradb_product_duration_bool_exp
+    productImages: hasuradb_product_image_bool_exp
+    productInformations: hasuradb_product_information_bool_exp
+    productPricings: hasuradb_product_pricing_bool_exp
+    productTags: hasuradb_product_tag_bool_exp
+    productTargetGroups: hasuradb_product_target_group_bool_exp
+    productVideos: hasuradb_product_video_bool_exp
+    socialMedia: hasuradb_social_media_bool_exp
+    type: hasuradb_product_types_enum_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+    urlPrimary: String_comparison_exp
+    webshopUrlPrimary: String_comparison_exp
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_capacity"
+  """
+  type hasuradb_product_capacity {
+    id: uuid!
+    max: Int
+    min: Int
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+    updatedAt: timestamptz
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_aggregate_order_by {
+    avg: hasuradb_product_capacity_avg_order_by
+    count: order_by
+    max: hasuradb_product_capacity_max_order_by
+    min: hasuradb_product_capacity_min_order_by
+    stddev: hasuradb_product_capacity_stddev_order_by
+    stddev_pop: hasuradb_product_capacity_stddev_pop_order_by
+    stddev_samp: hasuradb_product_capacity_stddev_samp_order_by
+    sum: hasuradb_product_capacity_sum_order_by
+    var_pop: hasuradb_product_capacity_var_pop_order_by
+    var_samp: hasuradb_product_capacity_var_samp_order_by
+    variance: hasuradb_product_capacity_variance_order_by
+  }
+  
+  """
+  order by avg() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_avg_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_capacity". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_capacity_bool_exp {
+    _and: [hasuradb_product_capacity_bool_exp!]
+    _not: hasuradb_product_capacity_bool_exp
+    _or: [hasuradb_product_capacity_bool_exp!]
+    id: uuid_comparison_exp
+    max: Int_comparison_exp
+    min: Int_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_max_order_by {
+    id: order_by
+    max: order_by
+    min: order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_min_order_by {
+    id: order_by
+    max: order_by
+    min: order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.product_capacity"."""
+  input hasuradb_product_capacity_order_by {
+    id: order_by
+    max: order_by
+    min: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_capacity"
+  """
+  enum hasuradb_product_capacity_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    max
+  
+    """column name"""
+    min
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    updatedAt
+  }
+  
+  """
+  order by stddev() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_stddev_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  order by stddev_pop() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_stddev_pop_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  order by stddev_samp() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_stddev_samp_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  order by sum() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_sum_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  order by var_pop() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_var_pop_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  order by var_samp() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_var_samp_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  order by variance() on columns of table "hasuradb.product_capacity"
+  """
+  input hasuradb_product_capacity_variance_order_by {
+    max: order_by
+    min: order_by
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_certificate"
+  """
+  type hasuradb_product_certificate {
+    certificate: String!
+  
+    """An object relationship"""
+    certificateDetails: hasuradb_certificate!
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_certificate"
+  """
+  input hasuradb_product_certificate_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_certificate_max_order_by
+    min: hasuradb_product_certificate_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_certificate". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_certificate_bool_exp {
+    _and: [hasuradb_product_certificate_bool_exp!]
+    _not: hasuradb_product_certificate_bool_exp
+    _or: [hasuradb_product_certificate_bool_exp!]
+    certificate: String_comparison_exp
+    certificateDetails: hasuradb_certificate_bool_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_certificate"
+  """
+  input hasuradb_product_certificate_max_order_by {
+    certificate: order_by
+    productId: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_certificate"
+  """
+  input hasuradb_product_certificate_min_order_by {
+    certificate: order_by
+    productId: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.product_certificate".
+  """
+  input hasuradb_product_certificate_order_by {
+    certificate: order_by
+    certificateDetails: hasuradb_certificate_order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_certificate"
+  """
+  enum hasuradb_product_certificate_select_column {
+    """column name"""
+    certificate
+  
+    """column name"""
+    productId
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_duration"
+  """
+  type hasuradb_product_duration {
+    days: Int
+    hours: Int
+    id: uuid!
+    minutes: Int
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+    updatedAt: timestamptz!
+    weeks: Int
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_aggregate_order_by {
+    avg: hasuradb_product_duration_avg_order_by
+    count: order_by
+    max: hasuradb_product_duration_max_order_by
+    min: hasuradb_product_duration_min_order_by
+    stddev: hasuradb_product_duration_stddev_order_by
+    stddev_pop: hasuradb_product_duration_stddev_pop_order_by
+    stddev_samp: hasuradb_product_duration_stddev_samp_order_by
+    sum: hasuradb_product_duration_sum_order_by
+    var_pop: hasuradb_product_duration_var_pop_order_by
+    var_samp: hasuradb_product_duration_var_samp_order_by
+    variance: hasuradb_product_duration_variance_order_by
+  }
+  
+  """
+  order by avg() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_avg_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_duration". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_duration_bool_exp {
+    _and: [hasuradb_product_duration_bool_exp!]
+    _not: hasuradb_product_duration_bool_exp
+    _or: [hasuradb_product_duration_bool_exp!]
+    days: Int_comparison_exp
+    hours: Int_comparison_exp
+    id: uuid_comparison_exp
+    minutes: Int_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+    weeks: Int_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_max_order_by {
+    days: order_by
+    hours: order_by
+    id: order_by
+    minutes: order_by
+    productId: order_by
+    updatedAt: order_by
+    weeks: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_min_order_by {
+    days: order_by
+    hours: order_by
+    id: order_by
+    minutes: order_by
+    productId: order_by
+    updatedAt: order_by
+    weeks: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.product_duration"."""
+  input hasuradb_product_duration_order_by {
+    days: order_by
+    hours: order_by
+    id: order_by
+    minutes: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    updatedAt: order_by
+    weeks: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_duration"
+  """
+  enum hasuradb_product_duration_select_column {
+    """column name"""
+    days
+  
+    """column name"""
+    hours
+  
+    """column name"""
+    id
+  
+    """column name"""
+    minutes
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    updatedAt
+  
+    """column name"""
+    weeks
+  }
+  
+  """
+  order by stddev() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_stddev_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  order by stddev_pop() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_stddev_pop_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  order by stddev_samp() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_stddev_samp_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  order by sum() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_sum_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  order by var_pop() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_var_pop_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  order by var_samp() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_var_samp_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  order by variance() on columns of table "hasuradb.product_duration"
+  """
+  input hasuradb_product_duration_variance_order_by {
+    days: order_by
+    hours: order_by
+    minutes: order_by
+    weeks: order_by
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_image"
+  """
+  type hasuradb_product_image {
+    altText: String
+    copyright: String
+    coverPhoto: Boolean
+    filename: String!
+    id: uuid!
+    largeUrl: String!
+    orderIndex: Int
+    orientation: hasuradb_image_orientation_enum
+    originalHeight: Int
+    originalUrl: String!
+    originalWidth: Int
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+    thumbnailUrl: String
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_aggregate_order_by {
+    avg: hasuradb_product_image_avg_order_by
+    count: order_by
+    max: hasuradb_product_image_max_order_by
+    min: hasuradb_product_image_min_order_by
+    stddev: hasuradb_product_image_stddev_order_by
+    stddev_pop: hasuradb_product_image_stddev_pop_order_by
+    stddev_samp: hasuradb_product_image_stddev_samp_order_by
+    sum: hasuradb_product_image_sum_order_by
+    var_pop: hasuradb_product_image_var_pop_order_by
+    var_samp: hasuradb_product_image_var_samp_order_by
+    variance: hasuradb_product_image_variance_order_by
+  }
+  
+  """
+  order by avg() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_avg_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_image". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_image_bool_exp {
+    _and: [hasuradb_product_image_bool_exp!]
+    _not: hasuradb_product_image_bool_exp
+    _or: [hasuradb_product_image_bool_exp!]
+    altText: String_comparison_exp
+    copyright: String_comparison_exp
+    coverPhoto: Boolean_comparison_exp
+    filename: String_comparison_exp
+    id: uuid_comparison_exp
+    largeUrl: String_comparison_exp
+    orderIndex: Int_comparison_exp
+    orientation: hasuradb_image_orientation_enum_comparison_exp
+    originalHeight: Int_comparison_exp
+    originalUrl: String_comparison_exp
+    originalWidth: Int_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    thumbnailUrl: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_max_order_by {
+    altText: order_by
+    copyright: order_by
+    filename: order_by
+    id: order_by
+    largeUrl: order_by
+    orderIndex: order_by
+    originalHeight: order_by
+    originalUrl: order_by
+    originalWidth: order_by
+    productId: order_by
+    thumbnailUrl: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_min_order_by {
+    altText: order_by
+    copyright: order_by
+    filename: order_by
+    id: order_by
+    largeUrl: order_by
+    orderIndex: order_by
+    originalHeight: order_by
+    originalUrl: order_by
+    originalWidth: order_by
+    productId: order_by
+    thumbnailUrl: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.product_image"."""
+  input hasuradb_product_image_order_by {
+    altText: order_by
+    copyright: order_by
+    coverPhoto: order_by
+    filename: order_by
+    id: order_by
+    largeUrl: order_by
+    orderIndex: order_by
+    orientation: order_by
+    originalHeight: order_by
+    originalUrl: order_by
+    originalWidth: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    thumbnailUrl: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_image"
+  """
+  enum hasuradb_product_image_select_column {
+    """column name"""
+    altText
+  
+    """column name"""
+    copyright
+  
+    """column name"""
+    coverPhoto
+  
+    """column name"""
+    filename
+  
+    """column name"""
+    id
+  
+    """column name"""
+    largeUrl
+  
+    """column name"""
+    orderIndex
+  
+    """column name"""
+    orientation
+  
+    """column name"""
+    originalHeight
+  
+    """column name"""
+    originalUrl
+  
+    """column name"""
+    originalWidth
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    thumbnailUrl
+  }
+  
+  """
+  order by stddev() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_stddev_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  order by stddev_pop() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_stddev_pop_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  order by stddev_samp() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_stddev_samp_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  order by sum() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_sum_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  order by var_pop() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_var_pop_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  order by var_samp() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_var_samp_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  order by variance() on columns of table "hasuradb.product_image"
+  """
+  input hasuradb_product_image_variance_order_by {
+    orderIndex: order_by
+    originalHeight: order_by
+    originalWidth: order_by
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_information"
+  """
+  type hasuradb_product_information {
+    description: String
+    id: uuid!
+    language: hasuradb_languages_enum!
+    name: String
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+    productLinkId: uuid
+    updatedAt: timestamptz!
+  
+    """
+    A computed field, executes function "hasuradb.verified_prod_url"
+    """
+    url: String
+  
+    """An object relationship"""
+    verifiedProductLink: hasuradb_verified_link
+  
+    """An object relationship"""
+    verifiedWebshopLink: hasuradb_verified_link
+    webshopLinkId: uuid
+  
+    """
+    A computed field, executes function "hasuradb.verified_prod_webshop_url"
+    """
+    webshopUrl: String
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_information"
+  """
+  input hasuradb_product_information_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_information_max_order_by
+    min: hasuradb_product_information_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_information". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_information_bool_exp {
+    _and: [hasuradb_product_information_bool_exp!]
+    _not: hasuradb_product_information_bool_exp
+    _or: [hasuradb_product_information_bool_exp!]
+    description: String_comparison_exp
+    id: uuid_comparison_exp
+    language: hasuradb_languages_enum_comparison_exp
+    name: String_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    productLinkId: uuid_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+    url: String_comparison_exp
+    verifiedProductLink: hasuradb_verified_link_bool_exp
+    verifiedWebshopLink: hasuradb_verified_link_bool_exp
+    webshopLinkId: uuid_comparison_exp
+    webshopUrl: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_information"
+  """
+  input hasuradb_product_information_max_order_by {
+    description: order_by
+    id: order_by
+    name: order_by
+    productId: order_by
+    productLinkId: order_by
+    updatedAt: order_by
+    webshopLinkId: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_information"
+  """
+  input hasuradb_product_information_min_order_by {
+    description: order_by
+    id: order_by
+    name: order_by
+    productId: order_by
+    productLinkId: order_by
+    updatedAt: order_by
+    webshopLinkId: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.product_information".
+  """
+  input hasuradb_product_information_order_by {
+    description: order_by
+    id: order_by
+    language: order_by
+    name: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    productLinkId: order_by
+    updatedAt: order_by
+    url: order_by
+    verifiedProductLink: hasuradb_verified_link_order_by
+    verifiedWebshopLink: hasuradb_verified_link_order_by
+    webshopLinkId: order_by
+    webshopUrl: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_information"
+  """
+  enum hasuradb_product_information_select_column {
+    """column name"""
+    description
+  
+    """column name"""
+    id
+  
+    """column name"""
+    language
+  
+    """column name"""
+    name
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    productLinkId
+  
+    """column name"""
+    updatedAt
+  
+    """column name"""
+    webshopLinkId
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product"
+  """
+  input hasuradb_product_max_order_by {
+    businessHoursId: order_by
+    companyId: order_by
+    createdAt: order_by
+    externalSource: order_by
+    id: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product"
+  """
+  input hasuradb_product_min_order_by {
+    businessHoursId: order_by
+    companyId: order_by
+    createdAt: order_by
+    externalSource: order_by
+    id: order_by
+    updatedAt: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.product"."""
+  input hasuradb_product_order_by {
+    accessible: order_by
+    businessHours: hasuradb_business_hours_order_by
+    businessHoursId: order_by
+    company: hasuradb_company_order_by
+    companyId: order_by
+    contactDetails_aggregate: hasuradb_contact_details_aggregate_order_by
+    createdAt: order_by
+    duration: order_by
+    durationType: order_by
+    externalSource: order_by
+    id: order_by
+    openingHours_aggregate: hasuradb_opening_hours_compatibility_view_aggregate_order_by
+    postalAddresses_aggregate: hasuradb_postal_address_aggregate_order_by
+    productAvailabilities_aggregate: hasuradb_product_availability_aggregate_order_by
+    productAvailabilityLanguages_aggregate: hasuradb_product_availability_language_aggregate_order_by
+    productAvailableMonths_aggregate: hasuradb_product_available_months_aggregate_order_by
+    productCapacities_aggregate: hasuradb_product_capacity_aggregate_order_by
+    productCertificates_aggregate: hasuradb_product_certificate_aggregate_order_by
+    productDuration_aggregate: hasuradb_product_duration_aggregate_order_by
+    productImages_aggregate: hasuradb_product_image_aggregate_order_by
+    productInformations_aggregate: hasuradb_product_information_aggregate_order_by
+    productPricings_aggregate: hasuradb_product_pricing_aggregate_order_by
+    productTags_aggregate: hasuradb_product_tag_aggregate_order_by
+    productTargetGroups_aggregate: hasuradb_product_target_group_aggregate_order_by
+    productVideos_aggregate: hasuradb_product_video_aggregate_order_by
+    socialMedia: hasuradb_social_media_order_by
+    type: order_by
+    updatedAt: order_by
+    urlPrimary: order_by
+    webshopUrlPrimary: order_by
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_pricing"
+  """
+  type hasuradb_product_pricing {
+    fromPrice: numeric
+    id: uuid!
+    pricingType: hasuradb_pricing_types_enum!
+    pricingUnit: hasuradb_pricing_units_enum
+  
+    """An object relationship"""
+    product: hasuradb_product
+    productId: uuid
+    toPrice: numeric
+    updatedAt: timestamptz!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_aggregate_order_by {
+    avg: hasuradb_product_pricing_avg_order_by
+    count: order_by
+    max: hasuradb_product_pricing_max_order_by
+    min: hasuradb_product_pricing_min_order_by
+    stddev: hasuradb_product_pricing_stddev_order_by
+    stddev_pop: hasuradb_product_pricing_stddev_pop_order_by
+    stddev_samp: hasuradb_product_pricing_stddev_samp_order_by
+    sum: hasuradb_product_pricing_sum_order_by
+    var_pop: hasuradb_product_pricing_var_pop_order_by
+    var_samp: hasuradb_product_pricing_var_samp_order_by
+    variance: hasuradb_product_pricing_variance_order_by
+  }
+  
+  """
+  order by avg() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_avg_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_pricing". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_pricing_bool_exp {
+    _and: [hasuradb_product_pricing_bool_exp!]
+    _not: hasuradb_product_pricing_bool_exp
+    _or: [hasuradb_product_pricing_bool_exp!]
+    fromPrice: numeric_comparison_exp
+    id: uuid_comparison_exp
+    pricingType: hasuradb_pricing_types_enum_comparison_exp
+    pricingUnit: hasuradb_pricing_units_enum_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    toPrice: numeric_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_max_order_by {
+    fromPrice: order_by
+    id: order_by
+    productId: order_by
+    toPrice: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_min_order_by {
+    fromPrice: order_by
+    id: order_by
+    productId: order_by
+    toPrice: order_by
+    updatedAt: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.product_pricing"."""
+  input hasuradb_product_pricing_order_by {
+    fromPrice: order_by
+    id: order_by
+    pricingType: order_by
+    pricingUnit: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    toPrice: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_pricing"
+  """
+  enum hasuradb_product_pricing_select_column {
+    """column name"""
+    fromPrice
+  
+    """column name"""
+    id
+  
+    """column name"""
+    pricingType
+  
+    """column name"""
+    pricingUnit
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    toPrice
+  
+    """column name"""
+    updatedAt
+  }
+  
+  """
+  order by stddev() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_stddev_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  order by stddev_pop() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_stddev_pop_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  order by stddev_samp() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_stddev_samp_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  order by sum() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_sum_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  order by var_pop() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_var_pop_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  order by var_samp() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_var_samp_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  order by variance() on columns of table "hasuradb.product_pricing"
+  """
+  input hasuradb_product_pricing_variance_order_by {
+    fromPrice: order_by
+    toPrice: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product"
+  """
+  enum hasuradb_product_select_column {
+    """column name"""
+    accessible
+  
+    """column name"""
+    businessHoursId
+  
+    """column name"""
+    companyId
+  
+    """column name"""
+    createdAt
+  
+    """column name"""
+    externalSource
+  
+    """column name"""
+    id
+  
+    """column name"""
+    type
+  
+    """column name"""
+    updatedAt
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_tag"
+  """
+  type hasuradb_product_tag {
+    id: uuid!
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+    tag: String!
+    updatedAt: timestamptz!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_tag"
+  """
+  input hasuradb_product_tag_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_tag_max_order_by
+    min: hasuradb_product_tag_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_tag". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_tag_bool_exp {
+    _and: [hasuradb_product_tag_bool_exp!]
+    _not: hasuradb_product_tag_bool_exp
+    _or: [hasuradb_product_tag_bool_exp!]
+    id: uuid_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    tag: String_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_tag"
+  """
+  input hasuradb_product_tag_max_order_by {
+    id: order_by
+    productId: order_by
+    tag: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_tag"
+  """
+  input hasuradb_product_tag_min_order_by {
+    id: order_by
+    productId: order_by
+    tag: order_by
+    updatedAt: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.product_tag"."""
+  input hasuradb_product_tag_order_by {
+    id: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    tag: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_tag"
+  """
+  enum hasuradb_product_tag_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    tag
+  
+    """column name"""
+    updatedAt
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_target_group"
+  """
+  type hasuradb_product_target_group {
+    id: uuid!
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+    targetGroupId: hasuradb_target_groups_enum!
+    updatedAt: timestamptz!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_target_group"
+  """
+  input hasuradb_product_target_group_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_target_group_max_order_by
+    min: hasuradb_product_target_group_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_target_group". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_target_group_bool_exp {
+    _and: [hasuradb_product_target_group_bool_exp!]
+    _not: hasuradb_product_target_group_bool_exp
+    _or: [hasuradb_product_target_group_bool_exp!]
+    id: uuid_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    targetGroupId: hasuradb_target_groups_enum_comparison_exp
+    updatedAt: timestamptz_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_target_group"
+  """
+  input hasuradb_product_target_group_max_order_by {
+    id: order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_target_group"
+  """
+  input hasuradb_product_target_group_min_order_by {
+    id: order_by
+    productId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.product_target_group".
+  """
+  input hasuradb_product_target_group_order_by {
+    id: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    targetGroupId: order_by
+    updatedAt: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_target_group"
+  """
+  enum hasuradb_product_target_group_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    targetGroupId
+  
+    """column name"""
+    updatedAt
+  }
+  
+  enum hasuradb_product_types_enum {
+    """Accommodation"""
+    accommodation
+  
+    """Attraction"""
+    attraction
+  
+    """Event"""
+    event
+  
+    """Experience"""
+    experience
+  
+    """Rental service"""
+    rental_service
+  
+    """Restaurant"""
+    restaurant
+  
+    """Shop"""
+    shop
+  
+    """Transportation"""
+    transportation
+  
+    """Venue"""
+    venue
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_product_types_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_product_types_enum_comparison_exp {
+    _eq: hasuradb_product_types_enum
+    _in: [hasuradb_product_types_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_product_types_enum
+    _nin: [hasuradb_product_types_enum!]
+  }
+  
+  """
+  columns and relationships of "hasuradb.product_video"
+  """
+  type hasuradb_product_video {
+    id: uuid!
+  
+    """An object relationship"""
+    product: hasuradb_product!
+    productId: uuid!
+    title: String!
+  
+    """
+    A computed field, executes function "hasuradb.verified_video_url"
+    """
+    url: String
+  
+    """An object relationship"""
+    verifiedVideoLink: hasuradb_verified_link
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.product_video"
+  """
+  input hasuradb_product_video_aggregate_order_by {
+    count: order_by
+    max: hasuradb_product_video_max_order_by
+    min: hasuradb_product_video_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.product_video". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_product_video_bool_exp {
+    _and: [hasuradb_product_video_bool_exp!]
+    _not: hasuradb_product_video_bool_exp
+    _or: [hasuradb_product_video_bool_exp!]
+    id: uuid_comparison_exp
+    product: hasuradb_product_bool_exp
+    productId: uuid_comparison_exp
+    title: String_comparison_exp
+    url: String_comparison_exp
+    verifiedVideoLink: hasuradb_verified_link_bool_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.product_video"
+  """
+  input hasuradb_product_video_max_order_by {
+    id: order_by
+    productId: order_by
+    title: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.product_video"
+  """
+  input hasuradb_product_video_min_order_by {
+    id: order_by
+    productId: order_by
+    title: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.product_video"."""
+  input hasuradb_product_video_order_by {
+    id: order_by
+    product: hasuradb_product_order_by
+    productId: order_by
+    title: order_by
+    url: order_by
+    verifiedVideoLink: hasuradb_verified_link_order_by
+  }
+  
+  """
+  select columns of table "hasuradb.product_video"
+  """
+  enum hasuradb_product_video_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    productId
+  
+    """column name"""
+    title
+  }
+  
+  """
+  columns and relationships of "hasuradb.region"
+  """
+  type hasuradb_region {
+    """An array relationship"""
+    cities(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_city_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_city_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_city_bool_exp
+    ): [hasuradb_city!]!
+    id: uuid!
+    region: String!
+    regionCode: String!
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.region". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_region_bool_exp {
+    _and: [hasuradb_region_bool_exp!]
+    _not: hasuradb_region_bool_exp
+    _or: [hasuradb_region_bool_exp!]
+    cities: hasuradb_city_bool_exp
+    id: uuid_comparison_exp
+    region: String_comparison_exp
+    regionCode: String_comparison_exp
+  }
+  
+  """Ordering options when selecting data from "hasuradb.region"."""
+  input hasuradb_region_order_by {
+    cities_aggregate: hasuradb_city_aggregate_order_by
+    id: order_by
+    region: order_by
+    regionCode: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.region"
+  """
+  enum hasuradb_region_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    region
+  
+    """column name"""
+    regionCode
+  }
+  
+  """
+  columns and relationships of "hasuradb.social_media"
+  """
+  type hasuradb_social_media {
+    companyId: uuid!
+    id: uuid!
+  
+    """An array relationship"""
+    socialMediaLinks(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_social_media_link_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_social_media_link_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_social_media_link_bool_exp
+    ): [hasuradb_social_media_link!]!
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.social_media". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_social_media_bool_exp {
+    _and: [hasuradb_social_media_bool_exp!]
+    _not: hasuradb_social_media_bool_exp
+    _or: [hasuradb_social_media_bool_exp!]
+    companyId: uuid_comparison_exp
+    id: uuid_comparison_exp
+    socialMediaLinks: hasuradb_social_media_link_bool_exp
+  }
+  
+  """
+  columns and relationships of "hasuradb.social_media_link"
+  """
+  type hasuradb_social_media_link {
+    """An object relationship"""
+    company: hasuradb_company!
+    companyId: uuid!
+    id: uuid!
+    linkId: uuid!
+    linkType: hasuradb_social_media_platform_enum!
+    socialMediaId: uuid!
+  
+    """An object relationship"""
+    verifiedLink: hasuradb_verified_link!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.social_media_link"
+  """
+  input hasuradb_social_media_link_aggregate_order_by {
+    count: order_by
+    max: hasuradb_social_media_link_max_order_by
+    min: hasuradb_social_media_link_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.social_media_link". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_social_media_link_bool_exp {
+    _and: [hasuradb_social_media_link_bool_exp!]
+    _not: hasuradb_social_media_link_bool_exp
+    _or: [hasuradb_social_media_link_bool_exp!]
+    company: hasuradb_company_bool_exp
+    companyId: uuid_comparison_exp
+    id: uuid_comparison_exp
+    linkId: uuid_comparison_exp
+    linkType: hasuradb_social_media_platform_enum_comparison_exp
+    socialMediaId: uuid_comparison_exp
+    verifiedLink: hasuradb_verified_link_bool_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.social_media_link"
+  """
+  input hasuradb_social_media_link_max_order_by {
+    companyId: order_by
+    id: order_by
+    linkId: order_by
+    socialMediaId: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.social_media_link"
+  """
+  input hasuradb_social_media_link_min_order_by {
+    companyId: order_by
+    id: order_by
+    linkId: order_by
+    socialMediaId: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.social_media_link".
+  """
+  input hasuradb_social_media_link_order_by {
+    company: hasuradb_company_order_by
+    companyId: order_by
+    id: order_by
+    linkId: order_by
+    linkType: order_by
+    socialMediaId: order_by
+    verifiedLink: hasuradb_verified_link_order_by
+  }
+  
+  """
+  select columns of table "hasuradb.social_media_link"
+  """
+  enum hasuradb_social_media_link_select_column {
+    """column name"""
+    companyId
+  
+    """column name"""
+    id
+  
+    """column name"""
+    linkId
+  
+    """column name"""
+    linkType
+  
+    """column name"""
+    socialMediaId
+  }
+  
+  """Ordering options when selecting data from "hasuradb.social_media"."""
+  input hasuradb_social_media_order_by {
+    companyId: order_by
+    id: order_by
+    socialMediaLinks_aggregate: hasuradb_social_media_link_aggregate_order_by
+  }
+  
+  enum hasuradb_social_media_platform_enum {
+    facebook
+    instagram
+    linkedin
+    reddit
+    tik_tok
+    trip_advisor
+    twitter
+    vkontakte
+    we_chat
+    weibo
+    whatsapp
+    youtube
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_social_media_platform_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_social_media_platform_enum_comparison_exp {
+    _eq: hasuradb_social_media_platform_enum
+    _in: [hasuradb_social_media_platform_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_social_media_platform_enum
+    _nin: [hasuradb_social_media_platform_enum!]
+  }
+  
+  """
+  select columns of table "hasuradb.social_media"
+  """
+  enum hasuradb_social_media_select_column {
+    """column name"""
+    companyId
+  
+    """column name"""
+    id
+  }
+  
+  """
+  columns and relationships of "hasuradb.tags"
+  """
+  type hasuradb_tags {
+    categoryGroup: hasuradb_category_group_enum!
+  
+    """An array relationship"""
+    productTags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_tag_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_tag_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_tag_bool_exp
+    ): [hasuradb_product_tag!]!
+    tag: String!
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.tags"
+  """
+  input hasuradb_tags_aggregate_order_by {
+    count: order_by
+    max: hasuradb_tags_max_order_by
+    min: hasuradb_tags_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.tags". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_tags_bool_exp {
+    _and: [hasuradb_tags_bool_exp!]
+    _not: hasuradb_tags_bool_exp
+    _or: [hasuradb_tags_bool_exp!]
+    categoryGroup: hasuradb_category_group_enum_comparison_exp
+    productTags: hasuradb_product_tag_bool_exp
+    tag: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.tags"
+  """
+  input hasuradb_tags_max_order_by {
+    tag: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.tags"
+  """
+  input hasuradb_tags_min_order_by {
+    tag: order_by
+  }
+  
+  """Ordering options when selecting data from "hasuradb.tags"."""
+  input hasuradb_tags_order_by {
+    categoryGroup: order_by
+    productTags_aggregate: hasuradb_product_tag_aggregate_order_by
+    tag: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.tags"
+  """
+  enum hasuradb_tags_select_column {
+    """column name"""
+    categoryGroup
+  
+    """column name"""
+    tag
+  }
+  
+  """
+  columns and relationships of "hasuradb.target_groups"
+  """
+  type hasuradb_target_groups {
+    """An array relationship"""
+    productTargetGroups(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_target_group_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_target_group_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_target_group_bool_exp
+    ): [hasuradb_product_target_group!]!
+    targetGroup: String!
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.target_groups". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_target_groups_bool_exp {
+    _and: [hasuradb_target_groups_bool_exp!]
+    _not: hasuradb_target_groups_bool_exp
+    _or: [hasuradb_target_groups_bool_exp!]
+    productTargetGroups: hasuradb_product_target_group_bool_exp
+    targetGroup: String_comparison_exp
+  }
+  
+  enum hasuradb_target_groups_enum {
+    """B2B (Tour Operator)"""
+    b2b
+  
+    """B2C"""
+    b2c
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_target_groups_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_target_groups_enum_comparison_exp {
+    _eq: hasuradb_target_groups_enum
+    _in: [hasuradb_target_groups_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_target_groups_enum
+    _nin: [hasuradb_target_groups_enum!]
+  }
+  
+  """Ordering options when selecting data from "hasuradb.target_groups"."""
+  input hasuradb_target_groups_order_by {
+    productTargetGroups_aggregate: hasuradb_product_target_group_aggregate_order_by
+    targetGroup: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.target_groups"
+  """
+  enum hasuradb_target_groups_select_column {
+    """column name"""
+    targetGroup
+  }
+  
+  enum hasuradb_transportation_availability_enum {
+    businessHoursOnly
+    orderAndBusinessHours
+    orderOnly
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_transportation_availability_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_transportation_availability_enum_comparison_exp {
+    _eq: hasuradb_transportation_availability_enum
+    _in: [hasuradb_transportation_availability_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_transportation_availability_enum
+    _nin: [hasuradb_transportation_availability_enum!]
+  }
+  
+  """
+  columns and relationships of "hasuradb.verified_link"
+  """
+  type hasuradb_verified_link {
+    id: uuid!
+    url: String!
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.verified_link". All fields are combined with a logical 'AND'.
+  """
+  input hasuradb_verified_link_bool_exp {
+    _and: [hasuradb_verified_link_bool_exp!]
+    _not: hasuradb_verified_link_bool_exp
+    _or: [hasuradb_verified_link_bool_exp!]
+    id: uuid_comparison_exp
+    url: String_comparison_exp
+  }
+  
+  """Ordering options when selecting data from "hasuradb.verified_link"."""
+  input hasuradb_verified_link_order_by {
+    id: order_by
+    url: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.verified_link"
+  """
+  enum hasuradb_verified_link_select_column {
+    """column name"""
+    id
+  
+    """column name"""
+    url
+  }
+  
+  enum hasuradb_weekdays_enum {
+    friday
+    monday
+    saturday
+    sunday
+    thursday
+    tuesday
+    wednesday
+  }
+  
+  """
+  Boolean expression to compare columns of type "hasuradb_weekdays_enum". All fields are combined with logical 'AND'.
+  """
+  input hasuradb_weekdays_enum_comparison_exp {
+    _eq: hasuradb_weekdays_enum
+    _in: [hasuradb_weekdays_enum!]
+    _is_null: Boolean
+    _neq: hasuradb_weekdays_enum
+    _nin: [hasuradb_weekdays_enum!]
+  }
+  
+  scalar numeric
+  
+  """
+  Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'.
+  """
+  input numeric_comparison_exp {
+    _eq: numeric
+    _gt: numeric
+    _gte: numeric
+    _in: [numeric!]
+    _is_null: Boolean
+    _lt: numeric
+    _lte: numeric
+    _neq: numeric
+    _nin: [numeric!]
+  }
+  
+  """
+  columns and relationships of "hasuradb.opening_hours_default_view"
+  """
+  type openingHoursDefaultView {
+    """An object relationship"""
+    businessHours: hasuradb_business_hours
+    businessHoursId: uuid
+    closes: time
+    id: uuid
+    open: Boolean
+    opens: time
+    weekday: String
+  }
+  
+  """
+  order by aggregate values of table "hasuradb.opening_hours_default_view"
+  """
+  input openingHoursDefaultView_aggregate_order_by {
+    count: order_by
+    max: openingHoursDefaultView_max_order_by
+    min: openingHoursDefaultView_min_order_by
+  }
+  
+  """
+  Boolean expression to filter rows from the table "hasuradb.opening_hours_default_view". All fields are combined with a logical 'AND'.
+  """
+  input openingHoursDefaultView_bool_exp {
+    _and: [openingHoursDefaultView_bool_exp!]
+    _not: openingHoursDefaultView_bool_exp
+    _or: [openingHoursDefaultView_bool_exp!]
+    businessHours: hasuradb_business_hours_bool_exp
+    businessHoursId: uuid_comparison_exp
+    closes: time_comparison_exp
+    id: uuid_comparison_exp
+    open: Boolean_comparison_exp
+    opens: time_comparison_exp
+    weekday: String_comparison_exp
+  }
+  
+  """
+  order by max() on columns of table "hasuradb.opening_hours_default_view"
+  """
+  input openingHoursDefaultView_max_order_by {
+    businessHoursId: order_by
+    id: order_by
+    weekday: order_by
+  }
+  
+  """
+  order by min() on columns of table "hasuradb.opening_hours_default_view"
+  """
+  input openingHoursDefaultView_min_order_by {
+    businessHoursId: order_by
+    id: order_by
+    weekday: order_by
+  }
+  
+  """
+  Ordering options when selecting data from "hasuradb.opening_hours_default_view".
+  """
+  input openingHoursDefaultView_order_by {
+    businessHours: hasuradb_business_hours_order_by
+    businessHoursId: order_by
+    closes: order_by
+    id: order_by
+    open: order_by
+    opens: order_by
+    weekday: order_by
+  }
+  
+  """
+  select columns of table "hasuradb.opening_hours_default_view"
+  """
+  enum openingHoursDefaultView_select_column {
+    """column name"""
+    businessHoursId
+  
+    """column name"""
+    closes
+  
+    """column name"""
+    id
+  
+    """column name"""
+    open
+  
+    """column name"""
+    opens
+  
+    """column name"""
+    weekday
+  }
+  
+  """column ordering options"""
+  enum order_by {
+    """in ascending order, nulls last"""
+    asc
+  
+    """in ascending order, nulls first"""
+    asc_nulls_first
+  
+    """in ascending order, nulls last"""
+    asc_nulls_last
+  
+    """in descending order, nulls first"""
+    desc
+  
+    """in descending order, nulls first"""
+    desc_nulls_first
+  
+    """in descending order, nulls last"""
+    desc_nulls_last
+  }
+  
+  scalar point
+  
+  """
+  Boolean expression to compare columns of type "point". All fields are combined with logical 'AND'.
+  """
+  input point_comparison_exp {
+    _eq: point
+    _gt: point
+    _gte: point
+    _in: [point!]
+    _is_null: Boolean
+    _lt: point
+    _lte: point
+    _neq: point
+    _nin: [point!]
+  }
+  
+  type query_root {
+    """
+    fetch data from the table: "hasuradb.business_entity"
+    """
+    businessEntity(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_business_entity_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_business_entity_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_business_entity_bool_exp
+    ): [hasuradb_business_entity!]!
+  
+    """
+    fetch data from the table: "hasuradb.business_entity" using primary key columns
+    """
+    businessEntityByPk(id: uuid!): hasuradb_business_entity
+  
+    """
+    fetch data from the table: "hasuradb.business_hours"
+    """
+    businessHours(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_business_hours_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_business_hours_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_business_hours_bool_exp
+    ): [hasuradb_business_hours!]!
+  
+    """
+    fetch data from the table: "hasuradb.business_hours" using primary key columns
+    """
+    businessHoursByPk(id: uuid!): hasuradb_business_hours
+  
+    """
+    fetch data from the table: "hasuradb.business_hours_exception_view"
+    """
+    businessHoursExceptionView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_business_hours_exception_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_business_hours_exception_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_business_hours_exception_view_bool_exp
+    ): [hasuradb_business_hours_exception_view!]!
+  
+    """
+    fetch data from the table: "hasuradb.category_group"
+    """
+    categoryGroup(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_category_group_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_category_group_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_category_group_bool_exp
+    ): [hasuradb_category_group!]!
+  
+    """
+    fetch data from the table: "hasuradb.category_group" using primary key columns
+    """
+    categoryGroupByPk(groupName: String!): hasuradb_category_group
+  
+    """
+    fetch data from the table: "hasuradb.certificate"
+    """
+    certificate(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_certificate_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_certificate_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_certificate_bool_exp
+    ): [hasuradb_certificate!]!
+  
+    """
+    fetch data from the table: "hasuradb.certificate" using primary key columns
+    """
+    certificateByPk(logoUrl: String!): hasuradb_certificate
+  
+    """
+    fetch data from the table: "hasuradb.city"
+    """
+    city(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_city_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_city_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_city_bool_exp
+    ): [hasuradb_city!]!
+  
+    """fetch data from the table: "hasuradb.city" using primary key columns"""
+    cityByPk(id: uuid!): hasuradb_city
+  
+    """
+    fetch data from the table: "hasuradb.company"
+    """
+    company(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_company_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_company_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_company_bool_exp
+    ): [hasuradb_company!]!
+  
+    """
+    fetch data from the table: "hasuradb.company" using primary key columns
+    """
+    companyByPk(id: uuid!): hasuradb_company
+  
+    """
+    fetch data from the table: "hasuradb.company_social_media_links_compatibility_view"
+    """
+    companySocialMediaLinksCompatibilityView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_company_social_media_links_compatibility_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_company_social_media_links_compatibility_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_company_social_media_links_compatibility_view_bool_exp
+    ): [hasuradb_company_social_media_links_compatibility_view!]!
+  
+    """An array relationship"""
+    contactDetails(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_contact_details_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_contact_details_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_contact_details_bool_exp
+    ): [hasuradb_contact_details!]!
+  
+    """
+    fetch data from the table: "hasuradb.contact_details" using primary key columns
+    """
+    contactDetailsByPk(id: uuid!): hasuradb_contact_details
+  
+    """
+    fetch data from the table: "hasuradb.grouped_product_view"
+    """
+    groupedProductView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_grouped_product_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_grouped_product_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_grouped_product_view_bool_exp
+    ): [hasuradb_grouped_product_view!]!
+  
+    """
+    execute function "hasuradb.grouped_products" which returns "hasuradb.grouped_product_view"
+    """
+    groupedProducts(
+      """
+      input parameters for function "groupedProducts"
+      """
+      args: hasuradb_grouped_products_args!
+  
+      """distinct select on columns"""
+      distinct_on: [hasuradb_grouped_product_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_grouped_product_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_grouped_product_view_bool_exp
+    ): [hasuradb_grouped_product_view!]!
+  
+    """
+    execute function "hasuradb.dmo_products" which returns "hasuradb.product"
+    """
+    hasuradb_dmo_products(
+      """
+      input parameters for function "hasuradb_dmo_products"
+      """
+      args: hasuradb_dmo_products_args!
+  
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_bool_exp
+    ): [hasuradb_product!]!
+  
+    """
+    execute function "hasuradb.products_no_curator" which returns "hasuradb.product"
+    """
+    hasuradb_products_no_curator(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_bool_exp
+    ): [hasuradb_product!]!
+  
+    """An array relationship"""
+    openingHours(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_opening_hours_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_opening_hours_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_opening_hours_bool_exp
+    ): [hasuradb_opening_hours!]!
+  
+    """
+    fetch data from the table: "hasuradb.opening_hours" using primary key columns
+    """
+    openingHoursByPk(id: uuid!): hasuradb_opening_hours
+  
+    """
+    fetch data from the table: "hasuradb.opening_hours_compatibility_view"
+    """
+    openingHoursCompatibilityView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_opening_hours_compatibility_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_opening_hours_compatibility_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_opening_hours_compatibility_view_bool_exp
+    ): [hasuradb_opening_hours_compatibility_view!]!
+  
+    """
+    fetch data from the table: "hasuradb.opening_hours_default_view"
+    """
+    openingHoursDefaultView(
+      """distinct select on columns"""
+      distinct_on: [openingHoursDefaultView_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [openingHoursDefaultView_order_by!]
+  
+      """filter the rows returned"""
+      where: openingHoursDefaultView_bool_exp
+    ): [openingHoursDefaultView!]!
+  
+    """
+    fetch data from the table: "hasuradb.postal_address"
+    """
+    postalAddress(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_address_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_address_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_address_bool_exp
+    ): [hasuradb_postal_address!]!
+  
+    """
+    fetch data from the table: "hasuradb.postal_address" using primary key columns
+    """
+    postalAddressByPk(id: uuid!): hasuradb_postal_address
+  
+    """
+    fetch data from the table: "hasuradb.postal_area"
+    """
+    postalArea(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_area_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_area_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_area_bool_exp
+    ): [hasuradb_postal_area!]!
+  
+    """
+    fetch data from the table: "hasuradb.postal_area" using primary key columns
+    """
+    postalAreaByPk(id: uuid!): hasuradb_postal_area
+  
+    """
+    fetch data from the table: "hasuradb.product"
+    """
+    product(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_bool_exp
+    ): [hasuradb_product!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_availability"
+    """
+    productAvailability(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_bool_exp
+    ): [hasuradb_product_availability!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_availability" using primary key columns
+    """
+    productAvailabilityByPk(id: uuid!): hasuradb_product_availability
+  
+    """
+    fetch data from the table: "hasuradb.product_availability_language"
+    """
+    productAvailabilityLanguage(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_language_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_language_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_language_bool_exp
+    ): [hasuradb_product_availability_language!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_availability_language" using primary key columns
+    """
+    productAvailabilityLanguageByPk(id: uuid!): hasuradb_product_availability_language
+  
+    """An array relationship"""
+    productAvailableMonths(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_available_months_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_available_months_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_available_months_bool_exp
+    ): [hasuradb_product_available_months!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_available_months" using primary key columns
+    """
+    productAvailableMonthsByPk(id: uuid!): hasuradb_product_available_months
+  
+    """
+    fetch data from the table: "hasuradb.product" using primary key columns
+    """
+    productByPk(id: uuid!): hasuradb_product
+  
+    """
+    fetch data from the table: "hasuradb.product_capacity"
+    """
+    productCapacity(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_capacity_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_capacity_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_capacity_bool_exp
+    ): [hasuradb_product_capacity!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_capacity" using primary key columns
+    """
+    productCapacityByPk(id: uuid!): hasuradb_product_capacity
+  
+    """
+    fetch data from the table: "hasuradb.product_certificate"
+    """
+    productCertificate(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_certificate_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_certificate_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_certificate_bool_exp
+    ): [hasuradb_product_certificate!]!
+  
+    """An array relationship"""
+    productDuration(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_duration_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_duration_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_duration_bool_exp
+    ): [hasuradb_product_duration!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_duration" using primary key columns
+    """
+    productDurationByPk(id: uuid!): hasuradb_product_duration
+  
+    """
+    fetch data from the table: "hasuradb.product_image"
+    """
+    productImage(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_image_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_image_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_image_bool_exp
+    ): [hasuradb_product_image!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_image" using primary key columns
+    """
+    productImageByPk(id: uuid!): hasuradb_product_image
+  
+    """
+    fetch data from the table: "hasuradb.product_information"
+    """
+    productInformation(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_information_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_information_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_information_bool_exp
+    ): [hasuradb_product_information!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_information" using primary key columns
+    """
+    productInformationByPk(id: uuid!): hasuradb_product_information
+  
+    """
+    fetch data from the table: "hasuradb.product_pricing"
+    """
+    productPricing(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_pricing_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_pricing_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_pricing_bool_exp
+    ): [hasuradb_product_pricing!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_pricing" using primary key columns
+    """
+    productPricingByPk(id: uuid!): hasuradb_product_pricing
+  
+    """An array relationship"""
+    productTags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_tag_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_tag_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_tag_bool_exp
+    ): [hasuradb_product_tag!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_tag" using primary key columns
+    """
+    productTagsByPk(id: uuid!): hasuradb_product_tag
+  
+    """An array relationship"""
+    productTargetGroups(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_target_group_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_target_group_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_target_group_bool_exp
+    ): [hasuradb_product_target_group!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_target_group" using primary key columns
+    """
+    productTargetGroupsByPk(id: uuid!): hasuradb_product_target_group
+  
+    """An array relationship"""
+    productVideos(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_video_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_video_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_video_bool_exp
+    ): [hasuradb_product_video!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_video" using primary key columns
+    """
+    productVideosByPk(id: uuid!): hasuradb_product_video
+  
+    """
+    fetch data from the table: "hasuradb.region"
+    """
+    region(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_region_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_region_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_region_bool_exp
+    ): [hasuradb_region!]!
+  
+    """fetch data from the table: "hasuradb.region" using primary key columns"""
+    regionByPk(id: uuid!): hasuradb_region
+  
+    """
+    fetch data from the table: "hasuradb.social_media"
+    """
+    socialMedia(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_social_media_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_social_media_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_social_media_bool_exp
+    ): [hasuradb_social_media!]!
+  
+    """
+    fetch data from the table: "hasuradb.social_media" using primary key columns
+    """
+    socialMediaByPk(id: uuid!): hasuradb_social_media
+  
+    """An array relationship"""
+    socialMediaLinks(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_social_media_link_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_social_media_link_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_social_media_link_bool_exp
+    ): [hasuradb_social_media_link!]!
+  
+    """
+    fetch data from the table: "hasuradb.social_media_link" using primary key columns
+    """
+    socialMediaLinksByPk(id: uuid!): hasuradb_social_media_link
+  
+    """
+    fetch data from the table: "hasuradb.tags"
+    """
+    tags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_tags_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_tags_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_tags_bool_exp
+    ): [hasuradb_tags!]!
+  
+    """fetch data from the table: "hasuradb.tags" using primary key columns"""
+    tagsByPk(tag: String!): hasuradb_tags
+  
+    """
+    fetch data from the table: "hasuradb.target_groups"
+    """
+    targetGroups(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_target_groups_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_target_groups_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_target_groups_bool_exp
+    ): [hasuradb_target_groups!]!
+  
+    """
+    fetch data from the table: "hasuradb.target_groups" using primary key columns
+    """
+    targetGroupsByPk(targetGroup: String!): hasuradb_target_groups
+    userFullProfile: [UserFullProfile]
+    userFullProfileByCompany(companyId: uuid!): [UserFullProfile]
+    userFullProfileByPk(id: uuid!): UserFullProfile
+    userProfile(id: uuid!): UserProfile
+  
+    """
+    fetch data from the table: "hasuradb.verified_link"
+    """
+    verifiedLink(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_verified_link_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_verified_link_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_verified_link_bool_exp
+    ): [hasuradb_verified_link!]!
+  
+    """
+    fetch data from the table: "hasuradb.verified_link" using primary key columns
+    """
+    verifiedLinkByPk(id: uuid!): hasuradb_verified_link
+  }
+  
+  type subscription_root {
+    """
+    fetch data from the table: "hasuradb.business_entity"
+    """
+    businessEntity(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_business_entity_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_business_entity_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_business_entity_bool_exp
+    ): [hasuradb_business_entity!]!
+  
+    """
+    fetch data from the table: "hasuradb.business_entity" using primary key columns
+    """
+    businessEntityByPk(id: uuid!): hasuradb_business_entity
+  
+    """
+    fetch data from the table: "hasuradb.business_hours"
+    """
+    businessHours(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_business_hours_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_business_hours_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_business_hours_bool_exp
+    ): [hasuradb_business_hours!]!
+  
+    """
+    fetch data from the table: "hasuradb.business_hours" using primary key columns
+    """
+    businessHoursByPk(id: uuid!): hasuradb_business_hours
+  
+    """
+    fetch data from the table: "hasuradb.business_hours_exception_view"
+    """
+    businessHoursExceptionView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_business_hours_exception_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_business_hours_exception_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_business_hours_exception_view_bool_exp
+    ): [hasuradb_business_hours_exception_view!]!
+  
+    """
+    fetch data from the table: "hasuradb.category_group"
+    """
+    categoryGroup(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_category_group_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_category_group_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_category_group_bool_exp
+    ): [hasuradb_category_group!]!
+  
+    """
+    fetch data from the table: "hasuradb.category_group" using primary key columns
+    """
+    categoryGroupByPk(groupName: String!): hasuradb_category_group
+  
+    """
+    fetch data from the table: "hasuradb.certificate"
+    """
+    certificate(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_certificate_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_certificate_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_certificate_bool_exp
+    ): [hasuradb_certificate!]!
+  
+    """
+    fetch data from the table: "hasuradb.certificate" using primary key columns
+    """
+    certificateByPk(logoUrl: String!): hasuradb_certificate
+  
+    """
+    fetch data from the table: "hasuradb.city"
+    """
+    city(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_city_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_city_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_city_bool_exp
+    ): [hasuradb_city!]!
+  
+    """fetch data from the table: "hasuradb.city" using primary key columns"""
+    cityByPk(id: uuid!): hasuradb_city
+  
+    """
+    fetch data from the table: "hasuradb.company"
+    """
+    company(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_company_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_company_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_company_bool_exp
+    ): [hasuradb_company!]!
+  
+    """
+    fetch data from the table: "hasuradb.company" using primary key columns
+    """
+    companyByPk(id: uuid!): hasuradb_company
+  
+    """
+    fetch data from the table: "hasuradb.company_social_media_links_compatibility_view"
+    """
+    companySocialMediaLinksCompatibilityView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_company_social_media_links_compatibility_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_company_social_media_links_compatibility_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_company_social_media_links_compatibility_view_bool_exp
+    ): [hasuradb_company_social_media_links_compatibility_view!]!
+  
+    """An array relationship"""
+    contactDetails(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_contact_details_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_contact_details_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_contact_details_bool_exp
+    ): [hasuradb_contact_details!]!
+  
+    """
+    fetch data from the table: "hasuradb.contact_details" using primary key columns
+    """
+    contactDetailsByPk(id: uuid!): hasuradb_contact_details
+  
+    """
+    fetch data from the table: "hasuradb.grouped_product_view"
+    """
+    groupedProductView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_grouped_product_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_grouped_product_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_grouped_product_view_bool_exp
+    ): [hasuradb_grouped_product_view!]!
+  
+    """
+    execute function "hasuradb.grouped_products" which returns "hasuradb.grouped_product_view"
+    """
+    groupedProducts(
+      """
+      input parameters for function "groupedProducts"
+      """
+      args: hasuradb_grouped_products_args!
+  
+      """distinct select on columns"""
+      distinct_on: [hasuradb_grouped_product_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_grouped_product_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_grouped_product_view_bool_exp
+    ): [hasuradb_grouped_product_view!]!
+  
+    """
+    execute function "hasuradb.dmo_products" which returns "hasuradb.product"
+    """
+    hasuradb_dmo_products(
+      """
+      input parameters for function "hasuradb_dmo_products"
+      """
+      args: hasuradb_dmo_products_args!
+  
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_bool_exp
+    ): [hasuradb_product!]!
+  
+    """
+    execute function "hasuradb.products_no_curator" which returns "hasuradb.product"
+    """
+    hasuradb_products_no_curator(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_bool_exp
+    ): [hasuradb_product!]!
+  
+    """An array relationship"""
+    openingHours(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_opening_hours_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_opening_hours_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_opening_hours_bool_exp
+    ): [hasuradb_opening_hours!]!
+  
+    """
+    fetch data from the table: "hasuradb.opening_hours" using primary key columns
+    """
+    openingHoursByPk(id: uuid!): hasuradb_opening_hours
+  
+    """
+    fetch data from the table: "hasuradb.opening_hours_compatibility_view"
+    """
+    openingHoursCompatibilityView(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_opening_hours_compatibility_view_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_opening_hours_compatibility_view_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_opening_hours_compatibility_view_bool_exp
+    ): [hasuradb_opening_hours_compatibility_view!]!
+  
+    """
+    fetch data from the table: "hasuradb.opening_hours_default_view"
+    """
+    openingHoursDefaultView(
+      """distinct select on columns"""
+      distinct_on: [openingHoursDefaultView_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [openingHoursDefaultView_order_by!]
+  
+      """filter the rows returned"""
+      where: openingHoursDefaultView_bool_exp
+    ): [openingHoursDefaultView!]!
+  
+    """
+    fetch data from the table: "hasuradb.postal_address"
+    """
+    postalAddress(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_address_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_address_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_address_bool_exp
+    ): [hasuradb_postal_address!]!
+  
+    """
+    fetch data from the table: "hasuradb.postal_address" using primary key columns
+    """
+    postalAddressByPk(id: uuid!): hasuradb_postal_address
+  
+    """
+    fetch data from the table: "hasuradb.postal_area"
+    """
+    postalArea(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_postal_area_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_postal_area_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_postal_area_bool_exp
+    ): [hasuradb_postal_area!]!
+  
+    """
+    fetch data from the table: "hasuradb.postal_area" using primary key columns
+    """
+    postalAreaByPk(id: uuid!): hasuradb_postal_area
+  
+    """
+    fetch data from the table: "hasuradb.product"
+    """
+    product(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_bool_exp
+    ): [hasuradb_product!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_availability"
+    """
+    productAvailability(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_bool_exp
+    ): [hasuradb_product_availability!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_availability" using primary key columns
+    """
+    productAvailabilityByPk(id: uuid!): hasuradb_product_availability
+  
+    """
+    fetch data from the table: "hasuradb.product_availability_language"
+    """
+    productAvailabilityLanguage(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_availability_language_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_availability_language_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_availability_language_bool_exp
+    ): [hasuradb_product_availability_language!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_availability_language" using primary key columns
+    """
+    productAvailabilityLanguageByPk(id: uuid!): hasuradb_product_availability_language
+  
+    """An array relationship"""
+    productAvailableMonths(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_available_months_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_available_months_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_available_months_bool_exp
+    ): [hasuradb_product_available_months!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_available_months" using primary key columns
+    """
+    productAvailableMonthsByPk(id: uuid!): hasuradb_product_available_months
+  
+    """
+    fetch data from the table: "hasuradb.product" using primary key columns
+    """
+    productByPk(id: uuid!): hasuradb_product
+  
+    """
+    fetch data from the table: "hasuradb.product_capacity"
+    """
+    productCapacity(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_capacity_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_capacity_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_capacity_bool_exp
+    ): [hasuradb_product_capacity!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_capacity" using primary key columns
+    """
+    productCapacityByPk(id: uuid!): hasuradb_product_capacity
+  
+    """
+    fetch data from the table: "hasuradb.product_certificate"
+    """
+    productCertificate(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_certificate_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_certificate_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_certificate_bool_exp
+    ): [hasuradb_product_certificate!]!
+  
+    """An array relationship"""
+    productDuration(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_duration_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_duration_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_duration_bool_exp
+    ): [hasuradb_product_duration!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_duration" using primary key columns
+    """
+    productDurationByPk(id: uuid!): hasuradb_product_duration
+  
+    """
+    fetch data from the table: "hasuradb.product_image"
+    """
+    productImage(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_image_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_image_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_image_bool_exp
+    ): [hasuradb_product_image!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_image" using primary key columns
+    """
+    productImageByPk(id: uuid!): hasuradb_product_image
+  
+    """
+    fetch data from the table: "hasuradb.product_information"
+    """
+    productInformation(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_information_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_information_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_information_bool_exp
+    ): [hasuradb_product_information!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_information" using primary key columns
+    """
+    productInformationByPk(id: uuid!): hasuradb_product_information
+  
+    """
+    fetch data from the table: "hasuradb.product_pricing"
+    """
+    productPricing(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_pricing_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_pricing_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_pricing_bool_exp
+    ): [hasuradb_product_pricing!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_pricing" using primary key columns
+    """
+    productPricingByPk(id: uuid!): hasuradb_product_pricing
+  
+    """An array relationship"""
+    productTags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_tag_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_tag_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_tag_bool_exp
+    ): [hasuradb_product_tag!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_tag" using primary key columns
+    """
+    productTagsByPk(id: uuid!): hasuradb_product_tag
+  
+    """An array relationship"""
+    productTargetGroups(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_target_group_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_target_group_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_target_group_bool_exp
+    ): [hasuradb_product_target_group!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_target_group" using primary key columns
+    """
+    productTargetGroupsByPk(id: uuid!): hasuradb_product_target_group
+  
+    """An array relationship"""
+    productVideos(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_product_video_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_product_video_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_product_video_bool_exp
+    ): [hasuradb_product_video!]!
+  
+    """
+    fetch data from the table: "hasuradb.product_video" using primary key columns
+    """
+    productVideosByPk(id: uuid!): hasuradb_product_video
+  
+    """
+    fetch data from the table: "hasuradb.region"
+    """
+    region(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_region_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_region_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_region_bool_exp
+    ): [hasuradb_region!]!
+  
+    """fetch data from the table: "hasuradb.region" using primary key columns"""
+    regionByPk(id: uuid!): hasuradb_region
+  
+    """
+    fetch data from the table: "hasuradb.social_media"
+    """
+    socialMedia(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_social_media_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_social_media_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_social_media_bool_exp
+    ): [hasuradb_social_media!]!
+  
+    """
+    fetch data from the table: "hasuradb.social_media" using primary key columns
+    """
+    socialMediaByPk(id: uuid!): hasuradb_social_media
+  
+    """An array relationship"""
+    socialMediaLinks(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_social_media_link_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_social_media_link_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_social_media_link_bool_exp
+    ): [hasuradb_social_media_link!]!
+  
+    """
+    fetch data from the table: "hasuradb.social_media_link" using primary key columns
+    """
+    socialMediaLinksByPk(id: uuid!): hasuradb_social_media_link
+  
+    """
+    fetch data from the table: "hasuradb.tags"
+    """
+    tags(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_tags_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_tags_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_tags_bool_exp
+    ): [hasuradb_tags!]!
+  
+    """fetch data from the table: "hasuradb.tags" using primary key columns"""
+    tagsByPk(tag: String!): hasuradb_tags
+  
+    """
+    fetch data from the table: "hasuradb.target_groups"
+    """
+    targetGroups(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_target_groups_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_target_groups_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_target_groups_bool_exp
+    ): [hasuradb_target_groups!]!
+  
+    """
+    fetch data from the table: "hasuradb.target_groups" using primary key columns
+    """
+    targetGroupsByPk(targetGroup: String!): hasuradb_target_groups
+  
+    """
+    fetch data from the table: "hasuradb.verified_link"
+    """
+    verifiedLink(
+      """distinct select on columns"""
+      distinct_on: [hasuradb_verified_link_select_column!]
+  
+      """limit the number of rows returned"""
+      limit: Int
+  
+      """skip the first n rows. Use only with order_by"""
+      offset: Int
+  
+      """sort the rows by one or more columns"""
+      order_by: [hasuradb_verified_link_order_by!]
+  
+      """filter the rows returned"""
+      where: hasuradb_verified_link_bool_exp
+    ): [hasuradb_verified_link!]!
+  
+    """
+    fetch data from the table: "hasuradb.verified_link" using primary key columns
+    """
+    verifiedLinkByPk(id: uuid!): hasuradb_verified_link
+  }
+  
+  scalar time
+  
+  """
+  Boolean expression to compare columns of type "time". All fields are combined with logical 'AND'.
+  """
+  input time_comparison_exp {
+    _eq: time
+    _gt: time
+    _gte: time
+    _in: [time!]
+    _is_null: Boolean
+    _lt: time
+    _lte: time
+    _neq: time
+    _nin: [time!]
+  }
+  
+  scalar timestamptz
+  
+  """
+  Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'.
+  """
+  input timestamptz_comparison_exp {
+    _eq: timestamptz
+    _gt: timestamptz
+    _gte: timestamptz
+    _in: [timestamptz!]
+    _is_null: Boolean
+    _lt: timestamptz
+    _lte: timestamptz
+    _neq: timestamptz
+    _nin: [timestamptz!]
+  }
+  
+  scalar timetz
+  
+  """
+  Boolean expression to compare columns of type "timetz". All fields are combined with logical 'AND'.
+  """
+  input timetz_comparison_exp {
+    _eq: timetz
+    _gt: timetz
+    _gte: timetz
+    _in: [timetz!]
+    _is_null: Boolean
+    _lt: timetz
+    _lte: timetz
+    _neq: timetz
+    _nin: [timetz!]
+  }
+  
+  scalar uuid
+  
+  """
+  Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
+  """
+  input uuid_comparison_exp {
+    _eq: uuid
+    _gt: uuid
+    _gte: uuid
+    _in: [uuid!]
+    _is_null: Boolean
+    _lt: uuid
+    _lte: uuid
+    _neq: uuid
+    _nin: [uuid!]
+  }
+  
+  

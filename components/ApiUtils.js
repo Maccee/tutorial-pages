@@ -7,7 +7,7 @@ export const selectAndFetch = async () => {
   let selectedNames = new Set(); // Set to keep track of selected place names
 
   // Randomly select places without duplicates
-  while (selectedPlaces.length < 20) {
+  while (selectedPlaces.length < 6) {
     const randomIndex = Math.floor(Math.random() * allPlaces.length);
     const placeName = allPlaces[randomIndex];
 
@@ -21,65 +21,72 @@ export const selectAndFetch = async () => {
   let newMarkers = []; // Temporary array to hold new markers
 
   for (const place of selectedPlaces) {
-    const url = `https://api.hel.fi/linkedevents/v1/search/?type=place&q=${place}`;
+    const url = `https://api.hel.fi/linkedevents/v1/search/?type=place&q=${place}&show_all_places=true`;
 
     try {
       const response = await fetch(url);
       const result = await response.json();
       console.log(place, result);
 
-      // Access the first item in the data array
-      let item = result.data[0];
-
-      // Use data[1] if the name starts with "äänestys"
-      if (
-        (item && item.name.fi.startsWith("Äänestys")) ||
-        item.name.fi.startsWith("EuroPark") ||
-        (item.name.fi.startsWith("Pysäköinti") && result.data.length > 1)
-      ) {
-        item = result.data[1];
-      }
-
-      // Check if the item meets the required conditions
-      if (
-        item &&
-        item.position &&
-        item.position.coordinates &&
-        !item.id.startsWith("osoite") &&
-        !item.id.startsWith("harrastus")
-      ) {
-        let imageUrl;
-        if (item.image) {
-          imageUrl = await getImage(item.image);
-        }
-
-        // Fetch additional image if necessary
-        if (!imageUrl) {
-          const imageResponse = await fetch(
-            `https://api.hel.fi/linkedevents/v1/image/?text=${place}`
-          );
-          const imageResult = await imageResponse.json();
-
-          if (imageResult.data.length > 0) {
-            imageUrl = imageResult.data[0].url;
-          } else {
-            continue; // Skip if no image is found
+      for (let item of result.data) {
+        // Loop through all items in the data array
+        if (
+          item &&
+          item.position &&
+          item.position.coordinates &&
+          !item.id.startsWith("osoite") &&
+          !item.id.startsWith("harrastus")
+        ) {
+          // Check if the name starts with specific strings and adjust the item accordingly
+          if (
+            item.name.fi.startsWith("Äänestys") ||
+            item.name.fi.startsWith("EuroPark") ||
+            item.name.fi.startsWith("Pysäköinti")
+          ) {
+            continue; // Skip current item
           }
+
+          let imageUrl;
+          try {
+            if (item.image) {
+              // Try to get the image from the item's image attribute
+              imageUrl = await getImage(item.image);
+            }
+
+            if (!imageUrl) {
+              // If imageUrl is still not set, fetch from the alternative API
+              console.log(place, item.id, item.name.fi, "No image found, trying to image/text/place")
+              const imageResponse = await fetch(
+                `https://api.hel.fi/linkedevents/v1/image/?text=${place}`
+              );
+              const imageResult = await imageResponse.json();
+
+              if (imageResult.data && imageResult.data.length > 0) {
+                imageUrl = imageResult.data[0].url;
+                console.log(place, item.id, item.name.fi,"Image found! using first available")
+              } else {
+                console.log(place, item.id, item.name.fi,"No images found, Skipping ")
+                //continue; // Skip if no image is found
+              }
+            }
+          } catch (error) {
+            console.error("Error fetching image for place:", place, error);
+            continue; // Skip to the next item if there's an error in image fetching
+          }
+
+          const marker = {
+            id: item.id,
+            name: item.name.fi,
+            description: item.description?.fi
+              ? (item.description.fi.match(/^[^,.]*/) || [])[0] + "."
+              : "",
+            imageUrl,
+            www: item.info_url?.fi,
+            coordinates: item.position.coordinates,
+          };
+
+          newMarkers.push(marker); // Add marker to temporary array
         }
-
-        // Create a marker object
-        const marker = {
-          id: item.id,
-          name: item.name.fi,
-          description: item.description?.fi
-            ? (item.description.fi.match(/^[^,.]*/) || [])[0] + "."
-            : "",
-          imageUrl,
-          www: item.info_url?.fi,
-          coordinates: item.position.coordinates,
-        };
-
-        newMarkers.push(marker); // Add marker to temporary array
       }
     } catch (error) {
       console.error("Error fetching data for place:", place, error);
@@ -106,6 +113,18 @@ export async function fetchData(url, accumulatedMarkers = []) {
           if (item.image) {
             imageUrl = await getImage(item.image);
           }
+          // Fetch additional image if necessary
+          if (!imageUrl) {
+            const imageResponse = await fetch(
+              `https://api.hel.fi/linkedevents/v1/image/?text=${item.name.fi}`
+            );
+            const imageResult = await imageResponse.json();
+
+            if (imageResult.data.length > 0) {
+              imageUrl = imageResult.data[0].url;
+            }
+          }
+
           return {
             id: item.id,
             name: item.name.fi,
@@ -145,6 +164,7 @@ export async function getImage(imageId) {
       `https://api.hel.fi/linkedevents/v1/image/${imageId}`
     );
     const imageData = await response.json();
+    console.log("original image found", imageId);
     return imageData.url;
   } catch (error) {
     console.error("Error fetching image:", error);

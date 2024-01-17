@@ -29,11 +29,12 @@ function Map({ markers, selectedCard }) {
 
     useEffect(() => {
       if (selectedCard) {
-        map.flyTo([selectedCard[1], selectedCard[0]], 16); // Assuming zoom level 13
+        //map.flyTo([60.264753787236685,24.849923151141372], 16); // Testing purposes for manual entry
+        map.flyTo([selectedCard[1], selectedCard[0]], 16);
       }
     }, [selectedCard, map]);
 
-    return null; // This component does not render anything
+    return null;
   }
 
   const togglePolyline = () => {

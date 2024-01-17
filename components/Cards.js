@@ -19,7 +19,7 @@ export const Cards = ({ markers, setSelectedCard }) => {
             >
               <div className="absolute flex inset-0 flex-col justify-end p-4 bg-opacity-50 bg-slate-900 rounded-3xl">
                 <p className="text-lg xl:text-3xl font-semibold text-white">
-                  {item.name}
+                  {item.name} {item.id}
                 </p>
                 <p className="text-sm text-white">{item.description}</p>
                 <p>
