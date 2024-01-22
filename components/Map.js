@@ -13,10 +13,57 @@ function LocationMarkers({ markers }) {
           key={index}
           position={{ lat: marker.coordinates[1], lng: marker.coordinates[0] }}
         >
-          <Popup>{marker.name}</Popup>
+          <Popup>
+            {marker.name}
+            {marker.description}
+          </Popup>
         </Marker>
       ))}
     </>
+  );
+}
+
+function ZoomControl() {
+  const map = useMap();
+
+  const zoomIn = () => {
+    map.zoomIn();
+  };
+
+  const zoomOut = () => {
+    map.zoomOut();
+  };
+
+  return (
+    <div className="flex flex-col absolute right-2 top-2 z-50">
+      <button
+        onClick={zoomIn}
+        className="bg-blue-500 text-white p-2 mb-1 rounded-full shadow-lg hover:bg-blue-700 transition duration-300"
+      >
+        +
+      </button>
+      <button
+        onClick={zoomOut}
+        className="bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition duration-300"
+      >
+        -
+      </button>
+    </div>
+  );
+}
+function PolylineControl({ showPolyline, setShowPolyline }) {
+  const togglePolyline = () => {
+    setShowPolyline(!showPolyline);
+  };
+
+  return (
+    <button
+      onClick={togglePolyline}
+      className="absolute right-2 top-[5rem] z-50 bg-white p-2 text-sm rounded shadow"
+      // Adjust top-[5rem] as needed to position below the ZoomControl
+    >
+      {showPolyline ? "Hide Polyline" : "Show Polyline"}
+    </button>
   );
 }
 
@@ -42,28 +89,27 @@ function Map({ markers, selectedCard }) {
   };
 
   return (
-    <section className="hidden md:block">
+    <section className="">
       <MapContainer
-        style={{ height: "600px", width: "400px" }}
+        style={{ height: "300px" }}
         center={center}
         zoom={13}
         scrollWheelZoom={true}
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
         />
-
         <LocationMarkers markers={markers} />
         <FlyToSelectedCard selectedCard={selectedCard} />
         <Aluejako showPolyline={showPolyline} />
+        <ZoomControl />
+        <PolylineControl
+          showPolyline={showPolyline}
+          setShowPolyline={setShowPolyline}
+        />
       </MapContainer>
-      <button
-        className="mt-2 bg-white p-2 text-sm rounded shadow"
-        onClick={togglePolyline}
-      >
-        {showPolyline ? "Hide Polyline" : "Show Polyline"}
-      </button>
     </section>
   );
 }

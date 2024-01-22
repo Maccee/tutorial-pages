@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.leaflet-control {
+  z-index: 1 !important;
+}
+.leaflet-pane {
+  z-index: 1 !important;
+}
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 1 !important;
+}
+
+.word-wrap {
+  word-wrap: break-word; /* Older browsers */
+  overflow-wrap: break-word; /* Standard property */
+}

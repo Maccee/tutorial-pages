@@ -5,7 +5,7 @@ import {
   MagnifyingGlassIcon,
   GlobeAltIcon,
   UserCircleIcon,
-  UsersIcon
+  UsersIcon,
 } from "@heroicons/react/24/solid";
 
 function Header({ setKeyword }) {
@@ -22,20 +22,22 @@ function Header({ setKeyword }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md p-5 md:px-10">
-      <div className="relative flex items-center h-14 cursor-pointer my-auto">
-        <Image
-          src="/logo2.png"
-          layout="fill"
-          objectFit="contain"
-          objectPosition="left"
-          alt="logo"
-        />
+    <header className="sticky top-0 flex justify-between items-center p-1">
+      <div className="flex items-center flex-grow-0">
+        <div className="h-10 w-10 relative mr-2">
+          <Image
+            src="/logo2.png"
+            layout="fill"
+            objectFit="contain"
+            alt="logo"
+          />
+        </div>
       </div>
-      <div className="flex items-center ">
-        <div className="flex flex-grow items-center md:border-2 rounded-full py-2 md:shadow-sm">
+
+      <div className="flex flex-grow items-center max-w-xl">
+        <div className="flex flex-grow items-center md:border-2 rounded-full py-2 md:shadow-sm w-full">
           <input
-            className="flex-grow pl-5 bg-transparent outline-none text-gray-600 placeholder-gray-400"
+            className="flex-grow pl-2 bg-transparent outline-none text-gray-600 placeholder-gray-400"
             type="text"
             placeholder="Search"
             value={inputValue}

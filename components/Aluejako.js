@@ -27,7 +27,7 @@ export const Aluejako = ({ showPolyline }) => {
         jsonDataVan.features.map((feature, index) => (
           <Polyline
             key={index}
-            color="black"
+            color="blue"
             weight={1}
             opacity={0.7}
             interactive={true}
@@ -62,7 +62,7 @@ export const Aluejako = ({ showPolyline }) => {
         ).map((positions, index) => (
           <Polyline
             key={index}
-            color="black"
+            color="blue"
             weight={1}
             opacity={0.7}
             interactive={true}
