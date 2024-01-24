@@ -27,11 +27,10 @@ function Header({ setKeyword, toggleMapVisibility }) {
   return (
     <header className="sticky top-0 flex justify-between items-center p-1 bg-white z-50 shadow-lg">
       <div className="flex items-center">
-        <div className="h-10 w-10 relative mr-2">
-          <Image
+        <div className="h-12 w-12 relative mr-2">
+          <img
             src="/logo2.png"
-            layout="fill"
-            objectFit="contain"
+            
             alt="logo"
           />
         </div>
@@ -48,7 +47,7 @@ function Header({ setKeyword, toggleMapVisibility }) {
             onKeyDown={handleKeyDown}
           />
           <MagnifyingGlassIcon
-            className="hidden md:inline-flex h-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-2"
+            className="hidden md:inline-flex h-12 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-2"
             onClick={handleSearch}
           />
         </div>
@@ -61,11 +60,11 @@ function Header({ setKeyword, toggleMapVisibility }) {
 
         <div className="flex items-center space-x-2 border-2 p-2 rounded-full">
           <MapIcon
-            className="h-6 cursor-pointer"
+            className="h-12 cursor-pointer"
             onClick={toggleMapVisibility}
           />
-          <StarIcon className="h-6 cursor-pointer" />
-          <UserCircleIcon className="h-6 cursor-pointer" />
+          <StarIcon className="h-12 cursor-pointer" />
+          <UserCircleIcon className="h-12 cursor-pointer" />
         </div>
       </div>
     </header>
