@@ -2,6 +2,9 @@
   "name": "tutorial-pages",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
@@ -10,15 +13,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
-    "@turf/turf": "^6.5.0",
     "amqplib": "^0.10.3",
-    "axios": "^1.6.5",
-    "fs": "^0.0.1-security",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet.markercluster": "^1.5.3",
     "next": "14.0.4",
     "next-transpile-modules": "^10.0.1",
-    "proj4": "^2.10.0",
     "react": "^18",
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",
