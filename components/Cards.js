@@ -18,13 +18,15 @@ export const Cards = ({ markers, setSelectedCard }) => {
             >
               <div className="absolute flex inset-0 flex-col justify-end p-4 bg-opacity-50 bg-slate-900 rounded-3xl">
                 <p className="text-lg xl:text-3xl font-semibold text-white">
-                  {item.name} {item.id}
+                  {item.name}
                 </p>
                 <p className="text-sm text-white">{item.description}</p>
                 <p>
                   <a
                     href={item.www}
                     className="text-decoration-none text-gray-400 word-wrap"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {item.www}

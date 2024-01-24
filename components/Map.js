@@ -16,7 +16,11 @@ import jsonDataVan from "../public/aluejakoVantaa.json";
 import jsonDataEsp from "../public/aluejakoEspoo.json";
 import jsonDataKau from "../public/aluejakoKauniainen.json";
 
-import { ZoomControl } from "./MapControl";
+import {
+  ZoomControl,
+  transformGeometryCollections,
+  flipCoordinates,
+} from "./MapControlUtils";
 
 function LocationMarkers({ markers }) {
   return (
@@ -36,45 +40,7 @@ function LocationMarkers({ markers }) {
   );
 }
 
-const flipCoordinates = (geoJson) => {
-  const flipCoords = (coords) => {
-    if (Array.isArray(coords[0])) {
-      return coords.map(flipCoords);
-    }
-    return [coords[1], coords[0]];
-  };
-
-  const flippedGeoJson = JSON.parse(JSON.stringify(geoJson)); // Deep copy
-
-  flippedGeoJson.features.forEach((feature) => {
-    if (feature.geometry && feature.geometry.coordinates) {
-      feature.geometry.coordinates = flipCoords(feature.geometry.coordinates);
-    }
-  });
-
-  return flippedGeoJson;
-};
-const transformGeometryCollections = (geoJsonData) => {
-  const transformedFeatures = [];
-
-  geoJsonData.features.forEach((feature) => {
-    if (feature.geometry.type === "GeometryCollection") {
-      feature.geometry.geometries.forEach((geometry) => {
-        transformedFeatures.push({
-          type: "Feature",
-          properties: { ...feature.properties },
-          geometry: { ...geometry },
-        });
-      });
-    } else {
-      transformedFeatures.push(feature);
-    }
-  });
-
-  return { ...geoJsonData, features: transformedFeatures };
-};
-
-function Map({ markers, selectedCard }) {
+function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
 
@@ -100,6 +66,9 @@ function Map({ markers, selectedCard }) {
       if (selectedCard) {
         //map.flyTo([60.264753787236685,24.849923151141372], 16); // Testing purposes for manual entry
         map.flyTo([selectedCard[1], selectedCard[0]], 16);
+        setSelectedCard(null);
+
+        setIsMapVisible(true);
       }
     }, [selectedCard]);
 

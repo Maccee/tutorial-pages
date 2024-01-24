@@ -19,37 +19,39 @@ function Header({ setKeyword, toggleMapVisibility }) {
 
   return (
     <header className="flex items-center justify-between p-1 bg-white shadow-lg border-2 z-50">
-  {/* Logo Section */}
-  <div className="flex items-center">
-    <div className="h-12 w-12 relative mr-2">
-      <img src="/logo2.png" alt="logo" />
-    </div>
-  </div>
+      {/* Logo Section */}
+      <div className="flex items-center">
+        <div className="h-12 w-12 relative mr-2">
+          <img src="/logo2.png" alt="logo" />
+        </div>
+      </div>
 
-  {/* Search Area */}
-  <div className="flex flex-grow items-center border-2 p-1 rounded-full min-w-0">
-    <input
-      className="flex-grow bg-transparent outline-none min-w-0"
-      type="text"
-      placeholder="Search"
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      onKeyDown={handleKeyDown}
-    />
-    <MagnifyingGlassIcon
-      className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-2"
-      onClick={handleSearch}
-    />
-  </div>
+      {/* Search Area */}
+      <div className="flex flex-grow items-center border-2 p-1 rounded-full min-w-0">
+        <input
+          className="flex-grow bg-transparent outline-none min-w-0"
+          type="text"
+          placeholder="Search"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <MagnifyingGlassIcon
+          className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-2"
+          onClick={handleSearch}
+        />
+      </div>
 
-  {/* Icon Group */}
-  <div className="flex items-center space-x-1 md:border-2 p-2 rounded-full">
-    <MapIcon className="h-8 cursor-pointer text-logoBlue" onClick={toggleMapVisibility} />
-    <StarIcon className="h-8 cursor-pointer text-logoBlue" />
-    <UserCircleIcon className="h-8 cursor-pointer text-logoBlue" />
-  </div>
-</header>
-
+      {/* Icon Group */}
+      <div className="flex items-center space-x-1 ml-2">
+        <MapIcon
+          className="h-8 cursor-pointer text-logoBlue"
+          onClick={toggleMapVisibility}
+        />
+        <StarIcon className="h-8 cursor-pointer text-logoBlue" />
+        <UserCircleIcon className="h-8 cursor-pointer text-logoBlue" />
+      </div>
+    </header>
   );
 }
 
