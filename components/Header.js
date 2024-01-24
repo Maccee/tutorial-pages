@@ -3,10 +3,13 @@ import React from "react";
 import Image from "next/image";
 import {
   MagnifyingGlassIcon,
-  GlobeAltIcon,
-  UserCircleIcon,
-  UsersIcon,
+  GlobeAltIcon
 } from "@heroicons/react/24/solid";
+import {
+    StarIcon,
+    MapIcon,
+    UserCircleIcon
+} from "@heroicons/react/24/outline";
 
 function Header({ setKeyword, toggleMapVisibility }) {
   const [inputValue, setInputValue] = useState("");
@@ -22,8 +25,8 @@ function Header({ setKeyword, toggleMapVisibility }) {
   };
 
   return (
-    <header className="sticky top-0 flex justify-between items-center p-1 bg-white z-50">
-      <div className="flex items-center flex-grow-0">
+    <header className="sticky top-0 flex justify-between items-center p-1 bg-white z-50 shadow-lg">
+      <div className="flex items-center">
         <div className="h-10 w-10 relative mr-2">
           <Image
             src="/logo2.png"
@@ -35,7 +38,7 @@ function Header({ setKeyword, toggleMapVisibility }) {
       </div>
 
       <div className="flex flex-grow items-center max-w-xl">
-        <div className="flex flex-grow items-center md:border-2 rounded-full py-2 md:shadow-sm w-full">
+        <div className="flex items-center md:border-2 rounded-full py-2 mx-2 md:shadow-sm w-full">
           <input
             className="flex-grow pl-2 bg-transparent outline-none text-gray-600 placeholder-gray-400"
             type="text"
@@ -53,15 +56,15 @@ function Header({ setKeyword, toggleMapVisibility }) {
 
       <div className="flex items-center space-x-4 justify-end text-logoBlue">
         <p className="hidden md:inline cursor-pointer text-gray-400">
-          Blaablaa
+          Logged In
         </p>
 
         <div className="flex items-center space-x-2 border-2 p-2 rounded-full">
-          <GlobeAltIcon
+          <MapIcon
             className="h-6 cursor-pointer"
             onClick={toggleMapVisibility}
           />
-          <UsersIcon className="h-6 cursor-pointer" />
+          <StarIcon className="h-6 cursor-pointer" />
           <UserCircleIcon className="h-6 cursor-pointer" />
         </div>
       </div>
