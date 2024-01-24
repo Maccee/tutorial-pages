@@ -1,7 +1,14 @@
-export async function fetchData(url, accumulatedMarkers = []) {
+export async function fetchData(
+  url,
+  accumulatedMarkers = [],
+  progressCallback
+) {
   try {
     const response = await fetch(url);
     const result = await response.json();
+
+    let totalItems = result.data.length;
+    let itemsProcessed = 0;
 
     const newMarkers = await Promise.all(
       result.data
@@ -24,7 +31,14 @@ export async function fetchData(url, accumulatedMarkers = []) {
               imageUrl = imageResult.data[0].url;
             }
           }
+          itemsProcessed += 1;
+          const progress =
+            totalItems > 0 ? (itemsProcessed / totalItems) * 100 : 0;
 
+          // Call the progressCallback with the current progress if it's a function
+          if (typeof progressCallback === "function") {
+            progressCallback(progress);
+          }
           return {
             id: item.id,
             name: item.name.fi,
@@ -37,7 +51,8 @@ export async function fetchData(url, accumulatedMarkers = []) {
           };
         })
     );
-    console.log(result.data);
+
+    // console.log(result.data);
     const updatedMarkers = [...accumulatedMarkers, ...newMarkers];
 
     const sortedMarkers = updatedMarkers.sort((a, b) => {
@@ -97,7 +112,7 @@ export async function getImage(imageId) {
       `https://api.hel.fi/linkedevents/v1/image/${imageId}`
     );
     const imageData = await response.json();
-    console.log("original image found", imageId);
+    // console.log("original image found", imageId);
     return imageData.url;
   } catch (error) {
     console.error("Error fetching image:", error);

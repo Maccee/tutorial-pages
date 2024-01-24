@@ -1,6 +1,6 @@
 import { useState } from "react";
 import React from "react";
-import Image from "next/image";
+
 import { MagnifyingGlassIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import { StarIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
@@ -18,7 +18,7 @@ function Header({ setKeyword, toggleMapVisibility }) {
   };
 
   return (
-    <header className="flex items-center justify-between p-1 bg-white shadow-lg border-2 z-50">
+    <header className="flex items-center justify-between p-1 bg-white shadow-lg z-0">
       {/* Logo Section */}
       <div className="flex items-center">
         <div className="h-12 w-12 relative mr-2">
