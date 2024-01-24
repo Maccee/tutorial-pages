@@ -36,7 +36,6 @@ function LocationMarkers({ markers }) {
   );
 }
 
-
 const flipCoordinates = (geoJson) => {
   const flipCoords = (coords) => {
     if (Array.isArray(coords[0])) {
@@ -76,14 +75,13 @@ const transformGeometryCollections = (geoJsonData) => {
 };
 
 function Map({ markers, selectedCard }) {
-  
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
 
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
   const flippedGeojsonDataEsp = flipCoordinates(jsonDataEsp);
-  
+
   const transformedEspooData = transformGeometryCollections(
     flippedGeojsonDataEsp
   );
@@ -97,8 +95,6 @@ function Map({ markers, selectedCard }) {
 
   function FlyToSelectedCard({ selectedCard }) {
     const map = useMap();
-
-    
 
     useEffect(() => {
       if (selectedCard) {
@@ -178,13 +174,11 @@ function Map({ markers, selectedCard }) {
               style={geoJsonStyle}
               onEachFeature={onEachFeature}
             />
-            
           </>
         )}
-        
+
         <LocationMarkers markers={markers} />
-        <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue}/>
-        
+        <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue} />
       </MapContainer>
     </section>
   );
