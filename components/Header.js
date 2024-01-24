@@ -8,7 +8,7 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/solid";
 
-function Header({ setKeyword }) {
+function Header({ setKeyword, toggleMapVisibility }) {
   const [inputValue, setInputValue] = useState("");
 
   const handleSearch = () => {
@@ -22,7 +22,7 @@ function Header({ setKeyword }) {
   };
 
   return (
-    <header className="sticky top-0 flex justify-between items-center p-1">
+    <header className="sticky top-0 flex justify-between items-center p-1 bg-white z-50">
       <div className="flex items-center flex-grow-0">
         <div className="h-10 w-10 relative mr-2">
           <Image
@@ -57,7 +57,10 @@ function Header({ setKeyword }) {
         </p>
 
         <div className="flex items-center space-x-2 border-2 p-2 rounded-full">
-          <GlobeAltIcon className="h-6 cursor-pointer" />
+          <GlobeAltIcon
+            className="h-6 cursor-pointer"
+            onClick={toggleMapVisibility}
+          />
           <UsersIcon className="h-6 cursor-pointer" />
           <UserCircleIcon className="h-6 cursor-pointer" />
         </div>

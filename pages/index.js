@@ -30,28 +30,27 @@ export default function Home() {
 
   return (
     <div>
-      <Header setKeyword={setKeyword} />
+      <Header
+        setKeyword={setKeyword}
+        toggleMapVisibility={toggleMapVisibility}
+      />
 
-      <main className="relative justify-between xl:mx-24 z-0">
+      <main className="relative justify-between xl:mx-24">
         <div
           className={`transition-all duration-500 ${
             isMapVisible
-              ? "opacity-100 max-h-[500px] sticky top-[50px]"
+              ? "opacity-100 max-h-[500px] sticky top-[50px] "
               : "opacity-0 max-h-0"
           }`}
-          style={{ overflow: "hidden" }}
+          style={{ overflow: "hidden", zIndex: "10" }}
         >
           <MapComponentWithNoSSR
             markers={markers}
             selectedCard={selectedCard}
+            toggleMapVisibility={toggleMapVisibility}
           />
         </div>
-        <button
-          className="transition duration-300 ease-in-out bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-          onClick={toggleMapVisibility}
-        >
-          Toggle Map
-        </button>
+
         <Cards markers={markers} setSelectedCard={setSelectedCard} />
       </main>
     </div>

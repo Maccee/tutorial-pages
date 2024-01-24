@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
+    "@turf/turf": "^6.5.0",
     "axios": "^1.6.5",
     "fs": "^0.0.1-security",
     "leaflet-defaulticon-compatibility": "^0.1.2",

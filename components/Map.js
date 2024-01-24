@@ -14,6 +14,7 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import jsonDataHel from "../public/aluejakoHelsinki.json";
 import jsonDataVan from "../public/aluejakoVantaa.json";
 import jsonDataEsp from "../public/aluejakoEspoo.json";
+import jsonDataKau from "../public/aluejakoKauniainen.json";
 
 function LocationMarkers({ markers }) {
   return (
@@ -45,16 +46,16 @@ function ZoomControl() {
   };
 
   return (
-    <div className="flex flex-col absolute right-2 top-2 z-50">
+    <div className="flex flex-col absolute right-2 top-2">
       <button
         onClick={zoomIn}
-        className=" text-xl w-12 h-12 bg-blue-500 text-white  mb-1 rounded-full hover:bg-blue-700 transition duration-300"
+        className="text-xl w-12 h-12 bg-blue-500 text-white  mb-1 rounded-full hover:bg-blue-700 transition duration-300"
       >
         +
       </button>
       <button
         onClick={zoomOut}
-        className="text-xl w-12 h-12 bg-blue-500 text-white rounded-full  hover:bg-blue-700 transition duration-300"
+        className="text-xl w-12 h-12 bg-blue-500 text-white rounded-full hover:bg-blue-700 transition duration-300"
       >
         -
       </button>
@@ -69,7 +70,7 @@ function PolylineControl({ showAlue, setShowAlue }) {
   return (
     <button
       onClick={toggleAlue}
-      className="absolute text-xl w-12 h-12 bottom-2 right-2 z-50 bg-white p-2  rounded shadow"
+      className="absolute text-xl w-12 h-12 bottom-2 right-2 bg-white p-2 rounded shadow"
       // Adjust top-[5rem] as needed to position below the ZoomControl
     >
       {showAlue ? "HD" : "SP"}
@@ -114,13 +115,14 @@ const transformGeometryCollections = (geoJsonData) => {
   return { ...geoJsonData, features: transformedFeatures };
 };
 
-function Map({ markers, selectedCard }) {
+function Map({ markers, selectedCard, toggleMapVisibility }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
 
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
   const flippedGeojsonDataEsp = flipCoordinates(jsonDataEsp);
+  const flippedGeojsonDataKau = flipCoordinates(jsonDataKau);
 
   const transformedEspooData = transformGeometryCollections(
     flippedGeojsonDataEsp
@@ -161,7 +163,10 @@ function Map({ markers, selectedCard }) {
       // Check for Espoo dataset
       else if (feature.properties["Nimi"]) {
         popupContent = feature.properties["Nimi"];
-        console.log("Sample Espoo Feature", flippedGeojsonDataEsp.features[0]);
+      }
+      // Check for Kauniainen dataset
+      else if (feature.properties["Nimi"]) {
+        popupContent = feature.properties["Nimi"];
       }
     }
 
@@ -171,9 +176,13 @@ function Map({ markers, selectedCard }) {
   };
 
   return (
-    <section className="">
+    <section className="bg-white">
       <MapContainer
-        style={{ height: "300px" }}
+        style={{
+          height: "300px",
+
+          backgroundColor: "white",
+        }}
         center={center}
         zoom={13}
         scrollWheelZoom={true}
@@ -199,6 +208,11 @@ function Map({ markers, selectedCard }) {
             />
             <GeoJSON
               data={transformedEspooData}
+              style={geoJsonStyle}
+              onEachFeature={onEachFeature}
+            />
+            <GeoJSON
+              data={flippedGeojsonDataKau}
               style={geoJsonStyle}
               onEachFeature={onEachFeature}
             />

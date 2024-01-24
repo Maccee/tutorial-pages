@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 .leaflet-control {
-  z-index: 1 !important;
+  z-index: 0 !important;
 }
 .leaflet-pane {
-  z-index: 1 !important;
+  z-index: 0 !important;
 }
 .leaflet-top,
 .leaflet-bottom {
-  z-index: 1 !important;
+  z-index: 0 !important;
 }
 
 .word-wrap {
