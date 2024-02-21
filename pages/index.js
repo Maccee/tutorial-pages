@@ -17,7 +17,7 @@ export default function Home() {
 
   const [progress, setProgress] = useState(0);
 
-  // Inside your Home component
+  // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
     if (keyword) {
       setMarkers([]);
@@ -25,6 +25,7 @@ export default function Home() {
 
       const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=true&show_all_places=true`;
 
+      // Progress funtion passed to the fetchdata to dynamically set the progress based on how many markers have been built
       const updateProgress = (progress) => {
         setProgress(progress);
       };
@@ -42,6 +43,7 @@ export default function Home() {
     }
   }, [keyword]);
 
+  // map visibility, from a button in header
   const toggleMapVisibility = () => {
     setIsMapVisible(!isMapVisible);
   };

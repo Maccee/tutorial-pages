@@ -1,5 +1,4 @@
-import React from "react";
-
+// Map all markers to a component using grid layout.
 export const Cards = ({ markers, setSelectedCard }) => {
   const totalCards = markers?.length;
   return (

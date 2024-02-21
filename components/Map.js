@@ -22,6 +22,7 @@ import {
   flipCoordinates,
 } from "./MapControlUtils";
 
+// Put all markers to the map
 function LocationMarkers({ markers }) {
   return (
     <>
@@ -40,6 +41,7 @@ function LocationMarkers({ markers }) {
   );
 }
 
+
 function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
@@ -47,11 +49,11 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
   const flippedGeojsonDataEsp = flipCoordinates(jsonDataEsp);
-
   const transformedEspooData = transformGeometryCollections(
     flippedGeojsonDataEsp
   );
 
+  // geojson overlay styles
   const geoJsonStyle = {
     color: "blue",
     weight: 2,
@@ -59,6 +61,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
     fillOpacity: 0.5,
   };
 
+  // when card clicked, focus on the selected card
   function FlyToSelectedCard({ selectedCard }) {
     const map = useMap();
 
@@ -75,6 +78,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
     return null;
   }
 
+  // get the name of the area from the geojson and put it to the popup when area is clicked
   const onEachFeature = (feature, layer) => {
     let popupContent = "";
 
@@ -107,7 +111,6 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
       <MapContainer
         style={{
           height: "300px",
-
           backgroundColor: "white",
         }}
         center={center}

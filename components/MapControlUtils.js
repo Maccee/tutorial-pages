@@ -5,6 +5,7 @@ import {
   MagnifyingGlassMinusIcon,
 } from "@heroicons/react/24/outline";
 
+// this is the main map controls overlay
 export const ZoomControl = ({ showAlue, setShowAlue }) => {
   const map = useMap();
   const toggleAlue = () => {
@@ -13,7 +14,6 @@ export const ZoomControl = ({ showAlue, setShowAlue }) => {
   const zoomIn = () => {
     map.zoomIn();
   };
-
   const zoomOut = () => {
     map.zoomOut();
   };
@@ -46,6 +46,7 @@ export const ZoomControl = ({ showAlue, setShowAlue }) => {
   );
 };
 
+// helper function to flip the coordinates from the position array of the geojson to display the area in correct position
 export const flipCoordinates = (geoJson) => {
   const flipCoords = (coords) => {
     if (Array.isArray(coords[0])) {
@@ -53,9 +54,7 @@ export const flipCoordinates = (geoJson) => {
     }
     return [coords[1], coords[0]];
   };
-
   const flippedGeoJson = JSON.parse(JSON.stringify(geoJson)); // Deep copy
-
   flippedGeoJson.features.forEach((feature) => {
     if (feature.geometry && feature.geometry.coordinates) {
       feature.geometry.coordinates = flipCoords(feature.geometry.coordinates);
@@ -65,9 +64,9 @@ export const flipCoordinates = (geoJson) => {
   return flippedGeoJson;
 };
 
+// helper function to change the structure of a geojson file for the app to render the geojson data correctly
 export const transformGeometryCollections = (geoJsonData) => {
   const transformedFeatures = [];
-
   geoJsonData.features.forEach((feature) => {
     if (feature.geometry.type === "GeometryCollection") {
       feature.geometry.geometries.forEach((geometry) => {

@@ -7,10 +7,12 @@ import { StarIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 function Header({ setKeyword, toggleMapVisibility }) {
   const [inputValue, setInputValue] = useState("");
 
+  // set the value of keyword. Main/index.js has hook with keyword as dependancy array to make the request to the API
   const handleSearch = () => {
     setKeyword(inputValue);
   };
 
+  // use "enter" key aswell
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSearch();
