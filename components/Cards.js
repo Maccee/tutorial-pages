@@ -4,13 +4,14 @@ export const Cards = ({ markers, setSelectedCard }) => {
   return (
     <>
       <section className="relative">
-        {totalCards > 1 && <h2 className="">Results - {totalCards}</h2>}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 " style={{ paddingLeft: '15px', paddingRight: '15px', paddingBottom: '10px', paddingTop: '15px' }}>
           {markers?.map((item) => (
             <div
-              className="relative bg-cover bg-center bg-no-repeat shadow-lg border-gray-200 p-4 rounded-3xl h-56"
+              className="relative bg-cover bg-center bg-no-repeat shadow-lg border-gray-200 p-4 rounded-3xl h-56 transition duration-300 transform hover:scale-105 active:scale-100"
               style={{
                 backgroundImage: `url(${item.imageUrl})`,
+                transition: 'transform 300ms ease-in-out, box-shadow 300ms ease-in-out',
               }}
               onClick={() => setSelectedCard(item.coordinates)}
               key={item.id}

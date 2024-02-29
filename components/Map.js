@@ -111,7 +111,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
       <MapContainer
         style={{
           height: "300px",
-          backgroundColor: "white",
+          borderRadius: '20px',
         }}
         center={center}
         zoom={13}
@@ -151,6 +151,19 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
 
         <LocationMarkers markers={markers} />
         <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue} />
+        <div style={{
+          position: 'absolute',
+          top: '10px', // position UP
+          left: '10px', // position LEFT
+          zIndex: 1000, // layers
+          backgroundColor: 'rgba(255, 255, 255, 0.75)', // transparency
+          padding: '10px',
+          borderRadius: '5px',
+          fontSize: '20px',
+          fontWeight: 'bold',
+        }}>
+          Results - {markers.length}
+        </div>
       </MapContainer>
     </section>
   );

@@ -37,6 +37,7 @@ function Header({ setKeyword, toggleMapVisibility }) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          style={{ paddingLeft: '.5rem' }}
         />
         <MagnifyingGlassIcon
           className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-2"

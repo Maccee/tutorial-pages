@@ -59,10 +59,9 @@ export default function Home() {
           toggleMapVisibility={toggleMapVisibility}
         />
         <div
-          className={`transition-all duration-500 ${
-            isMapVisible ? "opacity-100 max-h-[500px] " : "opacity-0 max-h-0"
-          }`}
-          style={{ overflow: "hidden", zIndex: "10" }}
+          className={`transition-all duration-500 ${isMapVisible ? "opacity-100 max-h-[500px] " : "opacity-0 max-h-0"
+            }`}
+          style={{ overflow: "hidden", zIndex: "10", paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px' }}
         >
           <MapComponentWithNoSSR
             markers={markers}
@@ -75,6 +74,9 @@ export default function Home() {
       <main className="z-0">
         <Cards markers={markers} setSelectedCard={setSelectedCard} />
       </main>
+      <footer className="w-full text-center p-4" style={{ bottom: 0 }}>
+        <p>Copyright © 2024</p>
+      </footer>
     </>
   );
 }

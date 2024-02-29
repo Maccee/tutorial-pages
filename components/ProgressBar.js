@@ -15,7 +15,7 @@ const ProgressBar = ({ totalItems, itemsProcessed }) => {
     position: "fixed",
     top: 0,
     left: 0,
-    height: "3px",
+    height: "4px",
     backgroundColor: "blue",
     zIndex: 1000,
 
