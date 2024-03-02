@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 
 import { MagnifyingGlassIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import { StarIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
-function Header({ setKeyword, toggleMapVisibility }) {
+function Header({ setKeyword, toggleMapVisibility, toggleLoginVisibility, token }) {
   const [inputValue, setInputValue] = useState("");
+
+  // we need this to trigger the star icon color. Im working a different solution for this so hang on...
+  // this re-renders the header component when token is changed. however if we remove the token manually from local storage
+  // it wont trigger.. and that is not what we want.. We need some way to listen the local storage..
+  useEffect(() => {
+    console.log("token set!")
+  }, [token]);
+  
 
   // set the value of keyword. Main/index.js has hook with keyword as dependancy array to make the request to the API
   const handleSearch = () => {
@@ -51,8 +59,8 @@ function Header({ setKeyword, toggleMapVisibility }) {
           className="h-8 cursor-pointer text-logoBlue"
           onClick={toggleMapVisibility}
         />
-        <StarIcon className="h-8 cursor-pointer text-logoBlue" />
-        <UserCircleIcon className="h-8 cursor-pointer text-logoBlue" />
+        <StarIcon className={`h-8 cursor-pointer ${token ? 'text-logoBlue' : 'text-gray-200'}`} />
+        <UserCircleIcon onClick={toggleLoginVisibility} className="h-8 cursor-pointer text-logoBlue" />
       </div>
     </header>
   );

@@ -14,6 +14,11 @@ module.exports = {
       },
       colors: {
         'logoBlue': '#2285C7'
+      },
+      customProperties: {
+        variables: {
+          'logo-blue': '#2285C7',
+        },
       }
     },
   },

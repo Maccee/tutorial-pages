@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --logo-blue: #2285C7;
+}
+
+
 .leaflet-control {
   z-index: 0 !important;
 }
@@ -16,4 +21,16 @@
 .word-wrap {
   word-wrap: break-word; /* Older browsers */
   overflow-wrap: break-word; /* Standard property */
+}
+
+.defaultButton {
+  max-width: 250px;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--logo-blue);
+  color: white;
+  border-radius: 15px;
 }
