@@ -28,7 +28,7 @@ export default function Home() {
       setMarkers([]);
       setProgress(0);
 
-      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=true&show_all_places=true`;
+      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=false&show_all_places=true`;
 
       // Progress funtion passed to the fetchdata to dynamically set the progress based on how many markers have been built
       const updateProgress = (progress) => {

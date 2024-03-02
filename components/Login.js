@@ -1,5 +1,5 @@
-import { HandleLogin, HandleRegister } from '@/utils/LoginUtils';
-import React, { useState } from 'react';
+import { HandleLogin, HandleRegister, decodeTokenName } from '@/utils/LoginUtils';
+import React, { useState, useEffect } from 'react';
 
 export const Login = ({ setToken, token }) => {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -8,6 +8,14 @@ export const Login = ({ setToken, token }) => {
         password: '',
         confirmPassword: '',
     });
+
+    useEffect(() => {
+        // Check for token in local storage
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+          setToken(storedToken);
+        }
+      }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -100,7 +108,7 @@ export const Login = ({ setToken, token }) => {
                 {token &&
                     <div className='flex flex-col gap-2  items-center w-96'>
                         <div>Logged in as:</div>
-                        <div>{token}</div>
+                        <div>{decodeTokenName(token)}</div>
                         <button className='defaultButton' type="button" onClick={logout}>Logout</button>
                     </div>
                 }
