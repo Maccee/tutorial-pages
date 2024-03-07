@@ -111,7 +111,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
       <MapContainer
         style={{
           height: "300px",
-          borderRadius: '20px',
+          
         }}
         center={center}
         zoom={13}

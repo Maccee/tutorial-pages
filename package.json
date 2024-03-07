@@ -17,6 +17,7 @@
     "crypto-js": "^4.2.0",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet.markercluster": "^1.5.3",
+    "masonry-layout": "^4.2.2",
     "next": "^14.0.4",
     "next-transpile-modules": "^10.0.1",
     "react": "^18",

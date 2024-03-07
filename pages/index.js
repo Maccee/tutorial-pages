@@ -21,7 +21,6 @@ export default function Home() {
 
   const [token, setToken] = useState(null);
 
-
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
     if (keyword) {
@@ -60,42 +59,45 @@ export default function Home() {
 
   return (
     <>
-      {/* Display the ProgressBar component with totalItems and itemsProcessed as props */}
-      <ProgressBar totalItems={100} itemsProcessed={progress} />
-
-      <div className="sticky top-0 z-50">
-        <Header
-          setKeyword={setKeyword}
-          toggleMapVisibility={toggleMapVisibility}
-          toggleLoginVisibility={toggleLoginVisibility}
-          token={token}
-        />
-        <div
-          className={`transition-all duration-500 ${isLoginVisible ? "opacity-100 max-h-[500px] " : "opacity-0 max-h-0"
-            }`}
-          style={{ overflow: "hidden", zIndex: "10", paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px' }}
-        >
-          <Login setToken={setToken} token={token}/>
-        </div>
-        <div
-          className={`transition-all duration-500 ${isMapVisible ? "opacity-100 max-h-[500px] " : "opacity-0 max-h-0"
-            }`}
-          style={{ overflow: "hidden", zIndex: "10", paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px' }}
-        >
-          <MapComponentWithNoSSR
-            markers={markers}
-            selectedCard={selectedCard}
-            setSelectedCard={setSelectedCard}
-            setIsMapVisible={setIsMapVisible}
+     
+        {/* Display the ProgressBar component with totalItems and itemsProcessed as props */}
+        <ProgressBar totalItems={100} itemsProcessed={progress} />
+        <div className="sticky top-0 z-50">
+          <Header
+            setKeyword={setKeyword}
+            toggleMapVisibility={toggleMapVisibility}
+            toggleLoginVisibility={toggleLoginVisibility}
+            token={token}
           />
+          <div
+            className={`transition-all duration-500 ${
+              isLoginVisible
+                ? "opacity-100 max-h-[500px] "
+                : "opacity-0 max-h-0"
+            }`}
+          >
+            <Login setToken={setToken} token={token} />
+          </div>
+          <div
+            className={`transition-all duration-500 ${
+              isMapVisible ? "opacity-100 max-h-[500px] " : "opacity-0 max-h-0"
+            }`}
+          >
+            <MapComponentWithNoSSR
+              markers={markers}
+              selectedCard={selectedCard}
+              setSelectedCard={setSelectedCard}
+              setIsMapVisible={setIsMapVisible}
+            />
+          </div>
         </div>
-      </div>
-      <main className="z-0">
-        <Cards markers={markers} setSelectedCard={setSelectedCard} />
-      </main>
-      <footer className="w-full text-center p-4" style={{ bottom: 0 }}>
-        <p>Copyright © 2024</p>
-      </footer>
+        <main className="z-0">
+          <Cards markers={markers} setSelectedCard={setSelectedCard} />
+        </main>
+        <footer className="w-full text-center p-4" style={{ bottom: 0 }}>
+          <p>Copyright © 2024</p>
+        </footer>
+      
     </>
   );
 }

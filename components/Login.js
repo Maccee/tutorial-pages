@@ -42,13 +42,13 @@ export const Login = ({ setToken, token }) => {
 
     return (
         <div>
-            <div className='w-full flex items-center justify-center border-b-2 pb-2'>
+            <div className='w-full flex items-center justify-center border-b-2 pb-4 px-2 bg-white'>
                 {!token &&
-                    <form onSubmit={handleSubmit} className="space-y-4 w-96">
+                    <form onSubmit={handleSubmit} className="space-y-2 w-96">
                         <h2 className='text-3xl'>{isRegistering ? 'Register' : 'Login'}</h2>
                         {/* Username and Password Fields */}
                         <div>
-                            <label htmlFor="username" className='block text-center'>Username</label>
+                            <label htmlFor="username" className='block'>Username</label>
                             <div className='border-2 rounded-full px-3 py-2 flex items-center mt-2'>
                                 <input
                                     className='w-full outline-none'
@@ -62,7 +62,7 @@ export const Login = ({ setToken, token }) => {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="password" className='block text-center'>Password</label>
+                            <label htmlFor="password" className='block'>Password</label>
                             <div className='border-2 rounded-full px-3 py-2 flex items-center mt-2'>
                                 <input
                                     className='w-full outline-none'
@@ -78,7 +78,7 @@ export const Login = ({ setToken, token }) => {
                         {/* Always rendered but visually hidden when not registering */}
                         <div className={`transition-all duration-500 ease-in-out ${isRegistering ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'} overflow-hidden`}>
                             <div>
-                                <label htmlFor="confirmPassword" className='block text-center'>Confirm Password</label>
+                                <label htmlFor="confirmPassword" className='block'>Confirm Password</label>
                                 <div className='mt-2 flex items-center px-3 py-2 border-2 rounded-3xl'>
                                     <input
                                         className='w-full outline-none'
@@ -94,7 +94,7 @@ export const Login = ({ setToken, token }) => {
                         </div>
 
                         {/* Buttons */}
-                        <div className='flex justify-between'>
+                        <div className='flex justify-between pt-2'>
                             <button className='defaultButton' type="submit">{isRegistering ? 'Register' : 'Login'}</button>
                             <button className='defaultButton' type="button" onClick={toggleMode}>
                                 {isRegistering ? 'Back to Login' : 'New User?'}
