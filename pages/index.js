@@ -73,14 +73,13 @@ export default function Home() {
         <div
           className={`transition-all duration-500 ${isLoginVisible ? "opacity-100 max-h-[500px] " : "opacity-0 max-h-0"
             }`}
-          style={{ overflow: "hidden", zIndex: "10", paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px' }}
+          style={{ overflow: "hidden", zIndex: "50", paddingLeft: '20px', paddingRight: '20px', paddingTop: '0px', background: " white" }}
         >
-          <Login setToken={setToken} token={token}/>
+          <Login setToken={setToken} token={token} />
         </div>
         <div
-          className={`transition-all duration-500 ${isMapVisible ? "opacity-100 max-h-[500px] " : "opacity-0 max-h-0"
-            }`}
-          style={{ overflow: "hidden", zIndex: "10", paddingLeft: '20px', paddingRight: '20px', paddingTop: '20px' }}
+          className={`transition-all duration-500 ${isMapVisible ? "opacity-100" : "opacity-0 max-h-0"}`}
+          style={{ overflow: "hidden", zIndex: "30", background: "white", paddingLeft: '10px', paddingRight: '10px' }}
         >
           <MapComponentWithNoSSR
             markers={markers}
