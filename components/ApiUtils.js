@@ -39,7 +39,6 @@ export async function fetchData(
             }
           }
 
-
           // Update progressbar
           itemsProcessed += 1;
           const progress =
@@ -47,7 +46,6 @@ export async function fetchData(
           if (typeof progressCallback === "function") {
             progressCallback(progress);
           }
-
 
           // Construct marker object
           return {
@@ -133,3 +131,20 @@ export async function getImage(imageId) {
     return "";
   }
 }
+
+export const fetchAndSetMarkers = (searchKeyword, setProgress, setMarkers) => {
+  setMarkers([]);
+  setProgress(0);
+  const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${searchKeyword}&has_upcoming_event=false&show_all_places=true`;
+  const updateProgress = (progress) => setProgress(progress);
+
+  fetchData(initialUrl, [], updateProgress)
+    .then((fetchedMarkers) => {
+      setMarkers(fetchedMarkers);
+      setProgress(0); // Reset the progress after the fetch is complete
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+      // Optionally, you might want to handle error state here as well
+    });
+};

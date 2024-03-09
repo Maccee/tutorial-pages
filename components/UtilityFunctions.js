@@ -24,6 +24,6 @@ export const toggleMapVisibility = (isMapVisible, setIsMapVisible, setMapContain
   if (!isMapVisible) {
     setMapContainerHeight(300);
   } else {
-    setMapContainerHeight(20);
+    setMapContainerHeight(0);
   }
 };

@@ -38,7 +38,7 @@ function LocationMarkers({ markers }) {
             }}
           >
             <Popup>
-              <div className="">
+              <div className="scrollable overflow-y-auto max-h-40">
                 <p className="text-lg">{marker.name}</p>
                 <p className="text-2xs">{marker.description}</p>
               </div>
@@ -53,7 +53,7 @@ function LocationMarkers({ markers }) {
 function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
-  const [mapHeight, setMapHeight] = useState(500); // Initial map height
+  const [mapHeight, setMapHeight] = useState(300); // Initial map height
 
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
