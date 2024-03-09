@@ -14,14 +14,18 @@
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "amqplib": "^0.10.3",
+    "crypto-js": "^4.2.0",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet.markercluster": "^1.5.3",
+    "masonry-layout": "^4.2.2",
     "next": "^14.0.4",
+    "next-leaflet-cluster": "^1.0.0",
     "next-transpile-modules": "^10.0.1",
     "react": "^18",
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",
-    "react-leaflet-cluster": "^2.1.0"
+    "react-leaflet-cluster": "^2.1.0",
+    "react-leaflet-markercluster": "^3.0.0-rc1"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
