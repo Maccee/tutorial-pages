@@ -46,48 +46,62 @@ export const Cards = ({ markers, setSelectedCard }) => {
   };
 
   return (
-    <section className="relative flex items-center justify-center w-[100%]">
+    <section className="flex items-center justify-center w-full">
+  <div ref={gridRef} className="">
+    {markers?.map((item) => {
+      // Generate a random height between 140 and 250
+      const randomHeight = Math.floor(Math.random() * (250 - 140 + 1)) + 140;
 
-      <div ref={gridRef} className="">
-
-        {markers?.map((item) => (
-          <div
-            key={item.id}
-            className="p-2 rounded-md my-1 border-2 grid-item group relative overflow-hidden min-h-[140px] transition-all duration-300 ease-in-out hover:scale-[1.035] cursor-pointer"
-            onClick={() => setSelectedCard(item.coordinates)}
-            style={{
-              backgroundImage: `url(${item.imageUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              width: cardWidth + "px",
-            }}
-          >
-            <div className="relative z-10">
-              <div className="reltive opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite(item.id);
-                  }}
-                  aria-label="Toggle Favorite"
-                  className="outline-none focus:outline-none"
-                >
-                  <StarIcon
-                    className={`h-6 w-6 ${
-                      favorites.includes(item.id)
-                        ? "text-yellow-500"
-                        : "text-white"
-                    }`}
-                  />
-                </button>
-              </div>
-              <p className="text-lg font-semibold text-white">{item.name}</p>
+      return (
+        <div
+          key={item.id}
+          className="p-2 rounded-md my-1 border-2 grid-item group relative overflow-hidden transition-all duration-100 ease-in-out hover:scale-[1.03] cursor-pointer"
+          onClick={() => setSelectedCard(item.coordinates)}
+          style={{
+            backgroundImage: `url(${item.imageUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            width: cardWidth + "px",
+            height: randomHeight + "px", // Apply the random height here
+          }}
+        >
+          <div className="flex flex-col justify-end h-full">
+            <div className="z-50 p-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(item.id);
+                }}
+                aria-label="Toggle Favorite"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2"
+              >
+                <StarIcon
+                  className={`h-6 w-6 ${
+                    favorites.includes(item.id)
+                      ? "text-yellow-200"
+                      : "text-white"
+                  }`}
+                />
+              </button>
             </div>
-
-            <div className="absolute inset-0 bg-opacity-50 bg-slate-900 rounded-md"></div>
+            <div className="z-10 transition-all duration-100 group-hover">
+              <p
+                className={`text-lg font-semibold ${
+                  favorites.includes(item.id)
+                    ? "text-yellow-200"
+                    : "text-white"
+                }`}
+              >
+                {item.name}
+              </p>
+              
+            </div>
           </div>
-        ))}
-      </div>
-    </section>
+          <div className="absolute inset-0 bg-opacity-50 bg-slate-900 rounded-md"></div> {/* dark opacity cover box */}
+        </div>
+      );
+    })}
+  </div>
+</section>
   );
 };

@@ -7,8 +7,7 @@ import {
   useMap,
   GeoJSON,
 } from "react-leaflet";
-import MarkerClusterGroup from 'next-leaflet-cluster'
-
+import MarkerClusterGroup from "next-leaflet-cluster";
 
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
@@ -29,22 +28,23 @@ import {
 function LocationMarkers({ markers }) {
   return (
     <>
-    <MarkerClusterGroup
-        chunkedLoading={true}
-        showCoverageOnHover={false}
-               
-      >
-      {markers?.map((marker, index) => (
-        <Marker
-          key={index}
-          position={{ lat: marker.coordinates[1], lng: marker.coordinates[0] }}
-        >
-          <Popup>
-            {marker.name}
-            {marker.description}
-          </Popup>
-        </Marker>
-      ))}
+      <MarkerClusterGroup chunkedLoading={true} showCoverageOnHover={false}>
+        {markers?.map((marker, index) => (
+          <Marker
+            key={index}
+            position={{
+              lat: marker.coordinates[1],
+              lng: marker.coordinates[0],
+            }}
+          >
+            <Popup>
+              <div className="">
+                <p className="text-lg">{marker.name}</p>
+                <p className="text-2xs">{marker.description}</p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
       </MarkerClusterGroup>
     </>
   );
@@ -76,7 +76,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
     useEffect(() => {
       if (selectedCard) {
         //map.flyTo([60.264753787236685,24.849923151141372], 16); // Testing purposes for manual entry
-        map.flyTo([selectedCard[1], selectedCard[0]], 16);
+        map.flyTo([selectedCard[1], selectedCard[0]], 18);
         setSelectedCard(null);
 
         setIsMapVisible(true);
@@ -89,36 +89,27 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   // get the name of the area from the geojson and put it to the popup when area is clicked
   const onEachFeature = (feature, layer) => {
     let popupContent = "";
-
     if (feature.properties) {
-      // Check for Helsinki dataset
       if (feature.properties["hel:nimi_fi"]) {
         popupContent = feature.properties["hel:nimi_fi"];
-      }
-      // Check for Vantaa dataset
-      else if (feature.properties["kosanimi"]) {
+      } else if (feature.properties["kosanimi"]) {
         popupContent = feature.properties["kosanimi"];
-      }
-      // Check for Espoo dataset
-      else if (feature.properties["Nimi"]) {
+      } else if (feature.properties["Nimi"]) {
         popupContent = feature.properties["Nimi"];
-      }
-      // Check for Kauniainen dataset
-      else if (feature.properties["Nimi"]) {
+      } else if (feature.properties["Nimi"]) {
         popupContent = feature.properties["Nimi"];
       }
     }
-
     if (popupContent) {
       layer.bindPopup(popupContent);
     }
   };
 
   return (
-    <section className="bg-white" style={{ overflow: 'hidden' }}>
+    <section className="bg-white" style={{ overflow: "hidden" }}>
       <MapContainer
         style={{
-          height: "300px",
+          height: "600px",
         }}
         center={center}
         zoom={13}
@@ -131,8 +122,6 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
         />
 
         <LocationMarkers markers={markers} />
-
-        
 
         <FlyToSelectedCard selectedCard={selectedCard} />
         {showAlue && (
@@ -176,7 +165,6 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
             fontWeight: "bold",
           }}
         >
-
           Results - {markers.length}
         </div>
       </MapContainer>
