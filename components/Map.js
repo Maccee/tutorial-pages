@@ -53,6 +53,7 @@ function LocationMarkers({ markers }) {
 function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
+  const [mapHeight, setMapHeight] = useState(500); // Initial map height
 
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
@@ -105,11 +106,13 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
     }
   };
 
+  
+
   return (
     <section className="bg-white" style={{ overflow: "hidden" }}>
       <MapContainer
         style={{
-          height: "600px",
+          height: `${mapHeight}px`,
         }}
         center={center}
         zoom={13}
@@ -152,22 +155,11 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
         <LocationMarkers markers={markers} />
         <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue} />
 
-        <div
-          style={{
-            position: "absolute",
-            top: "10px", // position UP
-            left: "10px", // position LEFT
-            zIndex: 1000, // layers
-            backgroundColor: "rgba(255, 255, 255, 0.75)", // transparency
-            padding: "10px",
-            borderRadius: "5px",
-            fontSize: "20px",
-            fontWeight: "bold",
-          }}
-        >
+        <div className="absolute top-2.5 left-2.5 z-50 bg-white bg-opacity-75 p-2.5 rounded-md text-lg font-bold">
           Results - {markers.length}
         </div>
       </MapContainer>
+      
     </section>
   );
 }

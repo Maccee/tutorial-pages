@@ -4,7 +4,7 @@ import { StarIcon } from "@heroicons/react/24/outline";
 export const Cards = ({ markers, setSelectedCard }) => {
   const [favorites, setFavorites] = useState([]);
   const gridRef = useRef(null);
-  const cardWidth = 200;
+  const cardWidth = 170;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,8 +49,7 @@ export const Cards = ({ markers, setSelectedCard }) => {
     <section className="flex items-center justify-center w-full">
   <div ref={gridRef} className="">
     {markers?.map((item) => {
-      // Generate a random height between 140 and 250
-      const randomHeight = Math.floor(Math.random() * (250 - 140 + 1)) + 140;
+      
 
       return (
         <div
@@ -62,7 +61,7 @@ export const Cards = ({ markers, setSelectedCard }) => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             width: cardWidth + "px",
-            height: randomHeight + "px", // Apply the random height here
+            height: "150px",
           }}
         >
           <div className="flex flex-col justify-end h-full">
