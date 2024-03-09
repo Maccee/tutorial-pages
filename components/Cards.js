@@ -4,6 +4,7 @@ import { StarIcon } from "@heroicons/react/24/outline";
 export const Cards = ({ markers, setSelectedCard }) => {
   const [favorites, setFavorites] = useState([]);
   const gridRef = useRef(null);
+  const cardWidth = 200;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -26,8 +27,9 @@ export const Cards = ({ markers, setSelectedCard }) => {
           // Ensure Masonry is called correctly as a constructor
           new Masonry.default(gridRef.current, {
             itemSelector: ".grid-item",
-            columnWidth: 150,
+            columnWidth: cardWidth,
             gutter: 10,
+            fitWidth: true,
           });
         }
       })
@@ -44,18 +46,20 @@ export const Cards = ({ markers, setSelectedCard }) => {
   };
 
   return (
-    <section className="relative">
-      <div ref={gridRef} className="m-2" style={{ width: "100%" }}>
+    <section className="relative flex items-center justify-center w-[100%]">
+
+      <div ref={gridRef} className="">
+
         {markers?.map((item) => (
           <div
             key={item.id}
-            className="p-2 rounded-md my-1 border-2 grid-item group relative overflow-hidden min-h-[40px] transition-all duration-300 ease-in-out hover:scale-[1.035] cursor-pointer"
+            className="p-2 rounded-md my-1 border-2 grid-item group relative overflow-hidden min-h-[140px] transition-all duration-300 ease-in-out hover:scale-[1.035] cursor-pointer"
             onClick={() => setSelectedCard(item.coordinates)}
             style={{
               backgroundImage: `url(${item.imageUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              width: "150px"
+              width: cardWidth + "px",
             }}
           >
             <div className="relative z-10">
@@ -77,9 +81,7 @@ export const Cards = ({ markers, setSelectedCard }) => {
                   />
                 </button>
               </div>
-              <p className="text-lg font-semibold text-white">
-                {item.name}
-              </p>
+              <p className="text-lg font-semibold text-white">{item.name}</p>
             </div>
 
             <div className="absolute inset-0 bg-opacity-50 bg-slate-900 rounded-md"></div>
