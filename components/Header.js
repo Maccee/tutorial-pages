@@ -13,7 +13,7 @@ function Header({ setKeyword, toggleMapVisibility, toggleLoginVisibility, token 
   useEffect(() => {
     console.log("token set!")
   }, [token]);
-  
+
 
   // set the value of keyword. Main/index.js has hook with keyword as dependancy array to make the request to the API
   const handleSearch = () => {
@@ -28,7 +28,7 @@ function Header({ setKeyword, toggleMapVisibility, toggleLoginVisibility, token 
   };
 
   return (
-    <header className="flex items-center justify-between p-1 bg-white shadow-lg z-0">
+    <header className="flex items-center justify-between bg-white shadow-lg z-0" style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '3px', paddingBottom: '3px' }}>
       {/* Logo Section */}
       <div className="flex items-center">
         <div className="h-12 w-12 relative mr-2">
@@ -48,7 +48,7 @@ function Header({ setKeyword, toggleMapVisibility, toggleLoginVisibility, token 
           style={{ paddingLeft: '.5rem' }}
         />
         <MagnifyingGlassIcon
-          className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-2"
+          className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-1"
           onClick={handleSearch}
         />
       </div>
@@ -56,12 +56,19 @@ function Header({ setKeyword, toggleMapVisibility, toggleLoginVisibility, token 
       {/* Icon Group */}
       <div className="flex items-center space-x-1 ml-2">
         <MapIcon
-          className="h-8 cursor-pointer text-logoBlue"
+          className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
           onClick={toggleMapVisibility}
         />
+
+        {/* -=favorits=-
+          <StarIcon className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110" />
+        */}
         <StarIcon className={`h-8 cursor-pointer ${token ? 'text-logoBlue' : 'text-gray-200'}`} />
-        <UserCircleIcon onClick={toggleLoginVisibility} className="h-8 cursor-pointer text-logoBlue" />
+
+        {/* login */}
+        <UserCircleIcon onClick={toggleLoginVisibility} className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110" />
       </div>
+
     </header>
   );
 }

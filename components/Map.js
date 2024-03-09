@@ -115,7 +115,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   };
 
   return (
-    <section className="bg-white">
+    <section className="bg-white" style={{ overflow: 'hidden' }}>
       <MapContainer
         style={{
           height: "300px",
@@ -162,6 +162,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
 
         <LocationMarkers markers={markers} />
         <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue} />
+
         <div
           style={{
             position: "absolute",
@@ -175,6 +176,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
             fontWeight: "bold",
           }}
         >
+
           Results - {markers.length}
         </div>
       </MapContainer>
