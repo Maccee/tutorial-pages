@@ -7,6 +7,9 @@ import {
   useMap,
   GeoJSON,
 } from "react-leaflet";
+import MarkerClusterGroup from 'next-leaflet-cluster'
+
+
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -26,6 +29,11 @@ import {
 function LocationMarkers({ markers }) {
   return (
     <>
+    <MarkerClusterGroup
+        chunkedLoading={true}
+        showCoverageOnHover={false}
+               
+      >
       {markers?.map((marker, index) => (
         <Marker
           key={index}
@@ -37,10 +45,10 @@ function LocationMarkers({ markers }) {
           </Popup>
         </Marker>
       ))}
+      </MarkerClusterGroup>
     </>
   );
 }
-
 
 function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   const center = { lat: 60.1705, lon: 24.9414 };
@@ -111,7 +119,6 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
       <MapContainer
         style={{
           height: "300px",
-          
         }}
         center={center}
         zoom={13}
@@ -122,7 +129,11 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
         />
+
         <LocationMarkers markers={markers} />
+
+        
+
         <FlyToSelectedCard selectedCard={selectedCard} />
         {showAlue && (
           <>
@@ -151,17 +162,19 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
 
         <LocationMarkers markers={markers} />
         <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue} />
-        <div style={{
-          position: 'absolute',
-          top: '10px', // position UP
-          left: '10px', // position LEFT
-          zIndex: 1000, // layers
-          backgroundColor: 'rgba(255, 255, 255, 0.75)', // transparency
-          padding: '10px',
-          borderRadius: '5px',
-          fontSize: '20px',
-          fontWeight: 'bold',
-        }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "10px", // position UP
+            left: "10px", // position LEFT
+            zIndex: 1000, // layers
+            backgroundColor: "rgba(255, 255, 255, 0.75)", // transparency
+            padding: "10px",
+            borderRadius: "5px",
+            fontSize: "20px",
+            fontWeight: "bold",
+          }}
+        >
           Results - {markers.length}
         </div>
       </MapContainer>
