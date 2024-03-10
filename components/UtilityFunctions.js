@@ -15,3 +15,8 @@ export const toggleMapVisibility = (isMapVisible, setIsMapVisible, setMapContain
     setMapContainerHeight(0);
   }
 };
+
+export const toggleAdjustmentsVisibility = (isAdjustmentsVisible, setIsAdjustmentsVisible) => {
+  console.log("toggle adjustments");
+  setIsAdjustmentsVisible(!isAdjustmentsVisible);
+};

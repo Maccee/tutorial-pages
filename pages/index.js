@@ -11,6 +11,7 @@ import { toggleMapVisibility } from "@/components/UtilityFunctions";
 import { MapIcon } from "@heroicons/react/24/outline";
 
 import dynamic from "next/dynamic";
+import { SearchAdjustments } from "@/components/SearchAdjustments";
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
 });
@@ -21,6 +22,7 @@ export default function Home() {
   const [selectedCard, setSelectedCard] = useState();
   const [isMapVisible, setIsMapVisible] = useState(true);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
+  const [isAdjustmentsVisible, setIsAdjustmentsVisible] = useState(false);
 
   const [progress, setProgress] = useState(0);
   const [token, setToken] = useState(null);
@@ -28,8 +30,6 @@ export default function Home() {
 
   const [userLocation, setUserLocation] = useState(null);
 
-  
-  
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
     if (keyword) {
@@ -37,7 +37,6 @@ export default function Home() {
     }
   }, [keyword]);
 
-  
   return (
     <>
       <ProgressBar totalItems={100} itemsProcessed={progress} />
@@ -48,9 +47,21 @@ export default function Home() {
           setIsMapVisible={setIsMapVisible}
           isLoginVisible={isLoginVisible}
           setIsLoginVisible={setIsLoginVisible}
+          isAdjustmentsVisible={isAdjustmentsVisible}
+          setIsAdjustmentsVisible={setIsAdjustmentsVisible}
           token={token}
           setMapContainerHeight={setMapContainerHeight}
         />
+
+        <div
+          className={`transition-all duration-200 ${
+            isAdjustmentsVisible
+              ? "opacity-100 max-h-[500px]"
+              : "opacity-0 max-h-0"
+          }`}
+        >
+          <SearchAdjustments />
+        </div>
 
         <div
           className={`transition-all duration-500 ${
@@ -73,7 +84,6 @@ export default function Home() {
             setIsMapVisible={setIsMapVisible}
             setUserLocation={setUserLocation}
             userLocation={userLocation}
-            
           />
         </div>
         <div className="cursor-pointer absolute flex w-full items-center justify-center  pb-2">

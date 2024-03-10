@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import React from "react";
 
-import { toggleLoginVisibility, toggleMapVisibility } from "./UtilityFunctions";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { toggleLoginVisibility, toggleMapVisibility, toggleAdjustmentsVisibility } from "./UtilityFunctions";
+import { MagnifyingGlassIcon, AdjustmentsVerticalIcon } from "@heroicons/react/24/solid";
 import { StarIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 const Header = ({
@@ -11,6 +11,8 @@ const Header = ({
   setIsMapVisible,
   isLoginVisible,
   setIsLoginVisible,
+  isAdjustmentsVisible,
+  setIsAdjustmentsVisible,
   token,
   setMapContainerHeight
 }) => {
@@ -34,6 +36,11 @@ const Header = ({
       handleSearch();
     }
   };
+
+const handleAdjustments = () => {
+  console.log("handleadjustmets")
+}
+
 
   return (
     <header
@@ -62,6 +69,12 @@ const Header = ({
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           style={{ paddingLeft: ".5rem" }}
+        />
+        <AdjustmentsVerticalIcon
+          className="inline-flex h-8 w-8 bg-white text-logoBlue rounded-full cursor-pointer md:mx-1"
+          onClick={() =>
+            toggleAdjustmentsVisibility(isAdjustmentsVisible, setIsAdjustmentsVisible)
+          }
         />
         <MagnifyingGlassIcon
           className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-1"
@@ -96,6 +109,7 @@ const Header = ({
           className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
         />
       </div>
+      <div></div>
     </header>
   );
 };
