@@ -1,18 +1,167 @@
+export const fetchAndSetMarkers = (
+  searchKeyword,
+  eventsCheck,
+  distance,
+  setProgress,
+  setMarkers
+) => {
+  console.log("Verify parameters received: ", {
+    searchKeyword,
+    eventsCheck,
+    distance,
+  });
+
+  setMarkers([]);
+  setProgress(0);
+
+  // Use fetchEventData for events, and fetchData for places
+  if (eventsCheck) {
+    // Assuming fetchEventData is defined elsewhere and it's adjusted as necessary
+    fetchEventData(searchKeyword, setProgress, setMarkers);
+  } else {
+    // Existing logic for places or other data using fetchData
+    let baseUrl = "https://api.hel.fi/linkedevents/v1/place/";
+    let apiUrl = `${baseUrl}?text=${encodeURIComponent(
+      searchKeyword
+    )}&has_upcoming_event=false&show_all_places=true`;
+
+    // fetchData function assumed to be defined elsewhere
+    fetchData(apiUrl, [], setProgress, searchKeyword)
+      .then((fetchedMarkers) => {
+        setMarkers(fetchedMarkers);
+        setProgress(0); // Indicate completion
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setProgress(0); // Reset the progress after fetch attempt
+        // Optionally, handle error state here as well
+      });
+  }
+};
+
+// Assuming fetchEventData function is implemented as discussed
+// Modified fetchEventData function
+async function fetchEventData(
+  searchKeyword,
+  progressCallback,
+  setMarkers,
+  url = null,
+  accumulatedMarkers = [],
+  seenEvents = new Map() // Track seen events to avoid duplicates
+) {
+  const baseUrl = "https://api.hel.fi/linkedevents/v1/event/";
+  const apiUrl =
+    url || `${baseUrl}?all_ongoing_AND=${encodeURIComponent(searchKeyword)}`;
+
+  // Start or update the progress
+  progressCallback(accumulatedMarkers.length ? 50 : 0);
+
+  try {
+    const response = await fetch(apiUrl);
+    const result = await response.json();
+    const events = result.data;
+
+    const markers = (
+      await Promise.all(
+        events.map(async (event) => {
+          // Skip fetching location details for already processed events
+          if (seenEvents.has(event.id) || seenEvents.has(event.name.fi)) {
+            return null; // Skip this event
+          }
+
+          // Mark this event as seen
+          seenEvents.set(event.id, true);
+          if (event.name && event.name.fi) {
+            seenEvents.set(event.name.fi, true);
+          }
+
+          let locationCoordinates = null;
+          if (event.location && event.location["@id"]) {
+            try {
+              const locationResponse = await fetch(event.location["@id"]);
+              const locationData = await locationResponse.json();
+              locationCoordinates =
+                locationData.position && locationData.position.coordinates
+                  ? locationData.position.coordinates
+                  : null;
+            } catch (error) {
+              console.warn(
+                `Failed to fetch location for event ${event.id}:`,
+                error
+              );
+              // Proceed without location coordinates in case of an error
+            }
+          }
+
+          // Return the event marker object
+          return {
+            id: event.id,
+            locationUrl: event.location["@id"],
+            offers: event.offers,
+            imageUrl: event.images.length > 0 ? event.images[0].url : "",
+            startTime: event.start_time,
+            endTime: event.end_time,
+            name: event.name.fi || event.name.en,
+            shortDescription:
+              event.short_description?.fi || event.short_description?.en,
+            description: event.description?.fi || event.description?.en,
+            infoUrl: event.info_url?.fi || event.info_url?.en,
+            provider: event.provider?.fi || event.provider?.en,
+            coordinates: locationCoordinates,
+          };
+        })
+      )
+    ).filter((marker) => marker !== null); // Filter out nulls from skipped duplicates
+
+    // Update the accumulated markers with the new unique markers
+    const newAccumulatedMarkers = [...accumulatedMarkers, ...markers];
+    setMarkers(newAccumulatedMarkers);
+
+    if (result.meta && result.meta.next) {
+      // Fetch the next page if it exists
+      await fetchEventData(
+        searchKeyword,
+        progressCallback,
+        setMarkers,
+        result.meta.next,
+        newAccumulatedMarkers,
+        seenEvents // Pass along the seenEvents map
+      );
+    } else {
+      // Completion of the fetching process
+      progressCallback(0);
+    }
+  } catch (error) {
+    console.error("Error fetching event data:", error);
+    progressCallback(0); // Indicate error or completion
+  }
+}
+
 // Function to fetch data
-export async function fetchData(url, accumulatedMarkers = [], progressCallback, searchKeyword) {
+async function fetchData(
+  url,
+  accumulatedMarkers = [],
+  progressCallback,
+  searchKeyword
+) {
   try {
     const response = await fetch(url);
     const result = await response.json();
     const newMarkers = await processItems(result.data, progressCallback);
     const updatedMarkers = [...accumulatedMarkers, ...newMarkers];
     const sortedMarkers = sortMarkersKeyword(updatedMarkers, searchKeyword);
-    
+
     if (sortedMarkers.length >= 100) {
       return sortedMarkers.slice(0, 100);
     }
 
     if (result.meta.next) {
-      return fetchData(result.meta.next, sortedMarkers, progressCallback, searchKeyword);
+      return fetchData(
+        result.meta.next,
+        sortedMarkers,
+        progressCallback,
+        searchKeyword
+      );
     } else {
       return sortedMarkers;
     }
@@ -29,9 +178,9 @@ async function processItems(items, progressCallback) {
 
   return Promise.all(
     items
-      .filter(item => item.position && item.position.coordinates)
-      .filter(item => !item.id.startsWith("osoite"))
-      .filter(item => !item.id.startsWith("harrastus"))
+      .filter((item) => item.position && item.position.coordinates)
+      .filter((item) => !item.id.startsWith("osoite"))
+      .filter((item) => !item.id.startsWith("harrastus"))
       .map(async (item) => {
         const imageUrl = await fetchImageUrl(item);
         updateProgress(progressCallback, ++itemsProcessed, totalItems);
@@ -49,7 +198,9 @@ async function fetchImageUrl(item) {
     imageUrl = await getImage(item.image);
   }
   if (!imageUrl && item.name?.fi) {
-    const response = await fetch(`https://api.hel.fi/linkedevents/v1/image/?text=${item.name.fi}`);
+    const response = await fetch(
+      `https://api.hel.fi/linkedevents/v1/image/?text=${item.name.fi}`
+    );
     const imageResult = await response.json();
     if (imageResult.data.length > 0) {
       imageUrl = imageResult.data[0].url;
@@ -96,15 +247,18 @@ function createMarkerObject(item, imageUrl) {
   };
 }
 
-
 // Function to sort markers by prioritizing items with the search keyword in the name,
 // followed by items that have both an image and a description.
 function sortMarkersKeyword(markers, searchKeyword) {
   console.log(searchKeyword, "triggered");
   return markers.sort((a, b) => {
     // Check if names contain the search keyword
-    const aNameContainsKeyword = a.name.toLowerCase().includes(searchKeyword.toLowerCase());
-    const bNameContainsKeyword = b.name.toLowerCase().includes(searchKeyword.toLowerCase());
+    const aNameContainsKeyword = a.name
+      .toLowerCase()
+      .includes(searchKeyword.toLowerCase());
+    const bNameContainsKeyword = b.name
+      .toLowerCase()
+      .includes(searchKeyword.toLowerCase());
 
     if (aNameContainsKeyword && !bNameContainsKeyword) {
       return -1; // 'a' comes before 'b'
@@ -117,7 +271,7 @@ function sortMarkersKeyword(markers, searchKeyword) {
       // Neither contains the keyword, sort by presence of image and description, and then by name length as a tiebreaker
       const aHasBoth = a.imageUrl && a.description;
       const bHasBoth = b.imageUrl && b.description;
-      
+
       if (aHasBoth && !bHasBoth) {
         return -1; // 'a' comes before 'b'
       } else if (bHasBoth && !aHasBoth) {
@@ -129,20 +283,3 @@ function sortMarkersKeyword(markers, searchKeyword) {
     }
   });
 }
-
-export const fetchAndSetMarkers = (searchKeyword, setProgress, setMarkers) => {
-  setMarkers([]);
-  setProgress(0);
-  const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${searchKeyword}&has_upcoming_event=false&show_all_places=true`;
-  const updateProgress = (progress) => setProgress(progress);
-
-  fetchData(initialUrl, [], updateProgress, searchKeyword)
-    .then((fetchedMarkers) => {
-      setMarkers(fetchedMarkers);
-      setProgress(0); // Reset the progress after the fetch is complete
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-      // Optionally, you might want to handle error state here as well
-    });
-};

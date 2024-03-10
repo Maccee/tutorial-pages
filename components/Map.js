@@ -30,25 +30,33 @@ function LocationMarkers({ markers }) {
   return (
     <>
       <MarkerClusterGroup chunkedLoading={true} showCoverageOnHover={false}>
-        {markers?.map((marker, index) => (
-          <Marker
-            key={index}
-            position={{
-              lat: marker.coordinates[1],
-              lng: marker.coordinates[0],
-            }}
-          >
-            <Popup>
-              <div className="scrollable overflow-y-auto max-h-40">
-                <p className="text-lg">{marker.name}</p>
-                <p className="text-2xs">{marker.description}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {markers
+          ?.filter(marker => 
+            Array.isArray(marker.coordinates) &&
+            marker.coordinates.length === 2 &&
+            marker.coordinates[0] != null &&
+            marker.coordinates[1] != null
+          )
+          .map((marker, index) => (
+            <Marker
+              key={index}
+              position={{
+                lat: marker.coordinates[1],
+                lng: marker.coordinates[0],
+              }}
+            >
+              <Popup>
+                <div className="scrollable overflow-y-auto max-h-40">
+                  <p className="text-lg">{marker.name}</p>
+                  <p className="text-2xs">{marker.description}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
       </MarkerClusterGroup>
     </>
   );
+  
 }
 
 function Map({

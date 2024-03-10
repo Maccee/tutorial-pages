@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import ProgressBar from "@/components/ProgressBar";
 import Header from "@/components/Header";
+import { SearchAdjustments } from "@/components/SearchAdjustments";
 import { Login } from "@/components/Login";
 import { Cards } from "@/components/Cards";
 
@@ -11,14 +12,17 @@ import { toggleMapVisibility } from "@/components/UtilityFunctions";
 import { MapIcon } from "@heroicons/react/24/outline";
 
 import dynamic from "next/dynamic";
-import { SearchAdjustments } from "@/components/SearchAdjustments";
+
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
 });
 
 export default function Home() {
+  // the search keyword
   const [keyword, setKeyword] = useState("");
+  // results array of marker objects
   const [markers, setMarkers] = useState([]);
+
   const [selectedCard, setSelectedCard] = useState();
   const [isMapVisible, setIsMapVisible] = useState(true);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
@@ -30,10 +34,20 @@ export default function Home() {
 
   const [userLocation, setUserLocation] = useState(null);
 
+  const [eventsCheck, setEventsCheck] = useState(false);
+
+  const [distance, setDistance] = useState(10); // Default distance set to 10km
+
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
     if (keyword) {
-      fetchAndSetMarkers(keyword, setProgress, setMarkers);
+      fetchAndSetMarkers(
+        keyword,
+        eventsCheck,
+        distance,
+        setProgress,
+        setMarkers
+      );
     }
   }, [keyword]);
 
@@ -54,17 +68,17 @@ export default function Home() {
         />
 
         <div
-          className={`transition-all duration-200 ${
+          className={`transition-all duration-300 overflow-hidden ${
             isAdjustmentsVisible
               ? "opacity-100 max-h-[500px]"
-              : "opacity-0 h-0"
+              : "opacity-0 max-h-0"
           }`}
         >
-          <SearchAdjustments />
+          <SearchAdjustments eventsCheck={eventsCheck} setEventsCheck={setEventsCheck} distance={distance} setDistance={setDistance}/>
         </div>
 
         <div
-          className={`transition-all duration-500 ${
+          className={`transition-all duration-300 overflow-hidden ${
             isLoginVisible ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0"
           }`}
         >
@@ -72,7 +86,7 @@ export default function Home() {
         </div>
 
         <div
-          className={`transition-all duration-500 overflow-hidden ${
+          className={`transition-all duration-300 overflow-hidden ${
             isMapVisible ? "opacity-100 " : "opacity-0"
           } relative`}
           style={{ maxHeight: `${mapContainerHeight}px` }}

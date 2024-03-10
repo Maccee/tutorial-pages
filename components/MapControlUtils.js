@@ -35,9 +35,7 @@ export const ZoomControl = ({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
-          if (setSelectedCard) {
-            setSelectedCard([position.coords.longitude, position.coords.latitude]);
-          }
+          
         },
         (error) => {
           console.error("Error obtaining location", error);

@@ -27,6 +27,7 @@ const Header = ({
 
   // set the value of keyword. Main/index.js has hook with keyword as dependancy array to make the request to the API
   const handleSearch = () => {
+    setKeyword("");
     setKeyword(inputValue);
   };
 
@@ -109,7 +110,7 @@ const handleAdjustments = () => {
           className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
         />
       </div>
-      <div></div>
+      
     </header>
   );
 };
