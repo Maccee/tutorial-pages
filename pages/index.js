@@ -26,6 +26,10 @@ export default function Home() {
   const [token, setToken] = useState(null);
   const [mapContainerHeight, setMapContainerHeight] = useState(300); // Default height in pixels
 
+  const [userLocation, setUserLocation] = useState(null);
+
+  
+  
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
     if (keyword) {
@@ -33,6 +37,7 @@ export default function Home() {
     }
   }, [keyword]);
 
+  
   return (
     <>
       <ProgressBar totalItems={100} itemsProcessed={progress} />
@@ -66,6 +71,9 @@ export default function Home() {
             selectedCard={selectedCard}
             setSelectedCard={setSelectedCard}
             setIsMapVisible={setIsMapVisible}
+            setUserLocation={setUserLocation}
+            userLocation={userLocation}
+            
           />
         </div>
         <div className="cursor-pointer absolute flex w-full items-center justify-center  pb-2">

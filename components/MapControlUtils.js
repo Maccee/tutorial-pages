@@ -1,12 +1,21 @@
+import { useState, useEffect } from "react";
+
 import { useMap } from "react-leaflet";
 import {
   GlobeAltIcon,
   MagnifyingGlassPlusIcon,
   MagnifyingGlassMinusIcon,
+  MapPinIcon,
 } from "@heroicons/react/24/outline";
 
 // this is the main map controls overlay
-export const ZoomControl = ({ showAlue, setShowAlue }) => {
+export const ZoomControl = ({
+  showAlue,
+  setShowAlue,
+  setSelectedCard,
+  setUserLocation,
+  userLocation,
+}) => {
   const map = useMap();
   const toggleAlue = () => {
     setShowAlue(!showAlue);
@@ -17,8 +26,46 @@ export const ZoomControl = ({ showAlue, setShowAlue }) => {
   const zoomOut = () => {
     map.zoomOut();
   };
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error obtaining location", error);
+        },
+        {
+          enableHighAccuracy: true, // You can adjust the options as needed
+          timeout: 20000,
+          maximumAge: 0,
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  }, []);
+
   return (
     <div className="flex flex-col absolute right-2 top-2">
+      <button
+        onClick={() => {
+          if (userLocation) {
+            setSelectedCard([userLocation.lng, userLocation.lat]);
+          }
+        }}
+        className="text-xl w-12 h-12 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+      >
+        {userLocation ? (
+          <MapPinIcon className="h-6 text-logoBlue" />
+        ) : (
+          <MapPinIcon className="h-6 text-gray-300" />
+        )}
+      </button>
       <button
         onClick={zoomIn}
         className="text-xl w-12 h-12 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"

@@ -130,10 +130,6 @@ function sortMarkersKeyword(markers, searchKeyword) {
   });
 }
 
-
-
-
-
 export const fetchAndSetMarkers = (searchKeyword, setProgress, setMarkers) => {
   setMarkers([]);
   setProgress(0);
