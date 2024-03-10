@@ -7,8 +7,8 @@ import { Cards } from "@/components/Cards";
 
 import { fetchAndSetMarkers } from "@/components/ApiUtils";
 import { toggleMapVisibility } from "@/components/UtilityFunctions";
-import { throttle } from "@/components/UtilityFunctions";
-import { Bars2Icon } from "@heroicons/react/24/outline";
+
+import { MapIcon } from "@heroicons/react/24/outline";
 
 import dynamic from "next/dynamic";
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
@@ -69,7 +69,7 @@ export default function Home() {
           />
         </div>
         <div className="cursor-pointer absolute flex w-full items-center justify-center  pb-2">
-          <Bars2Icon
+          <MapIcon
             className="h-6 w-28 text-white rounded-b-lg overflow-hidden bg-logoBlue shadow-lg"
             onClick={() =>
               toggleMapVisibility(
