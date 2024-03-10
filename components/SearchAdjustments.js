@@ -13,7 +13,7 @@ export const SearchAdjustments = () => {
   };
 
   return (
-    <div className="flex justify-center m-4 items-center gap-4">
+    <div className="flex justify-center pb-4 pt-4 bg-white items-center gap-4">
       Search for:
       <label>
         Events{" "}

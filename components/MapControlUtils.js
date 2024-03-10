@@ -27,7 +27,7 @@ export const ZoomControl = ({
     map.zoomOut();
   };
 
-  useEffect(() => {
+  const requestUserLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -35,12 +35,15 @@ export const ZoomControl = ({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+          if (setSelectedCard) {
+            setSelectedCard([position.coords.longitude, position.coords.latitude]);
+          }
         },
         (error) => {
           console.error("Error obtaining location", error);
         },
         {
-          enableHighAccuracy: true, // You can adjust the options as needed
+          enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 0,
         }
@@ -48,6 +51,10 @@ export const ZoomControl = ({
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
+  };
+
+  useEffect(() => {
+    requestUserLocation();
   }, []);
 
   return (

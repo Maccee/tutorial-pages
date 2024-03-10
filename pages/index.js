@@ -57,7 +57,7 @@ export default function Home() {
           className={`transition-all duration-200 ${
             isAdjustmentsVisible
               ? "opacity-100 max-h-[500px]"
-              : "opacity-0 max-h-0"
+              : "opacity-0 h-0"
           }`}
         >
           <SearchAdjustments />
