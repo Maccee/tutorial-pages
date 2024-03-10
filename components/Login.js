@@ -1,7 +1,7 @@
 import { HandleLogin, HandleRegister } from '@/utils/LoginUtils';
 import React, { useState } from 'react';
 
-export const Login = ({ setToken, token }) => {
+export const Login = ({ setToken, setIsModalVisible, token }) => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
@@ -16,15 +16,13 @@ export const Login = ({ setToken, token }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (isRegistering) {
-            console.log("Register button pressed");
-            HandleRegister(formData, setToken);
-        } else {
-            console.log("Login button pressed");
-            HandleLogin(formData, setToken);
-
-        }
+        // Муляж авторизации
+        const dummyToken = 'dummy-token';
+        setToken(dummyToken); // Здесь мы "устанавливаем токен" (для муляжа)
+        setIsModalVisible(false); // Сразу закрываем модальное окно
     };
+
+
 
     const toggleMode = () => setIsRegistering(!isRegistering);
     const logout = () => {
