@@ -51,8 +51,14 @@ export const SearchAdjustments = ({
             </div>
             <div className="flex gap-2 flex-col">
               {/* Removed buttons that are not connected to functionality for simplicity */}
-              <button className="defaultButtonSmall" onClick={() => performSearch({keyword: inputValue, setKeyword})}>Search</button>
-
+              <button
+                className="defaultButtonSmall"
+                onClick={() =>
+                  performSearch({ keyword: inputValue, setKeyword })
+                }
+              >
+                Search
+              </button>
             </div>
           </div>
         </div>

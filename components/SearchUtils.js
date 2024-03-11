@@ -3,7 +3,7 @@
 // Function to perform search
 // Depending on your application architecture, you might want to pass additional parameters
 // or return values from this function, such as fetching data from an API
-export const performSearch = async ({keyword, setKeyword}) => {
+export const performSearch = async ({ keyword, setKeyword }) => {
   // Set the keyword state. This could trigger other useEffect hooks elsewhere in your app
   // that react to changes in the keyword state.
   setKeyword(keyword);

@@ -97,7 +97,11 @@ export default function Home() {
             isLoginVisible ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0"
           }`}
         >
-          <Login setToken={setToken} setIsModalVisible={setIsModalVisible} token={token} />
+          <Login
+            setToken={setToken}
+            setIsModalVisible={setIsModalVisible}
+            token={token}
+          />
         </div>
 
         <div
@@ -136,8 +140,15 @@ export default function Home() {
         <p>Copyright © 2024</p>
       </footer>
 
-      <Modal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)}>
-        <Login setToken={setToken} setIsModalVisible={setIsModalVisible} token={token} />
+      <Modal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      >
+        <Login
+          setToken={setToken}
+          setIsModalVisible={setIsModalVisible}
+          token={token}
+        />
       </Modal>
     </>
   );
