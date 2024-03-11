@@ -1,29 +1,29 @@
-// Throttle function to limit the rate at which a function is executed
-export const throttle = (func, limit) => {
-  let inThrottle;
-  return function () {
-    const args = arguments;
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-};
-
 // login visibility, from a button in header
 export const toggleLoginVisibility = (isModalVisible, setIsModalVisible) => {
-  console.log("toggle login");
+
+  console.log("toggle login", isModalVisible);
+
   setIsModalVisible(!isModalVisible);
 };
 
-// map visibility, from a button in header
-export const toggleMapVisibility = (isMapVisible, setIsMapVisible, setMapContainerHeight) => {
+// map visibility, from a button in header and under the map container
+export const toggleMapVisibility = (
+  isMapVisible,
+  setIsMapVisible,
+  setMapContainerHeight
+) => {
   setIsMapVisible(!isMapVisible);
   if (!isMapVisible) {
     setMapContainerHeight(300);
   } else {
-    setMapContainerHeight(20);
+    setMapContainerHeight(0);
   }
+};
+
+export const toggleAdjustmentsVisibility = (
+  isAdjustmentsVisible,
+  setIsAdjustmentsVisible
+) => {
+  console.log("toggle adjustments");
+  setIsAdjustmentsVisible(!isAdjustmentsVisible);
 };

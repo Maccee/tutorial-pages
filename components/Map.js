@@ -23,37 +23,53 @@ import {
   transformGeometryCollections,
   flipCoordinates,
 } from "./MapControlUtils";
+import { UserLocationMarker } from "./UserLocationMarker";
 
 // Put all markers to the map
 function LocationMarkers({ markers }) {
   return (
     <>
       <MarkerClusterGroup chunkedLoading={true} showCoverageOnHover={false}>
-        {markers?.map((marker, index) => (
-          <Marker
-            key={index}
-            position={{
-              lat: marker.coordinates[1],
-              lng: marker.coordinates[0],
-            }}
-          >
-            <Popup>
-              <div className="">
-                <p className="text-lg">{marker.name}</p>
-                <p className="text-2xs">{marker.description}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {markers
+          ?.filter(marker => 
+            Array.isArray(marker.coordinates) &&
+            marker.coordinates.length === 2 &&
+            marker.coordinates[0] != null &&
+            marker.coordinates[1] != null
+          )
+          .map((marker, index) => (
+            <Marker
+              key={index}
+              position={{
+                lat: marker.coordinates[1],
+                lng: marker.coordinates[0],
+              }}
+            >
+              <Popup>
+                <div className="scrollable overflow-y-auto max-h-40">
+                  <p className="text-lg">{marker.name}</p>
+                  <p className="text-2xs">{marker.description}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
       </MarkerClusterGroup>
     </>
   );
+  
 }
 
-function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
+function Map({
+  markers,
+  selectedCard,
+  setSelectedCard,
+  setIsMapVisible,
+  setUserLocation,
+  userLocation,
+}) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
-  const [mapHeight, setMapHeight] = useState(500); // Initial map height
+  const mapHeight = 300; // Initial map height
 
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
@@ -106,8 +122,6 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
     }
   };
 
-  
-
   return (
     <section className="bg-white" style={{ overflow: "hidden" }}>
       <MapContainer
@@ -123,8 +137,6 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
         />
-
-        <LocationMarkers markers={markers} />
 
         <FlyToSelectedCard selectedCard={selectedCard} />
         {showAlue && (
@@ -152,14 +164,21 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
           </>
         )}
 
-        <LocationMarkers markers={markers} />
-        <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue} />
+        <LocationMarkers markers={markers} userLocation={userLocation} />
+        <UserLocationMarker userLocation={userLocation} />
+
+        <ZoomControl
+          showAlue={showAlue}
+          setShowAlue={setShowAlue}
+          setSelectedCard={setSelectedCard}
+          setUserLocation={setUserLocation}
+          userLocation={userLocation}
+        />
 
         <div className="absolute top-2.5 left-2.5 z-50 bg-white bg-opacity-75 p-2.5 rounded-md text-lg font-bold">
           Results - {markers.length}
         </div>
       </MapContainer>
-      
     </section>
   );
 }
