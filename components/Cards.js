@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { StarIcon } from "@heroicons/react/24/outline";
-import { SyncFavorites } from "@/utils/LoginUtils";
+import { SyncFavorites, ValidateToken } from "@/utils/LoginUtils";
 
 export const Cards = ({ markers, setSelectedCard, token }) => {
   const [favorites, setFavorites] = useState([]);
@@ -19,6 +19,7 @@ export const Cards = ({ markers, setSelectedCard, token }) => {
       localStorage.setItem("favorites", JSON.stringify(favorites));
     }
     SyncFavorites();
+    //ValidateToken();
   }, [favorites]);
 
   useEffect(() => {
@@ -70,14 +71,14 @@ export const Cards = ({ markers, setSelectedCard, token }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleFavorite(item.id);
+                        toggleFavorite(item.apiUrl);
                       }}
                       aria-label="Toggle Favorite"
                       className="opacity-0 group-hover:opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2"
                     >
                       <StarIcon
                         className={`h-6 w-6 ${
-                          favorites.includes(item.id)
+                          favorites.includes(item.apiUrl)
                             ? "text-yellow-200"
                             : "text-white"
                         }`}
@@ -88,7 +89,7 @@ export const Cards = ({ markers, setSelectedCard, token }) => {
                 <div className="z-10 transition-all duration-100 group-hover">
                   <p
                     className={`text-lg font-semibold ${
-                      favorites.includes(item.id)
+                      favorites.includes(item.apiUrl)
                         ? "text-yellow-200"
                         : "text-white"
                     }`}

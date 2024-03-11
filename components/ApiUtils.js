@@ -108,6 +108,7 @@ async function fetchEventData(
             infoUrl: event.info_url?.fi || event.info_url?.en,
             provider: event.provider?.fi || event.provider?.en,
             coordinates: locationCoordinates,
+            apiUrl: event["@id"],
           };
         })
       )
@@ -244,13 +245,14 @@ function createMarkerObject(item, imageUrl) {
     imageUrl,
     www: item.info_url?.fi,
     coordinates: item.position.coordinates,
+    apiUrl: item["@id"],
   };
 }
 
 // Function to sort markers by prioritizing items with the search keyword in the name,
 // followed by items that have both an image and a description.
 function sortMarkersKeyword(markers, searchKeyword) {
-  console.log(searchKeyword, "triggered");
+  
   return markers.sort((a, b) => {
     // Check if names contain the search keyword
     const aNameContainsKeyword = a.name

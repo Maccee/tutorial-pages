@@ -60,6 +60,61 @@ export function decodeTokenName(token) {
   return jsonPayload.sub;
 }
 
-export function SyncFavorites() {
-  console.log("sync")
+export async function ValidateToken() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.log("No token found in local storage.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "https://archidesk.azurewebsites.net/api/ValidateTokenFunction",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: token }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("Validation result:", result);
+  } catch (error) {
+    console.error("Error during token validation:", error);
+  }
+}
+
+export async function SyncFavorites() {
+  const favorites = localStorage.getItem("favorites");
+  const parsedFavorites = favorites ? JSON.parse(favorites) : [];
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.log("No token found in local storage.");
+    return;
+  }
+  
+  try {
+    const response = await fetch(
+      "https://archidesk.azurewebsites.net/api/SyncFavoritesFunction",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ favorites: parsedFavorites, token: token }),
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    console.log("Favorites successfully synced with the server.");
+  } catch (error) {
+    console.error("Error during syncing favorites:", error);
+  }
 }
