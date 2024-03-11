@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import React from "react";
 
-
 import {
   toggleLoginVisibility,
   toggleMapVisibility,
@@ -13,8 +12,6 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { StarIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import { toggleMapVisibility } from "./UtilityFunctions";
-
 
 import { performSearch } from "./SearchUtils";
 
@@ -97,18 +94,16 @@ const Header = ({
           }
         />
         <StarIcon
-          className={`h-8 cursor-pointer ${token ? "text-logoBlue" : "text-gray-200"
-            }`}
+          className={`h-8 cursor-pointer ${
+            token ? "text-logoBlue" : "text-gray-200"
+          }`}
         />
         <UserCircleIcon
-
           onClick={() =>
             toggleLoginVisibility(isModalVisible, setIsModalVisible)
           }
-
           className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
         />
-
       </div>
     </header>
   );
