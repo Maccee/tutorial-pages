@@ -1,7 +1,7 @@
 import { HandleLogin, HandleRegister, decodeTokenName } from '@/utils/LoginUtils';
 import React, { useState, useEffect } from 'react';
 
-export const Login = ({ setToken, token }) => {
+export const Login = ({ setToken, setIsModalVisible, token }) => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
@@ -13,9 +13,9 @@ export const Login = ({ setToken, token }) => {
         // Check for token in local storage
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-          setToken(storedToken);
+            setToken(storedToken);
         }
-      }, []);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,15 +24,13 @@ export const Login = ({ setToken, token }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (isRegistering) {
-            console.log("Register button pressed");
-            HandleRegister(formData, setToken);
-        } else {
-            console.log("Login button pressed");
-            HandleLogin(formData, setToken);
-
-        }
+        // Муляж авторизации
+        const dummyToken = 'dummy-token';
+        setToken(dummyToken); // Здесь мы "устанавливаем токен" (для муляжа)
+        setIsModalVisible(false); // Сразу закрываем модальное окно
     };
+
+
 
     const toggleMode = () => setIsRegistering(!isRegistering);
     const logout = () => {
@@ -42,9 +40,9 @@ export const Login = ({ setToken, token }) => {
 
     return (
         <div>
-            <div className='w-full flex items-center justify-center border-b-2 pb-4 px-2 bg-white'>
+            <div className='w-full flex items-center justify-center pb-4 px-2 bg-white'>
                 {!token &&
-                    <form onSubmit={handleSubmit} className="space-y-2 w-96">
+                    <form onSubmit={handleSubmit} className="space-y-2 w-full sm:w-full md:w-full lg:w-96 mx-auto">
                         <h2 className='text-3xl'>{isRegistering ? 'Register' : 'Login'}</h2>
                         {/* Username and Password Fields */}
                         <div>
@@ -95,10 +93,12 @@ export const Login = ({ setToken, token }) => {
 
                         {/* Buttons */}
                         <div className='flex justify-between pt-2'>
-                            <button className='defaultButton' type="submit">{isRegistering ? 'Register' : 'Login'}</button>
+
                             <button className='defaultButton' type="button" onClick={toggleMode}>
                                 {isRegistering ? 'Back to Login' : 'New User?'}
                             </button>
+
+                            <button className='defaultButton' type="submit">{isRegistering ? 'Register' : 'Login'}</button>
 
 
                         </div>
@@ -106,8 +106,8 @@ export const Login = ({ setToken, token }) => {
                 }
 
                 {token &&
-                    <div className='flex flex-col gap-2  items-center w-96'>
-                        <div>Logged in as:</div>
+                    <div className='flex flex-col gap-2  items-center w-full'>
+                        <div>Logged in as: User</div>
                         <div>{decodeTokenName(token)}</div>
                         <button className='defaultButton' type="button" onClick={logout}>Logout</button>
                     </div>

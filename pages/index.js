@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { SearchAdjustments } from "@/components/SearchAdjustments";
 import { Login } from "@/components/Login";
 import { Cards } from "@/components/Cards";
+import Modal from "@/components/Modal";
 
 import { fetchAndSetMarkers } from "@/components/ApiUtils";
 import { toggleMapVisibility } from "@/components/UtilityFunctions";
@@ -29,6 +30,7 @@ export default function Home() {
   const [isAdjustmentsVisible, setIsAdjustmentsVisible] = useState(false);
 
   const [token, setToken] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [mapContainerHeight, setMapContainerHeight] = useState(300); // Default height in pixels
 
   const [userLocation, setUserLocation] = useState(null);
@@ -65,6 +67,8 @@ export default function Home() {
           setIsLoginVisible={setIsLoginVisible}
           isAdjustmentsVisible={isAdjustmentsVisible}
           setIsAdjustmentsVisible={setIsAdjustmentsVisible}
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
           token={token}
           setMapContainerHeight={setMapContainerHeight}
         />
@@ -93,7 +97,7 @@ export default function Home() {
             isLoginVisible ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0"
           }`}
         >
-          <Login setToken={setToken} token={token} />
+          <Login setToken={setToken} setIsModalVisible={setIsModalVisible} token={token} />
         </div>
 
         <div
@@ -131,6 +135,10 @@ export default function Home() {
       <footer className="w-full text-center p-4 mt-10" style={{ bottom: 0 }}>
         <p>Copyright © 2024</p>
       </footer>
+
+      <Modal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)}>
+        <Login setToken={setToken} setIsModalVisible={setIsModalVisible} token={token} />
+      </Modal>
     </>
   );
 }

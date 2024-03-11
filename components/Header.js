@@ -24,6 +24,8 @@ const Header = ({
   setIsLoginVisible,
   isAdjustmentsVisible,
   setIsAdjustmentsVisible,
+  isModalVisible,
+  setIsModalVisible,
   token,
   setMapContainerHeight,
 }) => {
@@ -95,7 +97,7 @@ const Header = ({
         />
         <UserCircleIcon
           onClick={() =>
-            toggleLoginVisibility(isLoginVisible, setIsLoginVisible)
+            toggleLoginVisibility(isModalVisible, setIsModalVisible)
           }
           className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
         />

@@ -1,7 +1,7 @@
 // login visibility, from a button in header
-export const toggleLoginVisibility = (isLoginVisible, setIsLoginVisible) => {
-  console.log("toggle login");
-  setIsLoginVisible(!isLoginVisible);
+export const toggleLoginVisibility = (isModalVisible, setIsModalVisible) => {
+  console.log("toggle login", isModalVisible);
+  setIsModalVisible(!isModalVisible);
 };
 
 // map visibility, from a button in header and under the map container
