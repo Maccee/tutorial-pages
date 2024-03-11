@@ -38,4 +38,6 @@ function Modal({ isVisible, children, onClose }) {
   );
 }
 
+
 export default Modal;
+
