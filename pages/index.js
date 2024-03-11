@@ -119,17 +119,7 @@ export default function Home() {
           } relative`}
         style={{ maxHeight: `${mapContainerHeight}px` }}
       >
-        <MapComponentWithNoSSR
-          markers={markers}
-          selectedCard={selectedCard}
-          setSelectedCard={setSelectedCard}
-          setIsMapVisible={setIsMapVisible}
-        />
-        <div
-          className="cursor-ns-resize absolute bottom-0 left-0 right-0 bg-gray-100 flex w-full items-center justify-center"
-          onMouseDown={handleDrag}
-          style={{ height: "20px" }}
-        >
+        
 
           <MapComponentWithNoSSR
             markers={markers}
