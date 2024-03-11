@@ -1,6 +1,8 @@
 // login visibility, from a button in header
 export const toggleLoginVisibility = (isModalVisible, setIsModalVisible) => {
+
   console.log("toggle login", isModalVisible);
+
   setIsModalVisible(!isModalVisible);
 };
 
