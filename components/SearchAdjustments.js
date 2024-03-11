@@ -1,18 +1,19 @@
 import React from "react";
+import { performSearch } from "./SearchUtils";
 
 export const SearchAdjustments = ({
+  keyword,
+  setKeyword,
+  inputValue,
+  setInputValue,
   eventsCheck,
   setEventsCheck,
   distance,
-  setDistance
-  
+  setDistance,
 }) => {
-
   const handleEventsCheckChange = () => {
     setEventsCheck(!eventsCheck);
   };
-
-  
 
   const handleDistanceChange = (e) => {
     setDistance(e.target.value);
@@ -34,7 +35,7 @@ export const SearchAdjustments = ({
                   className="ml-2"
                 />
               </label>
-              
+
               <div className="flex flex-col items-center">
                 Distance:
                 <input
@@ -50,9 +51,8 @@ export const SearchAdjustments = ({
             </div>
             <div className="flex gap-2 flex-col">
               {/* Removed buttons that are not connected to functionality for simplicity */}
-              <button className="defaultButtonSmall" >
-                Search
-              </button>
+              <button className="defaultButtonSmall" onClick={() => performSearch({keyword: inputValue, setKeyword})}>Search</button>
+
             </div>
           </div>
         </div>

@@ -18,25 +18,25 @@ const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
 });
 
 export default function Home() {
-  // the search keyword
   const [keyword, setKeyword] = useState("");
-  // results array of marker objects
   const [markers, setMarkers] = useState([]);
-
+  const [progress, setProgress] = useState(0);
   const [selectedCard, setSelectedCard] = useState();
+
+  // component visibility
   const [isMapVisible, setIsMapVisible] = useState(true);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isAdjustmentsVisible, setIsAdjustmentsVisible] = useState(false);
 
-  const [progress, setProgress] = useState(0);
   const [token, setToken] = useState(null);
   const [mapContainerHeight, setMapContainerHeight] = useState(300); // Default height in pixels
 
   const [userLocation, setUserLocation] = useState(null);
 
+  // search states
   const [eventsCheck, setEventsCheck] = useState(false);
-
   const [distance, setDistance] = useState(10); // Default distance set to 10km
+  const [inputValue, setInputValue] = useState("");
 
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
@@ -57,6 +57,8 @@ export default function Home() {
       <div className="sticky top-0 z-50">
         <Header
           setKeyword={setKeyword}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
           isMapVisible={isMapVisible}
           setIsMapVisible={setIsMapVisible}
           isLoginVisible={isLoginVisible}
@@ -74,7 +76,16 @@ export default function Home() {
               : "opacity-0 max-h-0"
           }`}
         >
-          <SearchAdjustments eventsCheck={eventsCheck} setEventsCheck={setEventsCheck} distance={distance} setDistance={setDistance}/>
+          <SearchAdjustments
+            keyword={keyword}
+            setKeyword={setKeyword}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            eventsCheck={eventsCheck}
+            setEventsCheck={setEventsCheck}
+            distance={distance}
+            setDistance={setDistance}
+          />
         </div>
 
         <div

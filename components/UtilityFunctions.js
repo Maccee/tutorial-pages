@@ -1,13 +1,15 @@
-
-
-// login visibility, from a button in header 
+// login visibility, from a button in header
 export const toggleLoginVisibility = (isLoginVisible, setIsLoginVisible) => {
   console.log("toggle login");
   setIsLoginVisible(!isLoginVisible);
 };
 
 // map visibility, from a button in header and under the map container
-export const toggleMapVisibility = (isMapVisible, setIsMapVisible, setMapContainerHeight) => {
+export const toggleMapVisibility = (
+  isMapVisible,
+  setIsMapVisible,
+  setMapContainerHeight
+) => {
   setIsMapVisible(!isMapVisible);
   if (!isMapVisible) {
     setMapContainerHeight(300);
@@ -16,7 +18,10 @@ export const toggleMapVisibility = (isMapVisible, setIsMapVisible, setMapContain
   }
 };
 
-export const toggleAdjustmentsVisibility = (isAdjustmentsVisible, setIsAdjustmentsVisible) => {
+export const toggleAdjustmentsVisibility = (
+  isAdjustmentsVisible,
+  setIsAdjustmentsVisible
+) => {
   console.log("toggle adjustments");
   setIsAdjustmentsVisible(!isAdjustmentsVisible);
 };
