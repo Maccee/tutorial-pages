@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import React from "react";
 
 import {
@@ -21,21 +20,14 @@ const Header = ({
   setInputValue,
   isMapVisible,
   setIsMapVisible,
-
-  isLoginVisible,
-  setIsLoginVisible,
   isAdjustmentsVisible,
   setIsAdjustmentsVisible,
-
   isModalVisible,
   setIsModalVisible,
   token,
   setMapContainerHeight,
 }) => {
-  useEffect(() => {
-    console.log("token set!");
-  }, [token]);
-
+  
   // SEARCH
   const handleSearch = () => {
     performSearch({ keyword: inputValue, setKeyword }).catch(console.error);

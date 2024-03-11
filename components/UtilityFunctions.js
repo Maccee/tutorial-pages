@@ -1,8 +1,5 @@
 // login visibility, from a button in header
 export const toggleLoginVisibility = (isModalVisible, setIsModalVisible) => {
-
-  console.log("toggle login", isModalVisible);
-
   setIsModalVisible(!isModalVisible);
 };
 
@@ -20,6 +17,7 @@ export const toggleMapVisibility = (
   }
 };
 
+// adjustments visibility, from a button in headers search bar
 export const toggleAdjustmentsVisibility = (
   isAdjustmentsVisible,
   setIsAdjustmentsVisible

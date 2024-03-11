@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { StarIcon } from "@heroicons/react/24/outline";
+import { SyncFavorites } from "@/utils/LoginUtils";
 
 export const Cards = ({ markers, setSelectedCard }) => {
   const [favorites, setFavorites] = useState([]);
@@ -17,6 +18,7 @@ export const Cards = ({ markers, setSelectedCard }) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("favorites", JSON.stringify(favorites));
     }
+    SyncFavorites();
   }, [favorites]);
 
   useEffect(() => {

@@ -15,7 +15,6 @@ import { MapIcon } from "@heroicons/react/24/outline";
 
 import dynamic from "next/dynamic";
 
-
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
 });
@@ -43,7 +42,6 @@ export default function Home() {
   const [distance, setDistance] = useState(10); // Default distance set to 10km
   const [inputValue, setInputValue] = useState("");
 
-
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
     if (keyword) {
@@ -57,7 +55,6 @@ export default function Home() {
     }
   }, [keyword]);
 
-
   return (
     <>
       <ProgressBar totalItems={100} itemsProcessed={progress} />
@@ -68,18 +65,13 @@ export default function Home() {
           setInputValue={setInputValue}
           isMapVisible={isMapVisible}
           setIsMapVisible={setIsMapVisible}
-
-          isLoginVisible={isLoginVisible}
-          setIsLoginVisible={setIsLoginVisible}
           isAdjustmentsVisible={isAdjustmentsVisible}
           setIsAdjustmentsVisible={setIsAdjustmentsVisible}
-
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
           token={token}
           setMapContainerHeight={setMapContainerHeight}
         />
-
 
         <div
           className={`transition-all duration-300 overflow-hidden ${
@@ -115,12 +107,9 @@ export default function Home() {
         <div
           className={`transition-all duration-300 overflow-hidden ${
             isMapVisible ? "opacity-100 " : "opacity-0"
-
           } relative`}
-        style={{ maxHeight: `${mapContainerHeight}px` }}
-      >
-        
-
+          style={{ maxHeight: `${mapContainerHeight}px` }}
+        >
           <MapComponentWithNoSSR
             markers={markers}
             selectedCard={selectedCard}
@@ -145,7 +134,6 @@ export default function Home() {
       </div>
 
       <main className="z-0 mt-8">
-
         <Cards markers={markers} setSelectedCard={setSelectedCard} />
       </main>
       <footer className="w-full text-center p-4 mt-10" style={{ bottom: 0 }}>
@@ -162,7 +150,6 @@ export default function Home() {
           token={token}
         />
       </Modal>
-
     </>
   );
 }

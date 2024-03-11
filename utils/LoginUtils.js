@@ -2,8 +2,19 @@
 import SHA256 from "crypto-js/sha256";
 
 // ONLY USE IF DEVELOPING BACKEND FUNTIONALITY
-function HandleLoginDEV(formData, setToken) {
+export function HandleLogin(formData, setToken) {
   const hashedPassword = SHA256(formData.password).toString();
+  let hashedConfirmPassword;
+  if (formData.confirmPassword !== "") {
+    hashedConfirmPassword = SHA256(formData.confirmPassword).toString();
+  }
+
+  console.log(
+    "Formdata sent: ",
+    formData,
+    hashedPassword,
+    hashedConfirmPassword
+  );
 
   fetch("https://archidesk.azurewebsites.net/api/TokenFunction", {
     method: "POST",
@@ -13,6 +24,7 @@ function HandleLoginDEV(formData, setToken) {
     body: JSON.stringify({
       username: formData.username,
       password: hashedPassword,
+      confirmPassword: hashedConfirmPassword,
     }),
   })
     .then(async (response) => {
@@ -28,34 +40,26 @@ function HandleLoginDEV(formData, setToken) {
       setToken(data.token);
 
       console.log("Token received:", data.token);
-      console.log("exported name from token: ", decodeTokenName(data.token));
     })
     .catch((error) => {
       console.error("Error:", error);
-      alert(error.message);
+      //alert(error.message);
     });
-
-  console.log("HandleLogin triggered!", formData);
-}
-export function HandleLogin(formData, setToken) {
-  console.log("HandleLogin triggered!", formData);
-}
-
-export function HandleRegister(formData, setToken) {
-  console.log("HandleRegister triggered!", formData);
 }
 
 export function decodeTokenName(token) {
-  
-    const parts = token.split(".");
-    if (parts.length !== 3) {
-      console.log("Token is invalid");
-      return;
-    }
+  const parts = token.split(".");
+  if (parts.length !== 3) {
+    console.log("Token is invalid");
+    return;
+  }
 
-    const payload = parts[1];
-    const decodedPayload = atob(payload.replace(/_/g, "/").replace(/-/g, "+"));
-    const jsonPayload = JSON.parse(decodedPayload);
-    return jsonPayload.sub;
-  
+  const payload = parts[1];
+  const decodedPayload = atob(payload.replace(/_/g, "/").replace(/-/g, "+"));
+  const jsonPayload = JSON.parse(decodedPayload);
+  return jsonPayload.sub;
+}
+
+export function SyncFavorites() {
+  console.log("sync")
 }
