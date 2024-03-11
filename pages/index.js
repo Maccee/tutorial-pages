@@ -134,7 +134,7 @@ export default function Home() {
       </div>
 
       <main className="z-0 mt-8">
-        <Cards markers={markers} setSelectedCard={setSelectedCard} />
+        <Cards markers={markers} setSelectedCard={setSelectedCard} token={token} />
       </main>
       <footer className="w-full text-center p-4 mt-10" style={{ bottom: 0 }}>
         <p>Copyright © 2024</p>
