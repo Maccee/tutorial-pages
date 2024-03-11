@@ -13,13 +13,13 @@ function Modal({ isVisible, children, onClose }) {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000, // Убедитесь, что модальное окно будет над другими элементами
+    zIndex: 1000,
   };
 
   const modalStyle = {
     backgroundColor: 'white',
     padding: '20px',
-    borderRadius: '5px',
+    borderRadius: '20px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -33,7 +33,6 @@ function Modal({ isVisible, children, onClose }) {
     <div style={backdropStyle} onClick={onClose}>
       <div style={modalStyle} onClick={e => e.stopPropagation()}>
         {children}
-        <button style={buttonStyle} onClick={onClose}>Закрыть</button>
       </div>
     </div>
   );

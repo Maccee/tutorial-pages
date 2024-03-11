@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+
+import ProgressBar from "@/components/ProgressBar";
 import Header from "@/components/Header";
 import { fetchData } from "@/components/ApiUtils";
 import { Cards } from "@/components/Cards";
-import ProgressBar from "@/components/ProgressBar";
 import { Login } from "@/components/Login";
 import Modal from "@/components/Modal";
-
+import { throttle } from "@/components/UtilityFunctions";
+import { Bars2Icon } from "@heroicons/react/24/outline";
 
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -19,26 +21,22 @@ export default function Home() {
   const [isMapVisible, setIsMapVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   const [token, setToken] = useState(null);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [mapContainerHeight, setMapContainerHeight] = useState(500);
 
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
     if (keyword) {
       setMarkers([]);
       setProgress(0);
-
-      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=true&show_all_places=true`;
-
+      const initialUrl = `https://api.hel.fi/linkedevents/v1/place/?text=${keyword}&has_upcoming_event=false&show_all_places=true`;
       // Progress funtion passed to the fetchdata to dynamically set the progress based on how many markers have been built
       const updateProgress = (progress) => {
         setProgress(progress);
       };
-
       fetchData(initialUrl, [], updateProgress)
         .then((fetchedMarkers) => {
           setMarkers(fetchedMarkers);
-
           // Reset the progress after the fetch is complete
           setProgress(0);
         })
@@ -56,26 +54,51 @@ export default function Home() {
   // login visibility, from a button in header
   const toggleLoginVisibility = () => {
     setIsModalVisible(!isModalVisible);
-  };
+  }
 
+  const handleDrag = (e) => {
+    e.preventDefault();
+    const startY = e.clientY;
+    let startHeight = mapContainerHeight;
+    // Wrap the doDrag logic with the throttle function
+    const doDrag = throttle((dragEvent) => {
+      const newY = dragEvent.clientY;
+      const diffY = newY - startY;
+      const newHeight = Math.max(20, startHeight + diffY);
+      setMapContainerHeight(newHeight);
+    }, 50); // Throttle drag updates to run at most every 50 milliseconds
+    const stopDrag = () => {
+      document.removeEventListener("mousemove", doDrag);
+      document.removeEventListener("mouseup", stopDrag);
+    };
+    document.addEventListener("mousemove", doDrag);
+    document.addEventListener("mouseup", stopDrag);
+  };
 
   return (
     <>
-      {/* Display the ProgressBar component with totalItems and itemsProcessed as props */}
       <ProgressBar totalItems={100} itemsProcessed={progress} />
-
       <div className="sticky top-0 z-50">
         <Header
           setKeyword={setKeyword}
-          toggleMapVisibility={toggleMapVisibility}
-          toggleLoginVisibility={toggleLoginVisibility}
+          isMapVisible={isMapVisible}
+          setIsMapVisible={setIsMapVisible}
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
           token={token}
+          setMapContainerHeight={setMapContainerHeight}
         />
 
       </div>
+
+
+
+
+
       <div
-        className={`transition-all duration-500 ${isMapVisible ? "opacity-100" : "opacity-0 max-h-0"}`}
-        style={{ overflow: "hidden", zIndex: "30", background: "white", paddingLeft: '10px', paddingRight: '10px' }}
+        className={`transition-all duration-500 overflow-hidden ${isMapVisible ? "opacity-100 " : "opacity-0"
+          } relative`}
+        style={{ maxHeight: `${mapContainerHeight}px` }}
       >
         <MapComponentWithNoSSR
           markers={markers}
@@ -83,7 +106,16 @@ export default function Home() {
           setSelectedCard={setSelectedCard}
           setIsMapVisible={setIsMapVisible}
         />
+        <div
+          className="cursor-ns-resize absolute bottom-0 left-0 right-0 bg-gray-100 flex w-full items-center justify-center"
+          onMouseDown={handleDrag}
+          style={{ height: "20px" }}
+        >
+          <Bars2Icon className="h-6 text-logoBlue" />
+        </div>
       </div>
+
+
       <main className="z-0">
         <Cards markers={markers} setSelectedCard={setSelectedCard} />
       </main>

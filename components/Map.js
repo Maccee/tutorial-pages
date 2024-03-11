@@ -7,6 +7,8 @@ import {
   useMap,
   GeoJSON,
 } from "react-leaflet";
+import MarkerClusterGroup from "next-leaflet-cluster";
+
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -26,25 +28,32 @@ import {
 function LocationMarkers({ markers }) {
   return (
     <>
-      {markers?.map((marker, index) => (
-        <Marker
-          key={index}
-          position={{ lat: marker.coordinates[1], lng: marker.coordinates[0] }}
-        >
-          <Popup>
-            {marker.name}
-            {marker.description}
-          </Popup>
-        </Marker>
-      ))}
+      <MarkerClusterGroup chunkedLoading={true} showCoverageOnHover={false}>
+        {markers?.map((marker, index) => (
+          <Marker
+            key={index}
+            position={{
+              lat: marker.coordinates[1],
+              lng: marker.coordinates[0],
+            }}
+          >
+            <Popup>
+              <div className="">
+                <p className="text-lg">{marker.name}</p>
+                <p className="text-2xs">{marker.description}</p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
     </>
   );
 }
 
-
 function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
+  const [mapHeight, setMapHeight] = useState(500); // Initial map height
 
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
@@ -68,7 +77,7 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
     useEffect(() => {
       if (selectedCard) {
         //map.flyTo([60.264753787236685,24.849923151141372], 16); // Testing purposes for manual entry
-        map.flyTo([selectedCard[1], selectedCard[0]], 16);
+        map.flyTo([selectedCard[1], selectedCard[0]], 18);
         setSelectedCard(null);
 
         setIsMapVisible(true);
@@ -81,36 +90,29 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
   // get the name of the area from the geojson and put it to the popup when area is clicked
   const onEachFeature = (feature, layer) => {
     let popupContent = "";
-
     if (feature.properties) {
-      // Check for Helsinki dataset
       if (feature.properties["hel:nimi_fi"]) {
         popupContent = feature.properties["hel:nimi_fi"];
-      }
-      // Check for Vantaa dataset
-      else if (feature.properties["kosanimi"]) {
+      } else if (feature.properties["kosanimi"]) {
         popupContent = feature.properties["kosanimi"];
-      }
-      // Check for Espoo dataset
-      else if (feature.properties["Nimi"]) {
+      } else if (feature.properties["Nimi"]) {
         popupContent = feature.properties["Nimi"];
-      }
-      // Check for Kauniainen dataset
-      else if (feature.properties["Nimi"]) {
+      } else if (feature.properties["Nimi"]) {
         popupContent = feature.properties["Nimi"];
       }
     }
-
     if (popupContent) {
       layer.bindPopup(popupContent);
     }
   };
 
+  
+
   return (
-    <section className="bg-white" style={{ overflow: 'hidden' }}>
+    <section className="bg-white" style={{ overflow: "hidden" }}>
       <MapContainer
         style={{
-          height: "300px",
+          height: `${mapHeight}px`,
         }}
         center={center}
         zoom={13}
@@ -121,7 +123,9 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
         />
+
         <LocationMarkers markers={markers} />
+
         <FlyToSelectedCard selectedCard={selectedCard} />
         {showAlue && (
           <>
@@ -150,20 +154,12 @@ function Map({ markers, selectedCard, setSelectedCard, setIsMapVisible }) {
 
         <LocationMarkers markers={markers} />
         <ZoomControl showAlue={showAlue} setShowAlue={setShowAlue} />
-        <div style={{
-          position: 'absolute',
-          top: '10px',
-          left: '10px',
-          zIndex: 1000,
-          backgroundColor: 'rgba(255, 255, 255, 0.75)', // transparency
-          padding: '10px',
-          borderRadius: '5px',
-          fontSize: '20px',
-          fontWeight: 'bold',
-        }}>
+
+        <div className="absolute top-2.5 left-2.5 z-50 bg-white bg-opacity-75 p-2.5 rounded-md text-lg font-bold">
           Results - {markers.length}
         </div>
       </MapContainer>
+      
     </section>
   );
 }

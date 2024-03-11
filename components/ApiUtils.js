@@ -53,9 +53,7 @@ export async function fetchData(
           return {
             id: item.id,
             name: item.name.fi,
-            description: item.description?.fi
-              ? (item.description.fi.match(/^[^,.]*/) || [])[0] + "."
-              : "",
+            description: item.description?.fi,
             imageUrl,
             www: item.info_url?.fi,
             coordinates: item.position.coordinates,
