@@ -53,7 +53,6 @@ function LocationMarkers({ markers }) {
                   <p className="text-s">{marker.streetAddress}</p>
                   <p className="text-xs">{marker.description}</p>
                   <p className="text-xs"><a href={marker.www} target="_blank" rel="noopener noreferrer">{marker.www}</a></p>
-                  <p className="text-xs">{marker.apiUrl}</p>
                 </div>
               </Popup>
             </Marker>
