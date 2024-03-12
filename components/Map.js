@@ -98,7 +98,7 @@ function FavoriteLocationMarkers({ favoriteMarkers }) {
         {favoriteMarkers
           ?.filter(
             (marker) =>
-              Array.isArray(marker.position.coordinates) &&
+              Array.isArray(marker.position?.coordinates) &&
               marker.position.coordinates.length === 2 &&
               marker.position.coordinates[0] != null &&
               marker.position.coordinates[1] != null
