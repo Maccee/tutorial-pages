@@ -48,8 +48,10 @@ function LocationMarkers({ markers }) {
               <Popup>
                 <div className="scrollable overflow-y-auto max-h-40">
                   <p className="text-lg">{marker.name}</p>
-                  <p className="text-2xs">{marker.description}</p>
-                  <p className="text-2xs">{marker.apiUrl}</p>
+                  <p className="text-s">{marker.streetAddress}</p>
+                  <p className="text-xs">{marker.description}</p>
+                  <p className="text-xs"><a href={marker.www} target="_blank" rel="noopener noreferrer">{marker.www}</a></p>
+                  <p className="text-xs">{marker.apiUrl}</p>
                 </div>
               </Popup>
             </Marker>
