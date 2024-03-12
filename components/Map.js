@@ -50,6 +50,7 @@ function LocationMarkers({ markers }) {
             >
               <Popup>
                 <div className="scrollable overflow-y-auto max-h-40">
+                <p className="text-xs">{marker.multipleEventDates}</p>
                   <p className="text-lg">{marker.name}</p>
                   <p className="text-2xs">{marker.description}</p>
                   <p className="text-2xs">{marker.apiUrl}</p>

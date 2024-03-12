@@ -1,3 +1,5 @@
+import { markAssetError } from "next/dist/client/route-loader";
+
 export const fetchAndSetMarkers = (
   searchKeyword,
   eventsCheck,
@@ -14,129 +16,115 @@ export const fetchAndSetMarkers = (
   setMarkers([]);
   setProgress(0);
 
-  // Use fetchEventData for events, and fetchData for places
   if (eventsCheck) {
-    // Assuming fetchEventData is defined elsewhere and it's adjusted as necessary
     fetchEventData(searchKeyword, setProgress, setMarkers);
   } else {
-    // Existing logic for places or other data using fetchData
     let baseUrl = "https://api.hel.fi/linkedevents/v1/place/";
     let apiUrl = `${baseUrl}?text=${encodeURIComponent(
       searchKeyword
     )}&has_upcoming_event=false&show_all_places=true`;
 
-    // fetchData function assumed to be defined elsewhere
+    // fetchData function
     fetchData(apiUrl, [], setProgress, searchKeyword)
       .then((fetchedMarkers) => {
         setMarkers(fetchedMarkers);
-        setProgress(0); // Indicate completion
+        setProgress(0);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setProgress(0); // Reset the progress after fetch attempt
-        // Optionally, handle error state here as well
+        setProgress(0);
       });
   }
 };
 
-// Assuming fetchEventData function is implemented as discussed
-// Modified fetchEventData function
+// Funtion to fetch event data when eventcheck is checked in search filters.
 async function fetchEventData(
   searchKeyword,
   progressCallback,
   setMarkers,
   url = null,
-  accumulatedMarkers = [],
-  seenEvents = new Map() // Track seen events to avoid duplicates
+  accumulatedMarkersMap = new Map(), // Accumulate markers by location
+  seenLocations = new Set(), // Track seen locations to manage event dates
+  limit = 50,
 ) {
-  const baseUrl = "https://api.hel.fi/linkedevents/v1/event/";
-  const apiUrl =
-    url || `${baseUrl}?all_ongoing_AND=${encodeURIComponent(searchKeyword)}`;
 
-  // Start or update the progress
-  progressCallback(accumulatedMarkers.length ? 50 : 0);
+  const baseUrl = "https://api.hel.fi/linkedevents/v1/search/";
+  const apiUrl = url || `${baseUrl}?type=event&input=${encodeURIComponent(searchKeyword)}`;
+
+  progressCallback(url ? 50 : 0);
 
   try {
     const response = await fetch(apiUrl);
     const result = await response.json();
     const events = result.data;
 
-    const markers = (
-      await Promise.all(
-        events.map(async (event) => {
-          // Skip fetching location details for already processed events
-          if (seenEvents.has(event.id) || seenEvents.has(event.name.fi)) {
-            return null; // Skip this event
-          }
+    for (const event of events) {
+      const locationId = event.location["@id"];
+      if (!locationId) continue;
 
-          // Mark this event as seen
-          seenEvents.set(event.id, true);
-          if (event.name && event.name.fi) {
-            seenEvents.set(event.name.fi, true);
-          }
+      let marker = accumulatedMarkersMap.get(locationId);
 
-          let locationCoordinates = null;
-          if (event.location && event.location["@id"]) {
-            try {
-              const locationResponse = await fetch(event.location["@id"]);
-              const locationData = await locationResponse.json();
-              locationCoordinates =
-                locationData.position && locationData.position.coordinates
-                  ? locationData.position.coordinates
-                  : null;
-            } catch (error) {
-              console.warn(
-                `Failed to fetch location for event ${event.id}:`,
-                error
-              );
-              // Proceed without location coordinates in case of an error
-            }
-          }
+      if (marker) {
+        // If marker exists, add the event's start time to the multipleEventDates array
+        marker.multipleEventDates.push(event.start_time + " ");
+      } else {
+        // Fetch location coordinates
+        let locationCoordinates = null;
+        try {
+          const locationResponse = await fetch(locationId);
+          const locationData = await locationResponse.json();
+          locationCoordinates = locationData.position?.coordinates || null;
+        } catch (error) {
+          console.warn(`Failed to fetch location for event ${event.id}:`, error);
+        }
 
-          // Return the event marker object
-          return {
-            id: event.id,
-            locationUrl: event.location["@id"],
-            offers: event.offers,
-            imageUrl: event.images.length > 0 ? event.images[0].url : "",
-            startTime: event.start_time,
-            endTime: event.end_time,
-            name: event.name.fi || event.name.en,
-            shortDescription:
-              event.short_description?.fi || event.short_description?.en,
-            description: event.description?.fi || event.description?.en,
-            infoUrl: event.info_url?.fi || event.info_url?.en,
-            provider: event.provider?.fi || event.provider?.en,
-            coordinates: locationCoordinates,
-            apiUrl: event["@id"],
-          };
-        })
-      )
-    ).filter((marker) => marker !== null); // Filter out nulls from skipped duplicates
+        // Create a new marker
+        marker = {
+          id: event.id,
+          locationUrl: event.location["@id"],
+          offers: event.offers,
+          imageUrl: event.images[0]?.url || "",
+          startTime: event.start_time,
+          endTime: event.end_time,
+          name: event.name.fi || event.name.en,
+          shortDescription: event.short_description?.fi || event.short_description?.en,
+          description: event.description?.fi || event.description?.en,
+          infoUrl: event.info_url?.fi || event.info_url?.en,
+          provider: event.provider?.fi || event.provider?.en,
+          coordinates: locationCoordinates,
+          apiUrl: event["@id"],
+          multipleEventDates: [event.start_time]
+        };
+        accumulatedMarkersMap.set(locationId, marker);
+        seenLocations.add(locationId);
+      }
+    }
 
-    // Update the accumulated markers with the new unique markers
-    const newAccumulatedMarkers = [...accumulatedMarkers, ...markers];
+    // Convert the accumulated map to an array for setting markers
+    const newAccumulatedMarkers = Array.from(accumulatedMarkersMap.values());
     setMarkers(newAccumulatedMarkers);
+    
 
-    if (result.meta && result.meta.next) {
-      // Fetch the next page if it exists
-      await fetchEventData(
-        searchKeyword,
-        progressCallback,
-        setMarkers,
-        result.meta.next,
-        newAccumulatedMarkers,
-        seenEvents // Pass along the seenEvents map
-      );
+    if (result.meta?.next && accumulatedMarkersMap.size < limit) {
+       await fetchEventData(
+         searchKeyword,
+         progressCallback,
+         setMarkers,
+         result.meta.next,
+         accumulatedMarkersMap,
+         seenLocations
+       );
     } else {
-      // Completion of the fetching process
       progressCallback(0);
     }
   } catch (error) {
     console.error("Error fetching event data:", error);
-    progressCallback(0); // Indicate error or completion
+    progressCallback(0);
   }
 }
+
+
+
 
 // Function to fetch data
 async function fetchData(
@@ -252,7 +240,7 @@ function createMarkerObject(item, imageUrl) {
 // Function to sort markers by prioritizing items with the search keyword in the name,
 // followed by items that have both an image and a description.
 function sortMarkersKeyword(markers, searchKeyword) {
-  
+
   return markers.sort((a, b) => {
     // Check if names contain the search keyword
     const aNameContainsKeyword = a.name

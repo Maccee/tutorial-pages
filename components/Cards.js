@@ -79,7 +79,7 @@ export const Cards = ({
               }}
             >
               <div className="flex flex-col justify-end h-full">
-                <div className="z-50 p-2">
+                <div className="z-10 p-2">
                   {token && (
                     <button
                       onClick={(e) => {
