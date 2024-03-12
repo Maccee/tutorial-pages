@@ -211,7 +211,7 @@ export async function fetchImageUrl(item) {
 }
 
 // Function to fetch image URL based on image ID
-async function getImage(imageId) {
+export async function getImage(imageId) {
   try {
     // Fetch image data from the provided image ID
     const response = await fetch(
