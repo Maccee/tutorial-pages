@@ -193,7 +193,7 @@ async function processItems(items, progressCallback) {
 // Utility function to fetch an image URL for a given item
 // if the item has image property, the function calls getImage funtion to get that imageUrl and set that to the markerobject.
 // if the item dont have image prop, the function uses the image api to search images for the item name.
-async function fetchImageUrl(item) {
+export async function fetchImageUrl(item) {
   let imageUrl = "";
   if (item.image) {
     imageUrl = await getImage(item.image);

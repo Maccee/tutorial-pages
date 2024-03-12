@@ -18,6 +18,7 @@ export const Cards = ({
       setFavorites(JSON.parse(localData));
     }
   }, []);
+
   useEffect(() => {
     const localData = localStorage.getItem("favorites");
     if (localData) {
@@ -42,31 +43,22 @@ export const Cards = ({
       .catch((error) => console.error("Failed to load Masonry", error));
   }, [markers]); // Rerun when markers change
 
-  const toggleFavorite = (id) => {
+  const toggleFavorite = (id, item) => {
     const isFavorite = favorites.includes(id);
     const updatedFavorites = isFavorite
       ? favorites.filter((favId) => favId !== id)
       : [...favorites, id];
 
-    // This ensures local storage is updated first.
     if (typeof window !== "undefined") {
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
 
-      // Now, correctly parse the updated favorites back into an array
-      // and update the state with this new array.
       const localData = localStorage.getItem("favorites");
       const parsedFavorites = JSON.parse(localData);
       setFavorites(parsedFavorites);
     }
 
-    // Assuming SyncFavorites is an async operation that syncs the local state
-    // with a server or external data source. It doesn't directly affect local state management.
     SyncFavorites();
   };
-
-  useEffect(() => {
-    //console.log(favorites)
-  }, [favorites]);
 
   return (
     <section className="flex items-center justify-center w-full">
@@ -92,13 +84,13 @@ export const Cards = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleFavorite(item.apiUrl);
+                        toggleFavorite(item.apiUrl, item);
                       }}
                       aria-label="Toggle Favorite"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2"
+                      className="opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2"
                     >
                       <StarIcon
-                        className={`h-6 w-6 ${
+                        className={`h-8 w-8 ${
                           isFavorite ? "text-yellow-200" : "text-white"
                         }`}
                       />

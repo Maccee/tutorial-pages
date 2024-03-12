@@ -144,7 +144,7 @@ export async function GetFavorites() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json(); // Parse the JSON response
-    console.log("Favorites successfully fetched:", data.favorites);
+    
     localStorage.setItem("favorites", data.favorites);
   } catch (error) {
     console.error("Error fetching favorites:", error);

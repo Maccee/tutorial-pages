@@ -49,6 +49,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
+    console.log("refreshed")
     GetFavorites();
   }, []);
 
@@ -144,16 +145,23 @@ export default function Home() {
           />
         </div>
       </div>
-      <section className={`transition-all duration-300 overflow-hidden ${
+
+      
+        <section
+          className={`transition-all duration-300 overflow-hidden ${
             isFavoritesVisible
               ? "opacity-100 max-h-[500px]"
               : "opacity-0 max-h-0"
-          }`}>
-        <Favorites setSelectedCard={setSelectedCard}/>
-      </section>
+          }`}
+        >
+          <Favorites markers={markers} setMarkers={setMarkers} favorites={favorites} setFavorites={setFavorites} />
+        </section>
+     
+
       <main className="z-0 mt-8">
         <Cards
           markers={markers}
+          setMarkers={setMarkers}
           setSelectedCard={setSelectedCard}
           token={token}
           favorites={favorites}
@@ -168,11 +176,7 @@ export default function Home() {
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
       >
-        <Login
-          setToken={setToken}
-          setFavorites={setFavorites}
-          token={token}
-        />
+        <Login setToken={setToken} setFavorites={setFavorites} token={token} />
       </Modal>
     </>
   );
