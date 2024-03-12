@@ -192,7 +192,7 @@ function Map({
   };
 
   return (
-    <section className="bg-white" style={{ overflow: "hidden" }}>
+    <section className="bg-white relative z-10 overflow-hidden">
       <MapContainer
         style={{
           height: `${mapHeight}px`,
