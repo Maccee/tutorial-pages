@@ -24,6 +24,7 @@ const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
 export default function Home() {
   const [keyword, setKeyword] = useState("");
   const [markers, setMarkers] = useState([]);
+  const [favoriteMarkers, setFavoriteMarkers] = useState([]);
   const [progress, setProgress] = useState(0);
   const [selectedCard, setSelectedCard] = useState();
 
@@ -49,7 +50,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    console.log("refreshed")
+    console.log("refreshed");
     GetFavorites();
   }, []);
 
@@ -125,6 +126,7 @@ export default function Home() {
         >
           <MapComponentWithNoSSR
             markers={markers}
+            favoriteMarkers={favoriteMarkers}
             selectedCard={selectedCard}
             setSelectedCard={setSelectedCard}
             setIsMapVisible={setIsMapVisible}
@@ -146,17 +148,20 @@ export default function Home() {
         </div>
       </div>
 
-      
-        <section
-          className={`transition-all duration-300 overflow-hidden ${
-            isFavoritesVisible
-              ? "opacity-100 max-h-[500px]"
-              : "opacity-0 max-h-0"
-          }`}
-        >
-          <Favorites markers={markers} setMarkers={setMarkers} favorites={favorites} setFavorites={setFavorites} />
-        </section>
-     
+      <section
+        className={`transition-all duration-300 overflow-hidden ${
+          isFavoritesVisible ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0"
+        }`}
+      >
+        <Favorites
+          markers={markers}
+          setMarkers={setMarkers}
+          favorites={favorites}
+          setFavorites={setFavorites}
+          favoriteMarkers={favoriteMarkers}
+          setFavoriteMarkers={setFavoriteMarkers}
+        />
+      </section>
 
       <main className="z-0 mt-8">
         <Cards
