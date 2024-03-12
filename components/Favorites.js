@@ -43,19 +43,37 @@ export const Favorites = ({
   }, [favorites]);
 
   return (
-    <div className="flex gap-2 justify-center mt-8 text-white">
+    <div className="flex gap-2 justify-center mt-8 text-white flex-wrap">
       {favoriteMarkers.map((card, index) => (
-        <div key={index} className="p-4 border rounded mb-2" style={{
+        <div key={index} className="border rounded mb-2 overflow-hidden relative" style={{
+          width: "140px",
+          height: "150px",
+        }}>
+          {/* Background Image */}
+          <div style={{
             backgroundImage: `url(${card.imageUrl})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            width: "140px",
-            height: "150px",
-          }}>
-          <h2 className="font-semibold">{card.name.fi}</h2>
-          {/* Display more details as needed */}
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: 1,
+          }}></div>
+  
+          {/* Overlay */}
+          <div className="absolute w-full h-full bg-slate-900 bg-opacity-50" style={{
+            zIndex: 2,
+          }}></div>
+  
+          {/* Text Content */}
+          <div className="relative z-10 p-4">
+            <h2 className="font-semibold">{card.name.fi}</h2>
+            {/* Display more details as needed */}
+          </div>
         </div>
       ))}
     </div>
   );
+  
+
 };

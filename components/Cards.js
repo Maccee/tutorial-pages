@@ -90,18 +90,16 @@ export const Cards = ({
                       className="opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2"
                     >
                       <StarIcon
-                        className={`h-8 w-8 ${
-                          isFavorite ? "text-yellow-200" : "text-white"
-                        }`}
+                        className={`h-8 w-8 ${isFavorite ? "text-yellow-200" : "text-white"
+                          }`}
                       />
                     </button>
                   )}
                 </div>
                 <div className="z-10 transition-all duration-100 group-hover">
                   <p
-                    className={`text-lg font-semibold ${
-                      isFavorite ? "text-yellow-200" : "text-white"
-                    }`}
+                    className={`text-lg font-semibold ${isFavorite ? "text-yellow-200" : "text-white"
+                      }`}
                   >
                     {item.name}
                   </p>
