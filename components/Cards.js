@@ -70,8 +70,10 @@ export const Cards = ({
   };
 
   return (
+
     <><section className="flex items-center justify-center w-full">
       <div ref={gridRef} className="">
+
         {markers?.map((item) => {
           const isFavorite = favorites.includes(item.apiUrl);
           return (
@@ -96,7 +98,7 @@ export const Cards = ({
                         toggleFavorite(item.apiUrl, item);
                       }}
                       aria-label="Toggle Favorite"
-                      className="opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2"
+                      className="opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2 z-10"
                     >
                       <StarIcon
                         className={`h-8 w-8 ${isFavorite ? "text-yellow-200" : "text-white"
