@@ -1,11 +1,7 @@
-import {
-  HandleLogin,
-  HandleRegister,
-  decodeTokenName,
-} from "@/utils/LoginUtils";
+import { HandleLogin, decodeTokenName } from "@/utils/LoginUtils";
 import React, { useState, useEffect } from "react";
 
-export const Login = ({ setToken, setIsModalVisible, token }) => {
+export const Login = ({ setToken, setFavorites, token }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -28,16 +24,21 @@ export const Login = ({ setToken, setIsModalVisible, token }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Муляж авторизации
-    const dummyToken = "dummy-token";
-    setToken(dummyToken); // Здесь мы "устанавливаем токен" (для муляжа)
-    setIsModalVisible(false); // Сразу закрываем модальное окно
+    HandleLogin(formData, setToken);
   };
 
-  const toggleMode = () => setIsRegistering(!isRegistering);
+  const toggleMode = () => {
+    setIsRegistering(!isRegistering);
+    if (!isRegistering) {
+      formData.confirmPassword = "";
+    }
+  };
+
   const logout = () => {
     setToken(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("favorites");
+    setFavorites([]);
   };
 
   return (
@@ -126,9 +127,8 @@ export const Login = ({ setToken, setIsModalVisible, token }) => {
         )}
 
         {token && (
-          <div className="flex flex-col gap-2  items-center w-full">
-            <div>Logged in as: User</div>
-            <div>{decodeTokenName(token)}</div>
+          <div className="flex flex-col gap-2 items-center w-full">
+            <div>Logged in as: {decodeTokenName(token)}</div>
             <button className="defaultButton" type="button" onClick={logout}>
               Logout
             </button>

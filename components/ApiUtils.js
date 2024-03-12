@@ -108,6 +108,7 @@ async function fetchEventData(
             infoUrl: event.info_url?.fi || event.info_url?.en,
             provider: event.provider?.fi || event.provider?.en,
             coordinates: locationCoordinates,
+            apiUrl: event["@id"],
           };
         })
       )
@@ -192,7 +193,7 @@ async function processItems(items, progressCallback) {
 // Utility function to fetch an image URL for a given item
 // if the item has image property, the function calls getImage funtion to get that imageUrl and set that to the markerobject.
 // if the item dont have image prop, the function uses the image api to search images for the item name.
-async function fetchImageUrl(item) {
+export async function fetchImageUrl(item) {
   let imageUrl = "";
   if (item.image) {
     imageUrl = await getImage(item.image);
@@ -244,13 +245,14 @@ function createMarkerObject(item, imageUrl) {
     imageUrl,
     www: item.info_url?.fi,
     coordinates: item.position.coordinates,
+    apiUrl: item["@id"],
   };
 }
 
 // Function to sort markers by prioritizing items with the search keyword in the name,
 // followed by items that have both an image and a description.
 function sortMarkersKeyword(markers, searchKeyword) {
-  console.log(searchKeyword, "triggered");
+  
   return markers.sort((a, b) => {
     // Check if names contain the search keyword
     const aNameContainsKeyword = a.name

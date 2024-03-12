@@ -35,7 +35,6 @@ export const ZoomControl = ({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
-          
         },
         (error) => {
           console.error("Error obtaining location", error);
@@ -52,7 +51,7 @@ export const ZoomControl = ({
   };
 
   useEffect(() => {
-    requestUserLocation();
+    //requestUserLocation();
   }, []);
 
   return (

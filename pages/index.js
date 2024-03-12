@@ -14,7 +14,8 @@ import { toggleMapVisibility } from "@/components/UtilityFunctions";
 import { MapIcon } from "@heroicons/react/24/outline";
 
 import dynamic from "next/dynamic";
-
+import { Favorites } from "@/components/Favorites";
+import { GetFavorites } from "@/utils/LoginUtils";
 
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -31,9 +32,13 @@ export default function Home() {
 
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isAdjustmentsVisible, setIsAdjustmentsVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isFavoritesVisible, setIsFavoritesVisible] = useState(false);
+
+  const [favorites, setFavorites] = useState([]);
 
   const [token, setToken] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [mapContainerHeight, setMapContainerHeight] = useState(300); // Default height in pixels
 
   const [userLocation, setUserLocation] = useState(null);
@@ -43,6 +48,10 @@ export default function Home() {
   const [distance, setDistance] = useState(10); // Default distance set to 10km
   const [inputValue, setInputValue] = useState("");
 
+  useEffect(() => {
+    console.log("refreshed")
+    GetFavorites();
+  }, []);
 
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
@@ -57,7 +66,6 @@ export default function Home() {
     }
   }, [keyword]);
 
-
   return (
     <>
       <ProgressBar totalItems={100} itemsProcessed={progress} />
@@ -68,18 +76,15 @@ export default function Home() {
           setInputValue={setInputValue}
           isMapVisible={isMapVisible}
           setIsMapVisible={setIsMapVisible}
-
-          isLoginVisible={isLoginVisible}
-          setIsLoginVisible={setIsLoginVisible}
           isAdjustmentsVisible={isAdjustmentsVisible}
           setIsAdjustmentsVisible={setIsAdjustmentsVisible}
-
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
+          isFavoritesVisible={isFavoritesVisible}
+          setIsFavoritesVisible={setIsFavoritesVisible}
           token={token}
           setMapContainerHeight={setMapContainerHeight}
         />
-
 
         <div
           className={`transition-all duration-300 overflow-hidden ${
@@ -115,12 +120,9 @@ export default function Home() {
         <div
           className={`transition-all duration-300 overflow-hidden ${
             isMapVisible ? "opacity-100 " : "opacity-0"
-
           } relative`}
-        style={{ maxHeight: `${mapContainerHeight}px` }}
-      >
-        
-
+          style={{ maxHeight: `${mapContainerHeight}px` }}
+        >
           <MapComponentWithNoSSR
             markers={markers}
             selectedCard={selectedCard}
@@ -144,9 +146,27 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="z-0 mt-8">
+      
+        <section
+          className={`transition-all duration-300 overflow-hidden ${
+            isFavoritesVisible
+              ? "opacity-100 max-h-[500px]"
+              : "opacity-0 max-h-0"
+          }`}
+        >
+          <Favorites markers={markers} setMarkers={setMarkers} favorites={favorites} setFavorites={setFavorites} />
+        </section>
+     
 
-        <Cards markers={markers} setSelectedCard={setSelectedCard} />
+      <main className="z-0 mt-8">
+        <Cards
+          markers={markers}
+          setMarkers={setMarkers}
+          setSelectedCard={setSelectedCard}
+          token={token}
+          favorites={favorites}
+          setFavorites={setFavorites}
+        />
       </main>
       <footer className="w-full text-center p-4 mt-10" style={{ bottom: 0 }}>
         <p>Copyright © 2024</p>
@@ -156,13 +176,8 @@ export default function Home() {
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
       >
-        <Login
-          setToken={setToken}
-          setIsModalVisible={setIsModalVisible}
-          token={token}
-        />
+        <Login setToken={setToken} setFavorites={setFavorites} token={token} />
       </Modal>
-
     </>
   );
 }
