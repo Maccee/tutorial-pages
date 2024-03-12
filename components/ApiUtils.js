@@ -1,11 +1,10 @@
-import { markAssetError } from "next/dist/client/route-loader";
-
 export const fetchAndSetMarkers = (
   searchKeyword,
   eventsCheck,
   distance,
   setProgress,
-  setMarkers
+  setMarkers,
+  areaSearch
 ) => {
   console.log("Verify parameters received: ", {
     searchKeyword,
@@ -18,6 +17,8 @@ export const fetchAndSetMarkers = (
 
   if (eventsCheck) {
     fetchEventData(searchKeyword, setProgress, setMarkers);
+  } else if (areaSearch) {
+    fetchEventDataDivision(searchKeyword, setProgress, setMarkers);
   } else {
     let baseUrl = "https://api.hel.fi/linkedevents/v1/place/";
     let apiUrl = `${baseUrl}?text=${encodeURIComponent(
@@ -103,17 +104,101 @@ async function fetchEventData(
     // Convert the accumulated map to an array for setting markers
     const newAccumulatedMarkers = Array.from(accumulatedMarkersMap.values());
     setMarkers(newAccumulatedMarkers);
-    
+
 
     if (result.meta?.next && accumulatedMarkersMap.size < limit) {
-       await fetchEventData(
-         searchKeyword,
-         progressCallback,
-         setMarkers,
-         result.meta.next,
-         accumulatedMarkersMap,
-         seenLocations
-       );
+      await fetchEventData(
+        searchKeyword,
+        progressCallback,
+        setMarkers,
+        result.meta.next,
+        accumulatedMarkersMap,
+        seenLocations
+      );
+    } else {
+      progressCallback(0);
+    }
+  } catch (error) {
+    console.error("Error fetching event data:", error);
+    progressCallback(0);
+  }
+}
+async function fetchEventDataDivision(
+  searchKeyword,
+  progressCallback,
+  setMarkers,
+  url = null,
+  accumulatedMarkersMap = new Map(), // Accumulate markers by location
+  seenLocations = new Set(), // Track seen locations to manage event dates
+  limit = 50,
+) {
+  
+  const baseUrl = "https://api.hel.fi/linkedevents/v1/event/";
+  const apiUrl = url || `${baseUrl}?division=${encodeURIComponent(searchKeyword)}`;
+
+  progressCallback(url ? 50 : 0);
+
+  try {
+    const response = await fetch(apiUrl);
+    const result = await response.json();
+    const events = result.data;
+
+    for (const event of events) {
+      const locationId = event.location["@id"];
+      if (!locationId) continue;
+
+      let marker = accumulatedMarkersMap.get(locationId);
+
+      if (marker) {
+        // If marker exists, add the event's start time to the multipleEventDates array
+        marker.multipleEventDates.push(event.start_time + " ");
+      } else {
+        // Fetch location coordinates
+        let locationCoordinates = null;
+        try {
+          const locationResponse = await fetch(locationId);
+          const locationData = await locationResponse.json();
+          locationCoordinates = locationData.position?.coordinates || null;
+        } catch (error) {
+          console.warn(`Failed to fetch location for event ${event.id}:`, error);
+        }
+
+        // Create a new marker
+        marker = {
+          id: event.id,
+          locationUrl: event.location["@id"],
+          offers: event.offers,
+          imageUrl: event.images[0]?.url || "",
+          startTime: event.start_time,
+          endTime: event.end_time,
+          name: event.name.fi || event.name.en,
+          shortDescription: event.short_description?.fi || event.short_description?.en,
+          description: event.description?.fi || event.description?.en,
+          infoUrl: event.info_url?.fi || event.info_url?.en,
+          provider: event.provider?.fi || event.provider?.en,
+          coordinates: locationCoordinates,
+          apiUrl: event["@id"],
+          multipleEventDates: [event.start_time]
+        };
+        accumulatedMarkersMap.set(locationId, marker);
+        seenLocations.add(locationId);
+      }
+    }
+
+    // Convert the accumulated map to an array for setting markers
+    const newAccumulatedMarkers = Array.from(accumulatedMarkersMap.values());
+    setMarkers(newAccumulatedMarkers);
+
+
+    if (result.meta?.next && accumulatedMarkersMap.size < limit) {
+      await fetchEventDataDivision(
+        searchKeyword,
+        progressCallback,
+        setMarkers,
+        result.meta.next,
+        accumulatedMarkersMap,
+        seenLocations
+      );
     } else {
       progressCallback(0);
     }

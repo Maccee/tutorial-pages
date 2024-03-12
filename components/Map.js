@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -26,6 +26,7 @@ import {
 } from "./MapControlUtils";
 import { UserLocationMarker } from "./UserLocationMarker";
 import { FavoriteLocationMarkers } from "./FavoriteLocationMarkers";
+import { fetchAndSetMarkers, fetchEventDataDivision } from "./ApiUtils";
 
 // Put all markers to the map
 function LocationMarkers({ markers }) {
@@ -50,7 +51,7 @@ function LocationMarkers({ markers }) {
             >
               <Popup>
                 <div className="scrollable overflow-y-auto max-h-40">
-                <p className="text-xs">{marker.multipleEventDates}</p>
+                  <p className="text-xs">{marker.multipleEventDates}</p>
                   <p className="text-lg">{marker.name}</p>
                   <p className="text-2xs">{marker.description}</p>
                   <p className="text-2xs">{marker.apiUrl}</p>
@@ -66,7 +67,11 @@ function LocationMarkers({ markers }) {
 
 
 function Map({
+  eventsCheck,
+  distance,
   markers,
+  setMarkers,
+  setProgress,
   favoriteMarkers,
   selectedCard,
   setSelectedCard,
@@ -85,6 +90,26 @@ function Map({
     flippedGeojsonDataEsp
   );
 
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (map) {
+      map.on('popupopen', function (e) {
+        const buttonId = e.popup._content.match(/id="([^"]+)"/)[1];
+        if (buttonId) {
+          const button = document.getElementById(buttonId);
+          if (button) {
+            button.onclick = () => {
+              const areaName = buttonId.split('-').slice(1).join(' ');
+              findEventsInArea(areaName);
+            };
+          }
+        }
+      });
+    }
+  }, []);
+
   // geojson overlay styles
   const geoJsonStyle = {
     color: "blue",
@@ -102,7 +127,6 @@ function Map({
         //map.flyTo([60.264753787236685,24.849923151141372], 16); // Testing purposes for manual entry
         map.flyTo([selectedCard[1], selectedCard[0]], 18);
         setSelectedCard(null);
-
         setIsMapVisible(true);
       }
     }, [selectedCard]);
@@ -112,22 +136,23 @@ function Map({
 
   // get the name of the area from the geojson and put it to the popup when area is clicked
   const onEachFeature = (feature, layer) => {
-    let popupContent = "";
     if (feature.properties) {
-      if (feature.properties["hel:nimi_fi"]) {
-        popupContent = feature.properties["hel:nimi_fi"];
-      } else if (feature.properties["kosanimi"]) {
-        popupContent = feature.properties["kosanimi"];
-      } else if (feature.properties["Nimi"]) {
-        popupContent = feature.properties["Nimi"];
-      } else if (feature.properties["Nimi"]) {
-        popupContent = feature.properties["Nimi"];
+      let areaName = feature.properties["hel:nimi_fi"] || feature.properties["kosanimi"] || feature.properties["Nimi"];
+      if (areaName) {
+        layer.on('click', () => {
+          // Directly call findEventsInArea from here if possible
+          findEventsInArea(areaName);
+        });
       }
     }
-    if (popupContent) {
-      layer.bindPopup(popupContent);
-    }
   };
+
+
+  function findEventsInArea(areaName) {
+    console.log(`Finding events in ${areaName}`);
+    const areaSearch = true;
+    fetchAndSetMarkers( areaName, eventsCheck, distance, setProgress, setMarkers, areaSearch );
+  }
 
   return (
     <section className="bg-white" style={{ overflow: "hidden" }}>

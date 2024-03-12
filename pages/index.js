@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 
 import ProgressBar from "@/components/ProgressBar";
 import Header from "@/components/Header";
@@ -48,6 +48,8 @@ export default function Home() {
   const [eventsCheck, setEventsCheck] = useState(false);
   const [distance, setDistance] = useState(10); // Default distance set to 10km
   const [inputValue, setInputValue] = useState("");
+
+ 
 
   useEffect(() => {
     console.log("refreshed");
@@ -105,7 +107,11 @@ export default function Home() {
           style={{ maxHeight: `${mapContainerHeight}px` }}
         >
           <MapComponentWithNoSSR
+          eventsCheck={eventsCheck}
+          distance={distance}
             markers={markers}
+            setMarkers={setMarkers}
+            setProgress={setProgress}
             favoriteMarkers={favoriteMarkers}
             selectedCard={selectedCard}
             setSelectedCard={setSelectedCard}
