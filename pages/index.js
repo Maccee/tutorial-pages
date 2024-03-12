@@ -14,6 +14,8 @@ import { toggleMapVisibility } from "@/components/UtilityFunctions";
 import { MapIcon } from "@heroicons/react/24/outline";
 
 import dynamic from "next/dynamic";
+import { Favorites } from "@/components/Favorites";
+import { GetFavorites } from "@/utils/LoginUtils";
 
 const MapComponentWithNoSSR = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -30,9 +32,13 @@ export default function Home() {
 
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isAdjustmentsVisible, setIsAdjustmentsVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isFavoritesVisible, setIsFavoritesVisible] = useState(false);
+
+  const [favorites, setFavorites] = useState([]);
 
   const [token, setToken] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [mapContainerHeight, setMapContainerHeight] = useState(300); // Default height in pixels
 
   const [userLocation, setUserLocation] = useState(null);
@@ -41,6 +47,10 @@ export default function Home() {
   const [eventsCheck, setEventsCheck] = useState(false);
   const [distance, setDistance] = useState(10); // Default distance set to 10km
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    GetFavorites();
+  }, []);
 
   // hook to make a api request as the search keyword changes, its changed from the header component
   useEffect(() => {
@@ -69,6 +79,8 @@ export default function Home() {
           setIsAdjustmentsVisible={setIsAdjustmentsVisible}
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
+          isFavoritesVisible={isFavoritesVisible}
+          setIsFavoritesVisible={setIsFavoritesVisible}
           token={token}
           setMapContainerHeight={setMapContainerHeight}
         />
@@ -132,9 +144,21 @@ export default function Home() {
           />
         </div>
       </div>
-
+      <section className={`transition-all duration-300 overflow-hidden ${
+            isFavoritesVisible
+              ? "opacity-100 max-h-[500px]"
+              : "opacity-0 max-h-0"
+          }`}>
+        <Favorites setSelectedCard={setSelectedCard}/>
+      </section>
       <main className="z-0 mt-8">
-        <Cards markers={markers} setSelectedCard={setSelectedCard} token={token} />
+        <Cards
+          markers={markers}
+          setSelectedCard={setSelectedCard}
+          token={token}
+          favorites={favorites}
+          setFavorites={setFavorites}
+        />
       </main>
       <footer className="w-full text-center p-4 mt-10" style={{ bottom: 0 }}>
         <p>Copyright © 2024</p>
@@ -146,7 +170,7 @@ export default function Home() {
       >
         <Login
           setToken={setToken}
-          setIsModalVisible={setIsModalVisible}
+          setFavorites={setFavorites}
           token={token}
         />
       </Modal>

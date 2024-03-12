@@ -4,6 +4,7 @@ import SHA256 from "crypto-js/sha256";
 // ONLY USE IF DEVELOPING BACKEND FUNTIONALITY
 export function HandleLogin(formData, setToken) {
   const hashedPassword = SHA256(formData.password).toString();
+
   let hashedConfirmPassword;
   if (formData.confirmPassword !== "") {
     hashedConfirmPassword = SHA256(formData.confirmPassword).toString();
@@ -11,7 +12,7 @@ export function HandleLogin(formData, setToken) {
 
   console.log(
     "Formdata sent: ",
-    formData,
+    formData.username,
     hashedPassword,
     hashedConfirmPassword
   );
@@ -37,9 +38,12 @@ export function HandleLogin(formData, setToken) {
     })
     .then((data) => {
       localStorage.setItem("token", data.token);
+      // Stringify the favourites array before storing it
+      localStorage.setItem("favorites", JSON.stringify(data.favourites));
       setToken(data.token);
 
       console.log("Token received:", data.token);
+      console.log("Favourites received:", data.favourites);
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -53,7 +57,6 @@ export function decodeTokenName(token) {
     console.log("Token is invalid");
     return;
   }
-
   const payload = parts[1];
   const decodedPayload = atob(payload.replace(/_/g, "/").replace(/-/g, "+"));
   const jsonPayload = JSON.parse(decodedPayload);
@@ -98,7 +101,7 @@ export async function SyncFavorites() {
     console.log("No token found in local storage.");
     return;
   }
-  
+
   try {
     const response = await fetch(
       "https://archidesk.azurewebsites.net/api/SyncFavoritesFunction",
@@ -116,5 +119,34 @@ export async function SyncFavorites() {
     console.log("Favorites successfully synced with the server.");
   } catch (error) {
     console.error("Error during syncing favorites:", error);
+  }
+}
+
+export async function GetFavorites() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.log("No token found in local storage.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "https://archidesk.azurewebsites.net/api/GetFavoritesFunction",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: token }),
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json(); // Parse the JSON response
+    console.log("Favorites successfully fetched:", data.favorites);
+    localStorage.setItem("favorites", data.favorites);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
   }
 }

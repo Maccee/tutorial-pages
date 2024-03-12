@@ -1,7 +1,7 @@
 import { HandleLogin, decodeTokenName } from "@/utils/LoginUtils";
 import React, { useState, useEffect } from "react";
 
-export const Login = ({ setToken, setIsModalVisible, token }) => {
+export const Login = ({ setToken, setFavorites, token }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -14,7 +14,6 @@ export const Login = ({ setToken, setIsModalVisible, token }) => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
-      console.log("set from login.js")
     }
   }, []);
 
@@ -38,6 +37,8 @@ export const Login = ({ setToken, setIsModalVisible, token }) => {
   const logout = () => {
     setToken(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("favorites");
+    setFavorites([]);
   };
 
   return (
@@ -126,7 +127,7 @@ export const Login = ({ setToken, setIsModalVisible, token }) => {
         )}
 
         {token && (
-          <div className="flex flex-col gap-2  items-center w-full">
+          <div className="flex flex-col gap-2 items-center w-full">
             <div>Logged in as: {decodeTokenName(token)}</div>
             <button className="defaultButton" type="button" onClick={logout}>
               Logout

@@ -22,6 +22,12 @@ export const toggleAdjustmentsVisibility = (
   isAdjustmentsVisible,
   setIsAdjustmentsVisible
 ) => {
-  console.log("toggle adjustments");
   setIsAdjustmentsVisible(!isAdjustmentsVisible);
+};
+
+export const toggleFavoritesVisibility = (
+  isFavoritesVisible,
+  setIsFavoritesVisible
+) => {
+  setIsFavoritesVisible(!isFavoritesVisible);
 };

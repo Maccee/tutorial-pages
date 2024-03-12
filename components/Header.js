@@ -4,6 +4,7 @@ import {
   toggleLoginVisibility,
   toggleMapVisibility,
   toggleAdjustmentsVisibility,
+  toggleFavoritesVisibility,
 } from "./UtilityFunctions";
 import {
   MagnifyingGlassIcon,
@@ -13,6 +14,7 @@ import {
 import { StarIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 import { performSearch } from "./SearchUtils";
+import { decodeTokenName } from "@/utils/LoginUtils";
 
 const Header = ({
   setKeyword,
@@ -24,10 +26,11 @@ const Header = ({
   setIsAdjustmentsVisible,
   isModalVisible,
   setIsModalVisible,
+  isFavoritesVisible,
+  setIsFavoritesVisible,
   token,
   setMapContainerHeight,
 }) => {
-  
   // SEARCH
   const handleSearch = () => {
     performSearch({ keyword: inputValue, setKeyword }).catch(console.error);
@@ -75,7 +78,7 @@ const Header = ({
 
       {/* Icons */}
       <div className="flex items-center space-x-1 ml-2">
-        <MapIcon
+        {/* <MapIcon
           className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
           onClick={() =>
             toggleMapVisibility(
@@ -84,18 +87,31 @@ const Header = ({
               setMapContainerHeight
             )
           }
-        />
-        <StarIcon
-          className={`h-8 cursor-pointer ${
-            token ? "text-logoBlue" : "text-gray-200"
-          }`}
-        />
-        <UserCircleIcon
-          onClick={() =>
-            toggleLoginVisibility(isModalVisible, setIsModalVisible)
-          }
-          className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
-        />
+        /> */}
+        {token && (
+          <StarIcon
+            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${
+              token ? "text-logoBlue" : "text-gray-200"
+            }`}
+            onClick={() =>
+              toggleFavoritesVisibility(
+                isFavoritesVisible,
+                setIsFavoritesVisible
+              )
+            }
+          />
+        )}
+        <div className="flex flex-col">
+          <UserCircleIcon
+            onClick={() =>
+              toggleLoginVisibility(isModalVisible, setIsModalVisible)
+            }
+            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${
+              token ? "text-logoBlue" : "text-logoBlue"
+            }`}
+          />
+          {token && <span className="text-xs">{decodeTokenName(token)}</span>}
+        </div>
       </div>
     </header>
   );

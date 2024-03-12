@@ -1,26 +1,29 @@
 import { useEffect, useState, useRef } from "react";
 import { StarIcon } from "@heroicons/react/24/outline";
-import { SyncFavorites, ValidateToken } from "@/utils/LoginUtils";
+import { SyncFavorites } from "@/utils/LoginUtils";
 
-export const Cards = ({ markers, setSelectedCard, token }) => {
-  const [favorites, setFavorites] = useState([]);
+export const Cards = ({
+  markers,
+  setSelectedCard,
+  token,
+  favorites,
+  setFavorites,
+}) => {
   const gridRef = useRef(null);
   const cardWidth = 170;
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const localData = localStorage.getItem("favorites");
-      setFavorites(localData ? JSON.parse(localData) : []);
+    const localData = localStorage.getItem("favorites");
+    if (localData) {
+      setFavorites(JSON.parse(localData));
     }
   }, []);
-
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("favorites", JSON.stringify(favorites));
+    const localData = localStorage.getItem("favorites");
+    if (localData) {
+      setFavorites(JSON.parse(localData));
     }
-    SyncFavorites();
-    //ValidateToken();
-  }, [favorites]);
+  }, [token]);
 
   useEffect(() => {
     // Dynamically import Masonry here
@@ -41,17 +44,35 @@ export const Cards = ({ markers, setSelectedCard, token }) => {
 
   const toggleFavorite = (id) => {
     const isFavorite = favorites.includes(id);
-    setFavorites(
-      isFavorite
-        ? favorites.filter((favId) => favId !== id)
-        : [...favorites, id]
-    );
+    const updatedFavorites = isFavorite
+      ? favorites.filter((favId) => favId !== id)
+      : [...favorites, id];
+
+    // This ensures local storage is updated first.
+    if (typeof window !== "undefined") {
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+
+      // Now, correctly parse the updated favorites back into an array
+      // and update the state with this new array.
+      const localData = localStorage.getItem("favorites");
+      const parsedFavorites = JSON.parse(localData);
+      setFavorites(parsedFavorites);
+    }
+
+    // Assuming SyncFavorites is an async operation that syncs the local state
+    // with a server or external data source. It doesn't directly affect local state management.
+    SyncFavorites();
   };
+
+  useEffect(() => {
+    //console.log(favorites)
+  }, [favorites]);
 
   return (
     <section className="flex items-center justify-center w-full">
       <div ref={gridRef} className="">
         {markers?.map((item) => {
+          const isFavorite = favorites.includes(item.apiUrl);
           return (
             <div
               key={item.id}
@@ -78,9 +99,7 @@ export const Cards = ({ markers, setSelectedCard, token }) => {
                     >
                       <StarIcon
                         className={`h-6 w-6 ${
-                          favorites.includes(item.apiUrl)
-                            ? "text-yellow-200"
-                            : "text-white"
+                          isFavorite ? "text-yellow-200" : "text-white"
                         }`}
                       />
                     </button>
@@ -89,17 +108,14 @@ export const Cards = ({ markers, setSelectedCard, token }) => {
                 <div className="z-10 transition-all duration-100 group-hover">
                   <p
                     className={`text-lg font-semibold ${
-                      favorites.includes(item.apiUrl)
-                        ? "text-yellow-200"
-                        : "text-white"
+                      isFavorite ? "text-yellow-200" : "text-white"
                     }`}
                   >
                     {item.name}
                   </p>
                 </div>
               </div>
-              <div className="absolute inset-0 bg-opacity-50 bg-slate-900 rounded-md"></div>{" "}
-              {/* dark opacity cover box */}
+              <div className="absolute inset-0 bg-opacity-50 bg-slate-900 rounded-md"></div>
             </div>
           );
         })}
