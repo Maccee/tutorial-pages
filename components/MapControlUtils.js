@@ -62,35 +62,35 @@ export const ZoomControl = ({
             setSelectedCard([userLocation.lng, userLocation.lat]);
           }
         }}
-        className="text-xl w-12 h-12 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+        className="text-xl w-14 h-14 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"
       >
         {userLocation ? (
-          <MapPinIcon className="h-6 text-logoBlue" />
+          <MapPinIcon className="h-8 text-logoBlue" />
         ) : (
-          <MapPinIcon className="h-6 text-gray-300" />
+          <MapPinIcon className="h-8 text-gray-300" />
         )}
       </button>
       <button
         onClick={zoomIn}
-        className="text-xl w-12 h-12 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+        className="text-xl w-14 h-14 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"
       >
-        <MagnifyingGlassPlusIcon className="h-6 text-logoBlue" />
+        <MagnifyingGlassPlusIcon className="h-8 text-logoBlue" />
       </button>
       <button
         onClick={zoomOut}
-        className="text-xl w-12 h-12 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+        className="text-xl w-14 h-14 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center"
       >
-        <MagnifyingGlassMinusIcon className="h-6 text-logoBlue" />
+        <MagnifyingGlassMinusIcon className="h-8 text-logoBlue" />
       </button>
       <button
         onClick={toggleAlue}
-        className="text-xl w-12 h-12 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center shadow-black"
+        className="text-xl w-14 h-14 bg-white text-white mb-1 rounded-full hover:bg-blue-700 transition duration-300 flex items-center justify-center shadow-black"
         // Adjust top-[5rem] as needed to position below the ZoomControl
       >
         {showAlue ? (
-          <GlobeAltIcon className="h-6 text-logoBlue" />
+          <GlobeAltIcon className="h-8 text-logoBlue" />
         ) : (
-          <GlobeAltIcon className="h-6 text-gray-300" />
+          <GlobeAltIcon className="h-8 text-gray-300" />
         )}
       </button>
     </div>

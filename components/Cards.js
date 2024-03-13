@@ -121,35 +121,35 @@ export const Cards = ({
       </div>
     </section>
       <Modal isVisible={isCardModalVisible} onClose={() => setIsCardModalVisible(false)}>
-      {selectedCardInfo && (
-  <div style={{ width: "90vw", maxWidth: "600px" }}>
-    <h2>{selectedCardInfo.name}</h2>
-    <img src={selectedCardInfo.imageUrl} alt={selectedCardInfo.name?.fi || selectedCardInfo.name?.en || 'N/A'} style={{ width: "100%", maxHeight: "300px", objectFit: "cover" }} />
-    <p>ID: {selectedCardInfo.id}</p>
-    <p>Description: {selectedCardInfo.description?.fi || selectedCardInfo.description?.en || 'No description available'}</p>
-    <p>Website: <a href={selectedCardInfo.www} target="_blank" rel="noopener noreferrer">{selectedCardInfo.www}</a></p>
-    <p>API URL: {selectedCardInfo.apiUrl}</p>
-    <p>Coordinates: {selectedCardInfo.coordinates}</p>
-    <p>Location URL: {selectedCardInfo.locationUrl}</p>
-    <div>
-      <h3>Offers:</h3>
-      {selectedCardInfo.offers && selectedCardInfo.offers.map((offer, index) => (
-        <div key={index}>
-          <p>Is Free: {offer.is_free ? 'Yes' : 'No'}</p>
-          <p>Info URL: <a href={offer.info_url?.fi || offer.info_url?.en || offer.info_url?.sv || '#'} target="_blank" rel="noopener noreferrer">{offer.info_url?.fi || offer.info_url?.en || offer.info_url?.sv || 'N/A'}</a></p>
-          <p>Description: {offer.description?.fi || offer.description?.en || offer.description?.sv || 'No description available'}</p>
-          <p>Price: {offer.price?.fi || offer.price?.en || offer.price?.sv || 'N/A'}</p>
-        </div>
-      ))}
-    </div>
-    <p>Start Time: {selectedCardInfo.startTime}</p>
-    <p>End Time: {selectedCardInfo.endTime}</p>
-    <p>Short Description: {selectedCardInfo.shortDescription?.fi || selectedCardInfo.shortDescription?.en || 'No short description available'}</p>
-    <p>Info URL: <a href={selectedCardInfo.infoUrl?.fi || selectedCardInfo.infoUrl?.en || 'N/A'} target="_blank" rel="noopener noreferrer">{selectedCardInfo.infoUrl?.fi || selectedCardInfo.infoUrl?.en || 'N/A'}</a></p>
-    <p>Provider: {selectedCardInfo.provider?.fi || selectedCardInfo.provider?.en || 'N/A'}</p>
-    <p>Multiple Event Dates: {selectedCardInfo.multipleEventDates}</p>
-  </div>
-)}
+        {selectedCardInfo && (
+          <div style={{ width: "90vw", maxWidth: "600px" }}>
+            <h2>{selectedCardInfo.name}</h2>
+            <img src={selectedCardInfo.imageUrl} alt={selectedCardInfo.name?.fi || selectedCardInfo.name?.en || 'N/A'} style={{ width: "100%", maxHeight: "300px", objectFit: "cover" }} />
+            <p>ID: {selectedCardInfo.id}</p>
+            <p>Description: {selectedCardInfo.description}</p>
+            <p>Website: <a href={selectedCardInfo.www} target="_blank" rel="noopener noreferrer">{selectedCardInfo.www}</a></p>
+            <p>API URL: {selectedCardInfo.apiUrl}</p>
+            <p>Coordinates: {selectedCardInfo.coordinates}</p>
+            <p>Location URL: {selectedCardInfo.locationUrl}</p>
+            <div>
+              <h3>Offers:</h3>
+              {selectedCardInfo.offers && selectedCardInfo.offers.map((offer, index) => (
+                <div key={index}>
+                  <p>Is Free: {offer.is_free ? 'Yes' : 'No'}</p>
+                  <p>Info URL: <a href={offer.info_url?.fi || offer.info_url?.en || offer.info_url?.sv || '#'} target="_blank" rel="noopener noreferrer">{offer.info_url?.fi || offer.info_url?.en || offer.info_url?.sv || 'N/A'}</a></p>
+                  <p>Description: {offer.description?.fi || offer.description?.en || offer.description?.sv || 'No description available'}</p>
+                  <p>Price: {offer.price?.fi || offer.price?.en || offer.price?.sv || 'N/A'}</p>
+                </div>
+              ))}
+            </div>
+            <p>Start Time: {selectedCardInfo.startTime}</p>
+            <p>End Time: {selectedCardInfo.endTime}</p>
+            <p>Short Description: {selectedCardInfo.shortDescription?.fi || selectedCardInfo.shortDescription?.en || 'No short description available'}</p>
+            <p>Info URL: <a href={selectedCardInfo.infoUrl?.fi || selectedCardInfo.infoUrl?.en || 'N/A'} target="_blank" rel="noopener noreferrer">{selectedCardInfo.infoUrl?.fi || selectedCardInfo.infoUrl?.en || 'N/A'}</a></p>
+            <p>Provider: {selectedCardInfo.provider?.fi || selectedCardInfo.provider?.en || 'N/A'}</p>
+            <p>Multiple Event Dates: {selectedCardInfo.multipleEventDates}</p>
+          </div>
+        )}
 
 
 
