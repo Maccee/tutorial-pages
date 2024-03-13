@@ -122,7 +122,7 @@ export default function Home() {
         </div>
         <div className="cursor-pointer absolute flex w-full items-center justify-center  pb-2">
           <MapIcon
-            className="h-6 w-28 text-white rounded-b-lg overflow-hidden bg-logoBlue shadow-lg"
+            className="h-8 w-28 text-white rounded-b-lg overflow-hidden bg-logoBlue shadow-lg"
             onClick={() =>
               toggleMapVisibility(
                 isMapVisible,

@@ -51,7 +51,7 @@ const Header = ({
       </div>
 
       {/* SearchBar */}
-      <div className="flex flex-grow items-center border-2 p-1 rounded-full min-w-0">
+      <div className="flex flex-grow items-center border-2 p-2 rounded-full min-w-0">
         <input
           className="flex-grow bg-transparent outline-none min-w-0"
           type="text"
@@ -62,8 +62,8 @@ const Header = ({
           style={{ paddingLeft: ".5rem" }}
         />
         <div className="mx-2">
-          <label className="flex items-center justify-between">
-            <span>Events:</span>
+          <label className="flex">
+            <span className="text-xs">Events:</span>
             <input
               type="checkbox"
               checked={eventsCheck}
@@ -74,7 +74,7 @@ const Header = ({
         </div>
 
         <MagnifyingGlassIcon
-          className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-1"
+          className="inline-flex h-10 w-10 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-1"
           onClick={handleSearch}
         />
       </div>
@@ -84,7 +84,7 @@ const Header = ({
 
         {token && (
           <StarIcon
-            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${token ? "text-logoBlue" : "text-gray-200"
+            className={`h-10 cursor-pointer hover:scale-110 hover:text-blue-800 ${token ? "text-logoBlue" : "text-gray-200"
               }`}
             onClick={() =>
               toggleFavoritesVisibility(
@@ -99,10 +99,10 @@ const Header = ({
             onClick={() =>
               toggleLoginVisibility(isModalVisible, setIsModalVisible)
             }
-            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${token ? "text-logoBlue" : "text-logoBlue"
+            className={`h-10 cursor-pointer hover:scale-110 hover:text-blue-800 ${token ? "text-logoBlue" : "text-logoBlue"
               }`}
           />
-          {token && <span className="text-xs">{decodeTokenName(token)}</span>}
+          {/* {token && <span className="text-xs">{decodeTokenName(token)}</span>} */}
         </div>
       </div>
     </header>
