@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 
 import ProgressBar from "@/components/ProgressBar";
 import Header from "@/components/Header";
 
-import { SearchAdjustments } from "@/components/SearchAdjustments";
+
 import { Login } from "@/components/Login";
 import { Cards } from "@/components/Cards";
 import Modal from "@/components/Modal";
@@ -49,6 +49,8 @@ export default function Home() {
   const [distance, setDistance] = useState(10); // Default distance set to 10km
   const [inputValue, setInputValue] = useState("");
 
+ 
+
   useEffect(() => {
     console.log("refreshed");
     GetFavorites();
@@ -75,36 +77,16 @@ export default function Home() {
           setKeyword={setKeyword}
           inputValue={inputValue}
           setInputValue={setInputValue}
-          isMapVisible={isMapVisible}
-          setIsMapVisible={setIsMapVisible}
-          isAdjustmentsVisible={isAdjustmentsVisible}
-          setIsAdjustmentsVisible={setIsAdjustmentsVisible}
           isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
           isFavoritesVisible={isFavoritesVisible}
           setIsFavoritesVisible={setIsFavoritesVisible}
           token={token}
-          setMapContainerHeight={setMapContainerHeight}
+          eventsCheck={eventsCheck}
+          setEventsCheck={setEventsCheck}
         />
 
-        <div
-          className={`transition-all duration-300 overflow-hidden ${
-            isAdjustmentsVisible
-              ? "opacity-100 max-h-[500px]"
-              : "opacity-0 max-h-0"
-          }`}
-        >
-          <SearchAdjustments
-            keyword={keyword}
-            setKeyword={setKeyword}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            eventsCheck={eventsCheck}
-            setEventsCheck={setEventsCheck}
-            distance={distance}
-            setDistance={setDistance}
-          />
-        </div>
+        
 
         <div
           className={`transition-all duration-300 overflow-hidden ${
@@ -125,7 +107,11 @@ export default function Home() {
           style={{ maxHeight: `${mapContainerHeight}px` }}
         >
           <MapComponentWithNoSSR
+          eventsCheck={eventsCheck}
+          distance={distance}
             markers={markers}
+            setMarkers={setMarkers}
+            setProgress={setProgress}
             favoriteMarkers={favoriteMarkers}
             selectedCard={selectedCard}
             setSelectedCard={setSelectedCard}

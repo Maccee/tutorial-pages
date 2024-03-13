@@ -20,16 +20,13 @@ const Header = ({
   setKeyword,
   inputValue,
   setInputValue,
-  isMapVisible,
-  setIsMapVisible,
-  isAdjustmentsVisible,
-  setIsAdjustmentsVisible,
   isModalVisible,
   setIsModalVisible,
   isFavoritesVisible,
   setIsFavoritesVisible,
   token,
-  setMapContainerHeight,
+  eventsCheck,
+  setEventsCheck,
 }) => {
   // SEARCH
   const handleSearch = () => {
@@ -39,6 +36,9 @@ const Header = ({
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+  const handleEventsCheckChange = () => {
+    setEventsCheck(!eventsCheck);
   };
 
   return (
@@ -61,15 +61,18 @@ const Header = ({
           onKeyDown={handleKeyDown}
           style={{ paddingLeft: ".5rem" }}
         />
-        <AdjustmentsVerticalIcon
-          className="inline-flex h-8 w-8 bg-white text-logoBlue rounded-full cursor-pointer md:mx-1"
-          onClick={() =>
-            toggleAdjustmentsVisibility(
-              isAdjustmentsVisible,
-              setIsAdjustmentsVisible
-            )
-          }
-        />
+        <div className="mx-2">
+          <label className="flex items-center justify-between">
+            <span>Events:</span>
+            <input
+              type="checkbox"
+              checked={eventsCheck}
+              onChange={handleEventsCheckChange}
+              className="ml-2"
+            />
+          </label>
+        </div>
+
         <MagnifyingGlassIcon
           className="inline-flex h-8 w-8 bg-logoBlue text-white rounded-full p-2 cursor-pointer md:mx-1"
           onClick={handleSearch}
@@ -78,21 +81,11 @@ const Header = ({
 
       {/* Icons */}
       <div className="flex items-center space-x-1 ml-2">
-        {/* <MapIcon
-          className="h-8 cursor-pointer text-logoBlue hover:text-blue-800 hover:scale-110"
-          onClick={() =>
-            toggleMapVisibility(
-              isMapVisible,
-              setIsMapVisible,
-              setMapContainerHeight
-            )
-          }
-        /> */}
+
         {token && (
           <StarIcon
-            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${
-              token ? "text-logoBlue" : "text-gray-200"
-            }`}
+            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${token ? "text-logoBlue" : "text-gray-200"
+              }`}
             onClick={() =>
               toggleFavoritesVisibility(
                 isFavoritesVisible,
@@ -106,9 +99,8 @@ const Header = ({
             onClick={() =>
               toggleLoginVisibility(isModalVisible, setIsModalVisible)
             }
-            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${
-              token ? "text-logoBlue" : "text-logoBlue"
-            }`}
+            className={`h-8 cursor-pointer hover:scale-110 hover:text-blue-800 ${token ? "text-logoBlue" : "text-logoBlue"
+              }`}
           />
           {token && <span className="text-xs">{decodeTokenName(token)}</span>}
         </div>

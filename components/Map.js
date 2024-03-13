@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -25,6 +25,8 @@ import {
   flipCoordinates,
 } from "./MapControlUtils";
 import { UserLocationMarker } from "./UserLocationMarker";
+import { FavoriteLocationMarkers } from "./FavoriteLocationMarkers";
+import { fetchAndSetMarkers, fetchEventDataDivision } from "./ApiUtils";
 
 // Put all markers to the map
 function LocationMarkers({ markers }) {
@@ -49,6 +51,7 @@ function LocationMarkers({ markers }) {
             >
               <Popup>
                 <div className="scrollable overflow-y-auto max-h-40">
+                  <p className="text-xs">{marker.multipleEventDates}</p>
                   <p className="text-lg">{marker.name}</p>
                   <p className="text-s">{marker.streetAddress}</p>
                   <p className="text-xs">{marker.description}</p>
@@ -62,72 +65,14 @@ function LocationMarkers({ markers }) {
   );
 }
 
-function FavoriteLocationMarkers({ favoriteMarkers }) {
-  const userIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="yellow" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-</svg>`;
-  const customDivIcon = new L.DivIcon({
-    html: userIconSVG,
-    iconSize: [30, 30], // Adjust based on your SVG
-    iconAnchor: [15, 15], // Adjust based on your SVG
-    className: "my-custom-icon", // Custom class for further styling if needed
-  });
-  const createCustomIcon = (cluster) => {
-    return L.divIcon({
-      html: `
-      <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">
-        <div style="position: absolute; background-color: rgba(255, 255, 0, 0.5); width: 40px; height: 40px; border-radius: 20px; top: 0; left: 0; z-index: -1;"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="yellow" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 45px; height: 45px; z-index: 1;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-        </svg>
-        <div style="position: absolute;  color: black; font-weight: bold; z-index: 150;">
-          ${cluster.getChildCount()}
-        </div>
-      </div>`,
-      className: "my-custom-cluster-icon", // Add your custom class
-      iconSize: L.point(40, 40, true),
-    });
-  };
 
-  return (
-    <>
-      <MarkerClusterGroup
-        chunkedLoading={true}
-        showCoverageOnHover={false}
-        iconCreateFunction={createCustomIcon}
-      >
-        {favoriteMarkers
-          ?.filter(
-            (marker) =>
-              Array.isArray(marker.position.coordinates) &&
-              marker.position.coordinates.length === 2 &&
-              marker.position.coordinates[0] != null &&
-              marker.position.coordinates[1] != null
-          )
-          .map((marker, index) => (
-            <Marker
-              key={index}
-              position={{
-                lat: marker.position.coordinates[1],
-                lng: marker.position.coordinates[0],
-              }}
-              icon={customDivIcon}
-            >
-              <Popup>
-                <div className="scrollable overflow-y-auto max-h-40">
-                  <p className="text-lg">{marker.name.fi}</p>
-                  {/* Display more marker details here if needed */}
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-      </MarkerClusterGroup>
-    </>
-  );
-}
 
 function Map({
+  eventsCheck,
+  distance,
   markers,
+  setMarkers,
+  setProgress,
   favoriteMarkers,
   selectedCard,
   setSelectedCard,
@@ -146,6 +91,26 @@ function Map({
     flippedGeojsonDataEsp
   );
 
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (map) {
+      map.on('popupopen', function (e) {
+        const buttonId = e.popup._content.match(/id="([^"]+)"/)[1];
+        if (buttonId) {
+          const button = document.getElementById(buttonId);
+          if (button) {
+            button.onclick = () => {
+              const areaName = buttonId.split('-').slice(1).join(' ');
+              findEventsInArea(areaName);
+            };
+          }
+        }
+      });
+    }
+  }, []);
+
   // geojson overlay styles
   const geoJsonStyle = {
     color: "blue",
@@ -163,7 +128,6 @@ function Map({
         //map.flyTo([60.264753787236685,24.849923151141372], 16); // Testing purposes for manual entry
         map.flyTo([selectedCard[1], selectedCard[0]], 18);
         setSelectedCard(null);
-
         setIsMapVisible(true);
       }
     }, [selectedCard]);
@@ -173,22 +137,23 @@ function Map({
 
   // get the name of the area from the geojson and put it to the popup when area is clicked
   const onEachFeature = (feature, layer) => {
-    let popupContent = "";
     if (feature.properties) {
-      if (feature.properties["hel:nimi_fi"]) {
-        popupContent = feature.properties["hel:nimi_fi"];
-      } else if (feature.properties["kosanimi"]) {
-        popupContent = feature.properties["kosanimi"];
-      } else if (feature.properties["Nimi"]) {
-        popupContent = feature.properties["Nimi"];
-      } else if (feature.properties["Nimi"]) {
-        popupContent = feature.properties["Nimi"];
+      let areaName = feature.properties["hel:nimi_fi"] || feature.properties["kosanimi"] || feature.properties["Nimi"];
+      if (areaName) {
+        layer.on('click', () => {
+          // Directly call findEventsInArea from here if possible
+          findEventsInArea(areaName);
+        });
       }
     }
-    if (popupContent) {
-      layer.bindPopup(popupContent);
-    }
   };
+
+
+  function findEventsInArea(areaName) {
+    console.log(`Finding events in ${areaName}`);
+    const areaSearch = true;
+    fetchAndSetMarkers( areaName, eventsCheck, distance, setProgress, setMarkers, areaSearch );
+  }
 
   return (
     <section className="bg-white relative z-10 overflow-hidden">
