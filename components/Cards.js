@@ -24,10 +24,18 @@ export const Cards = ({
 
   useEffect(() => {
     const localData = localStorage.getItem("favorites");
-    if (localData) {
-      setFavorites(JSON.parse(localData));
+    try {
+      const parsedData = localData ? JSON.parse(localData) : null;
+      setFavorites(parsedData || []);
+    } catch (error) {
+      console.error("Parsing error in useEffect: ", error);
+      // Optionally reset the corrupted favorites in localStorage
+      // localStorage.setItem("favorites", JSON.stringify([]));
+      setFavorites([]);
     }
   }, [token]);
+  
+  
 
   useEffect(() => {
     // Dynamically import Masonry here
