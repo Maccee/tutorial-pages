@@ -51,7 +51,7 @@ export const ZoomControl = ({
   };
 
   useEffect(() => {
-    //requestUserLocation();
+    requestUserLocation();
   }, []);
 
   return (

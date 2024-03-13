@@ -32,7 +32,7 @@ export default function Home() {
   const [isMapVisible, setIsMapVisible] = useState(true);
 
   const [isLoginVisible, setIsLoginVisible] = useState(false);
-  const [isAdjustmentsVisible, setIsAdjustmentsVisible] = useState(false);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isFavoritesVisible, setIsFavoritesVisible] = useState(false);
 
@@ -40,7 +40,7 @@ export default function Home() {
 
   const [token, setToken] = useState(null);
 
-  const [mapContainerHeight, setMapContainerHeight] = useState(300); // Default height in pixels
+  const [mapContainerHeight, setMapContainerHeight] = useState(500); // Default height in pixels
 
   const [userLocation, setUserLocation] = useState(null);
 
@@ -146,6 +146,7 @@ export default function Home() {
           setFavorites={setFavorites}
           favoriteMarkers={favoriteMarkers}
           setFavoriteMarkers={setFavoriteMarkers}
+          setSelectedCard={setSelectedCard}
         />
       </section>
 

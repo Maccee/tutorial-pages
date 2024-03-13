@@ -82,7 +82,7 @@ function Map({
 }) {
   const center = { lat: 60.1705, lon: 24.9414 };
   const [showAlue, setShowAlue] = useState(false);
-  const mapHeight = 300; // Initial map height
+  
 
   const flippedGeojsonDataHel = flipCoordinates(jsonDataHel);
   const flippedGeojsonDataVan = flipCoordinates(jsonDataVan);
@@ -92,7 +92,23 @@ function Map({
   );
 
   const mapRef = useRef(null);
+  const [mapHeight, setMapHeight] = useState(
+    window.innerWidth > 768 ? 500 : 300 // Set initial height based on window width
+  );
 
+  // useEffect hook to listen for window resize events
+  useEffect(() => {
+    function handleResize() {
+      // Update mapHeight based on window width
+      setMapHeight(window.innerWidth > 768 ? 500 : 300);
+    }
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   useEffect(() => {
     const map = mapRef.current;
     if (map) {
@@ -199,7 +215,7 @@ function Map({
 
         <LocationMarkers markers={markers} userLocation={userLocation} />
         <FavoriteLocationMarkers favoriteMarkers={favoriteMarkers} />
-        <UserLocationMarker userLocation={userLocation} />
+        <UserLocationMarker userLocation={userLocation} eventsCheck={eventsCheck} distance={distance} setProgress={setProgress} setMarkers={setMarkers}/>
 
         <ZoomControl
           showAlue={showAlue}
