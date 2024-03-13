@@ -319,6 +319,7 @@ function createMarkerObject(item, imageUrl) {
     www: item.info_url?.fi,
     coordinates: item.position.coordinates,
     apiUrl: item["@id"],
+    streetAddress: item.street_address?.fi,
   };
 }
 

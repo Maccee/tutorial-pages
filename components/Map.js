@@ -53,8 +53,9 @@ function LocationMarkers({ markers }) {
                 <div className="scrollable overflow-y-auto max-h-40">
                   <p className="text-xs">{marker.multipleEventDates}</p>
                   <p className="text-lg">{marker.name}</p>
-                  <p className="text-2xs">{marker.description}</p>
-                  <p className="text-2xs">{marker.apiUrl}</p>
+                  <p className="text-s">{marker.streetAddress}</p>
+                  <p className="text-xs">{marker.description}</p>
+                  <p className="text-xs"><a href={marker.www} target="_blank" rel="noopener noreferrer">{marker.www}</a></p>
                 </div>
               </Popup>
             </Marker>
@@ -155,7 +156,7 @@ function Map({
   }
 
   return (
-    <section className="bg-white" style={{ overflow: "hidden" }}>
+    <section className="bg-white relative z-10 overflow-hidden">
       <MapContainer
         style={{
           height: `${mapHeight}px`,
