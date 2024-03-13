@@ -1,14 +1,12 @@
 export const fetchAndSetMarkers = (
-  userLocation, // Add this parameter to accept userLocation
   searchKeyword,
   eventsCheck,
   distance,
   setProgress,
   setMarkers,
-  areaSearch,
+  areaSearch
 ) => {
   console.log("Verify parameters received: ", {
-    userLocation, // Logging for verification
     searchKeyword,
     eventsCheck,
     distance,
@@ -21,8 +19,6 @@ export const fetchAndSetMarkers = (
     fetchEventData(searchKeyword, setProgress, setMarkers);
   } else if (areaSearch) {
     fetchEventDataDivision(searchKeyword, setProgress, setMarkers);
-  } else if (searchKeyword === "haelahelta" && userLocation) { // Check userLocation is provided
-    fetchNear(userLocation, setProgress, setMarkers); // Now correctly passing userLocation
   } else {
     let baseUrl = "https://api.hel.fi/linkedevents/v1/place/";
     let apiUrl = `${baseUrl}?text=${encodeURIComponent(
@@ -41,96 +37,6 @@ export const fetchAndSetMarkers = (
       });
   }
 };
-
- // Ensure the userLocation is correctly passed and constructed in the queryURL
- ///const queryURL = `${url}?dwithin_origin=24.8499,60.2647&dwithin_metres=1000`;
- //${userLocation.lng},${userLocation.lat}
- //24.8499,60.2647
-
- async function fetchNear(
-  userLocation, // { lat: number, lng: number }
-  progressCallback,
-  setMarkers,
-  url = 'https://api.hel.fi/linkedevents/v1/event/', // Adjusted Base URL for geographic search
-  accumulatedMarkersMap = new Map(),
-  seenLocations = new Set(),
-  limit = 50,
-) {
-  console.log("fetchNear");
-  // Constructing the query URL for geographic search
-  const queryURL = `${url}?dwithin_origin=24.8499,60.2647&dwithin_metres=1000`;
-  //const queryURL = `${url}?dwithin_origin=${userLocation.lat},${userLocation.lng}&dwithin_metres=1000`;
-
-  progressCallback(0);
-
-  try {
-    const response = await fetch(queryURL);
-    const result = await response.json();
-    const events = result.data;
-
-    for (const event of events) {
-      const locationId = event.location["@id"];
-      if (!locationId) continue;
-
-      if (!seenLocations.has(locationId)) {
-        let locationCoordinates = null;
-        try {
-          const locationResponse = await fetch(`https://api.hel.fi/linkedevents/v1/place/${locationId}/`);
-          const locationData = await locationResponse.json();
-          locationCoordinates = locationData.geometry.coordinates; // Assuming your locations API returns a 'geometry' object with 'coordinates'
-        } catch (error) {
-          console.warn(`Failed to fetch location for event ${event.id}:`, error);
-        }
-
-        // Same marker creation logic as fetchEventData
-        let marker = accumulatedMarkersMap.get(locationId) || {
-          id: event.id,
-          locationUrl: event.location["@id"],
-          offers: event.offers,
-          imageUrl: event.images && event.images.length > 0 ? event.images[0].url : "",
-          startTime: event.start_time,
-          endTime: event.end_time,
-          name: event.name.fi || event.name.en,
-          shortDescription: event.short_description?.fi || event.short_description?.en,
-          description: event.description?.fi || event.description?.en,
-          infoUrl: event.info_url?.fi || event.info_url?.en,
-          provider: event.provider?.fi || event.provider?.en,
-          coordinates: locationCoordinates,
-          apiUrl: event["@id"],
-          multipleEventDates: []
-        };
-
-        marker.multipleEventDates.push(event.start_time);
-        accumulatedMarkersMap.set(locationId, marker);
-        seenLocations.add(locationId);
-      }
-    }
-
-    // Convert the accumulated map to an array for setting markers
-    setMarkers(Array.from(accumulatedMarkersMap.values()));
-
-    if (result.meta?.next && accumulatedMarkersMap.size < limit) {
-      // Recursively fetch more events if pagination is available and limit not reached
-      await fetchNear(
-        userLocation,
-        progressCallback,
-        setMarkers,
-        result.meta.next,
-        accumulatedMarkersMap,
-        seenLocations,
-        limit
-      );
-    } else {
-      progressCallback(100); // Finished loading
-    }
-  } catch (error) {
-    console.error("Error fetching event data:", error);
-    progressCallback(0); // Error handling
-  }
-}
-
-
-
 
 // Funtion to fetch event data when eventcheck is checked in search filters.
 async function fetchEventData(
@@ -226,7 +132,7 @@ async function fetchEventDataDivision(
   seenLocations = new Set(), // Track seen locations to manage event dates
   limit = 50,
 ) {
-
+  
   const baseUrl = "https://api.hel.fi/linkedevents/v1/event/";
   const apiUrl = url || `${baseUrl}?division=${encodeURIComponent(searchKeyword)}`;
 

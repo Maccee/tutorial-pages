@@ -35,9 +35,7 @@ export const UserLocationMarker = ({ userLocation, eventsCheck, distance, setPro
             <div>
               <p>Your location</p>
               {/* Adding a button to the popup content */}
-              <button className='defaultButton' onClick={handleButtonClick}>Events Near me</button>
-              <br />
-              <button className='defaultButton' onClick={handleButtonClick}>Places Near me</button>
+              
             </div>
           </Popup>
         </Marker>

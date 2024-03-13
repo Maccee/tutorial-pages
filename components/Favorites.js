@@ -60,11 +60,47 @@ export const Favorites = ({
     fetchAllFavorites();
   }, [favorites]);
 
-  const openModalWithCardInfo = (item) => {
-    setSelectedFavoriteCardInfo(item);
+  const openModalWithCardInfo = async (item) => {
+    console.log(item);
+    // Initialize a variable for coordinates
+    let coordinates;
+
+    // Check if item.position.coordinates is already available (for place data)
+    if (item.position && item.position.coordinates) {
+        // Directly use the available coordinates
+        coordinates = item.position.coordinates;
+    } else if (item.location && item.location['@id']) {
+        // For event data, coordinates need to be fetched
+        const url = item.location['@id'];
+
+        try {
+            // Fetch the data from the URL
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            // Extract coordinates from the fetched data
+            // Assuming the response has a structure where the coordinates are under position.coordinates
+            coordinates = data.position.coordinates;
+        } catch (error) {
+            console.error("Failed to fetch coordinates: ", error);
+            return; // Exit if fetch fails
+        }
+    } else {
+        console.error("No coordinates available");
+        return; // Exit if no coordinates data is found
+    }
+
+    // Continue with setting modal information using the resolved coordinates
+    setSelectedFavoriteCardInfo(item); // Set with the original item
     setIsFavoriteCardModalVisible(true);
-    setSelectedCard(item.coordinates);
-  };
+    setSelectedCard(coordinates); // Use the resolved coordinates, either directly available or fetched
+};
+
+
+
 
   return (
     <>
