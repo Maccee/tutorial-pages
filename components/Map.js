@@ -215,7 +215,7 @@ function Map({
 
         <LocationMarkers markers={markers} userLocation={userLocation} />
         <FavoriteLocationMarkers favoriteMarkers={favoriteMarkers} />
-        <UserLocationMarker userLocation={userLocation} />
+        <UserLocationMarker userLocation={userLocation} eventsCheck={eventsCheck} distance={distance} setProgress={setProgress} setMarkers={setMarkers}/>
 
         <ZoomControl
           showAlue={showAlue}

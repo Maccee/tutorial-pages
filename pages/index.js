@@ -146,6 +146,7 @@ export default function Home() {
           setFavorites={setFavorites}
           favoriteMarkers={favoriteMarkers}
           setFavoriteMarkers={setFavoriteMarkers}
+          setSelectedCard={setSelectedCard}
         />
       </section>
 

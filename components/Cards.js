@@ -71,61 +71,63 @@ export const Cards = ({
 
   return (
 
-    <><section className="flex items-center justify-center w-full">
-      <div ref={gridRef} className="">
+    <>
+      <section className="flex items-center justify-center w-full">
+        <div ref={gridRef} className="">
 
-        {markers?.map((item) => {
-          const isFavorite = favorites.includes(item.apiUrl);
-          return (
-            <div
-              key={item.id}
-              className="p-2 rounded-md my-1 border-2 grid-item group relative overflow-hidden transition-all duration-100 ease-in-out hover:scale-[1.03] cursor-pointer"
-              onClick={() => openModalWithCardInfo(item)}
-              style={{
-                backgroundImage: `url(${item.imageUrl})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                width: cardWidth + "px",
-                height: "150px",
-              }}
-            >
-              <div className="flex flex-col justify-end h-full">
-                <div className="z-10 p-2">
-                  {token && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(item.apiUrl, item);
-                      }}
-                      aria-label="Toggle Favorite"
-                      className="opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2 z-10"
+          {markers?.map((item) => {
+            const isFavorite = favorites.includes(item.apiUrl);
+            return (
+              <div
+                key={item.id}
+                className="p-2 rounded-md my-1 border-2 grid-item group relative overflow-hidden transition-all duration-100 ease-in-out hover:scale-[1.03] cursor-pointer"
+                onClick={() => openModalWithCardInfo(item)}
+                style={{
+                  backgroundImage: `url(${item.imageUrl})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  width: cardWidth + "px",
+                  height: "150px",
+                }}
+              >
+                <div className="flex flex-col justify-end h-full">
+                  <div className="z-10 p-2">
+                    {token && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(item.apiUrl, item);
+                        }}
+                        aria-label="Toggle Favorite"
+                        className="opacity-100 transition-opacity duration-100 outline-none focus:outline-none absolute top-2 right-2 z-10"
+                      >
+                        <StarIcon
+                          className={`h-8 w-8 ${isFavorite ? "text-yellow-200" : "text-white"
+                            }`}
+                        />
+                      </button>
+                    )}
+                  </div>
+                  <div className="z-10 transition-all duration-100 group-hover">
+                    <p
+                      className={`text-lg font-semibold ${isFavorite ? "text-yellow-200" : "text-white"
+                        }`}
                     >
-                      <StarIcon
-                        className={`h-8 w-8 ${isFavorite ? "text-yellow-200" : "text-white"
-                          }`}
-                      />
-                    </button>
-                  )}
+                      {item.name}
+                    </p>
+                  </div>
                 </div>
-                <div className="z-10 transition-all duration-100 group-hover">
-                  <p
-                    className={`text-lg font-semibold ${isFavorite ? "text-yellow-200" : "text-white"
-                      }`}
-                  >
-                    {item.name}
-                  </p>
-                </div>
+                <div className="absolute inset-0 bg-opacity-50 bg-slate-900 rounded-md"></div>
               </div>
-              <div className="absolute inset-0 bg-opacity-50 bg-slate-900 rounded-md"></div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+            );
+          })}
+        </div>
+      </section>
       <Modal isVisible={isCardModalVisible} onClose={() => setIsCardModalVisible(false)}>
         {selectedCardInfo && (
           <div style={{ width: "90vw", maxWidth: "600px" }}>
             <h2>{selectedCardInfo.name}</h2>
+            <h2>{selectedCardInfo.streetAddress}</h2>
             <img src={selectedCardInfo.imageUrl} alt={selectedCardInfo.name?.fi || selectedCardInfo.name?.en || 'N/A'} style={{ width: "100%", maxHeight: "300px", objectFit: "cover" }} />
             <p>ID: {selectedCardInfo.id}</p>
             <p>Description: {selectedCardInfo.description}</p>
